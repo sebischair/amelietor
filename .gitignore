@@ -6,6 +6,9 @@ public/dist
 public/index.html
 public/sitemap.xml
 
+#IDEA
+.idea/
+
 # Node.js and NPM
 node_modules
 npm-debug.log
