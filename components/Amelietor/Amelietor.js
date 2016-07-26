@@ -104,9 +104,7 @@ class Amelietor extends React.Component {
     this.state = {
       editorState: EditorState.createWithContent(blocks, decorator),
     };
-
   }
-
 
 
   render() {
@@ -131,8 +129,6 @@ class Amelietor extends React.Component {
       </div>
     );
   }
-
-
 }
 
 function getEntityStrategy(mutability) {
@@ -148,7 +144,6 @@ function getEntityStrategy(mutability) {
       callback
     );
   };
-
 }
 
 function getDecoratedStyle(mutability) {
@@ -200,8 +195,6 @@ const styles = {
     padding: '2px 0',
   },
 };
-
-
 
 
 export default Amelietor;
