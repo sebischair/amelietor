@@ -11,6 +11,7 @@
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import Amelietor from '../../components/Amelietor';
+
 import s from './styles.css';
 import { title, html } from './index.md';
 
@@ -31,7 +32,6 @@ class HomePage extends React.Component {
 
         <h4>Editor</h4>
         <Amelietor />
-
         <h4>Articles</h4>
         <ul>
           {this.props.articles.map((article, i) =>

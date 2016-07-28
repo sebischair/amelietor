@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
+import Rec from '../Rec';
 import s from './Amelietor.css';
 import {
   Editor,
@@ -17,12 +18,12 @@ const rawContent = {
   blocks: [
     {
       text: (
-        'This is an "immutable" entity: Superman. Deleting any ' +
-        'characters will delete the entire entity. Adding characters ' +
-        'will remove the entity from the range.'
+        'The Yummy Inc online application will be deployed onto a ' +
+        'J2EE application server Websphere Application Server version 6, ' +
+        'as it is already the application server use for internal applications.'
       ),
       type: 'unstyled',
-      entityRanges: [{offset: 31, length: 8, key: 'first'}],
+      entityRanges: [{offset: 4, length: 9, key: 'first'}, {offset: 57, length: 4, key: 'second'} ],
     },
     {
       text: '',
@@ -30,24 +31,15 @@ const rawContent = {
     },
     {
       text: (
-        'This is a "mutable" entity: Batman. Characters may be added ' +
-        'and removed.'
+        'J2EE security model will be reused. ' +
+        'Data persistence will be addressed using a relational database.'
       ),
       type: 'unstyled',
-      entityRanges: [{offset: 28, length: 6, key: 'second'}],
+      entityRanges: [{offset: 0, length: 4, key: 'second'}, {offset: 79, length: 19, key: 'third'}],
     },
     {
       text: '',
       type: 'unstyled',
-    },
-    {
-      text: (
-        'This is a "segmented" entity: Green Lantern. Deleting any ' +
-        'characters will delete the current "segment" from the range. ' +
-        'Adding characters will remove the entire entity from the range.'
-      ),
-      type: 'unstyled',
-      entityRanges: [{offset: 30, length: 13, key: 'third'}],
     },
   ],
 
@@ -80,6 +72,12 @@ class Amelietor extends React.Component {
       console.log(convertToRaw(content));
     };
 
+    this.onSearchChange = ({ value }) => {
+      this.setState({
+        suggestions: defaultSuggestionsFilter(value, mentions),
+      });
+    };
+
 
     const blocks = convertFromRaw(rawContent);
 
@@ -101,6 +99,7 @@ class Amelietor extends React.Component {
     this.state = {editorState: EditorState.createWithContent(blocks, decorator)};
 
 
+
     this.state = {
       editorState: EditorState.createWithContent(blocks, decorator),
     };
@@ -111,7 +110,7 @@ class Amelietor extends React.Component {
     const {editorState} = this.state;
     return (
       <div>
-        <div className={`${s.editor}`}>
+      <div className={`${s.editor}`}>
           <Editor
             editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
@@ -119,14 +118,19 @@ class Amelietor extends React.Component {
             ref="editor"
             spellCheck={true}
           />
-        </div>
-        <input
+          <Rec
+            onSearchChange={ this.onSearchChange }
+            suggestions={ this.state.suggestions }
+          />
+      </div>
+      <input
           onClick={this.logState}
           className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
           type="button"
           value="Log State"
-        />
+      />
       </div>
+
     );
   }
 }
