@@ -9,8 +9,16 @@ class Rec extends React.Component {
   constructor(props) {
     super(props);
 
-    //this.onChange = (recState) => this.setState({recState});
-    //this.focus = () => this.refs.rec.focus();
+    this.state = {recState:{}};
+
+    this.onChange = (recState) => this.setState({recState});
+
+
+
+    this.logState = () => {
+      const content = this.state.recState;
+      console.log(content);
+    };
 
 
   }
@@ -18,11 +26,17 @@ class Rec extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className={`${s.recommendation}`}>
-          <p>Reccomendation</p>
+        <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
+          <div className="mdl-card__supporting-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Aenan convallis.
+          </div>
+          <div className="mdl-card__actions mdl-card--border">
+            <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onClick={this.logState}>
+              Details
+            </a>
+          </div>
         </div>
-      </div>
     );
   }
 }

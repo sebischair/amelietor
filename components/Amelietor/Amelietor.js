@@ -47,14 +47,18 @@ const rawContent = {
     first: {
       type: 'TOKEN',
       mutability: 'IMMUTABLE',
+      data: {'href':"http://dbpedia.org/page/MSQL"}
+
     },
     second: {
       type: 'TOKEN',
       mutability: 'MUTABLE',
+      data: {'href':"http://dbpedia.org/page/MSQL"}
     },
     third: {
       type: 'TOKEN',
       mutability: 'SEGMENTED',
+      data: {'href':"http://dbpedia.org/page/Relational_database"}
     },
   },
 };
@@ -72,11 +76,12 @@ class Amelietor extends React.Component {
       console.log(convertToRaw(content));
     };
 
-    this.onSearchChange = ({ value }) => {
+    this.onTokenClick = (data) => {
       this.setState({
-        suggestions: defaultSuggestionsFilter(value, mentions),
+        suggestions: data,
       });
     };
+
 
 
     const blocks = convertFromRaw(rawContent);
@@ -96,10 +101,6 @@ class Amelietor extends React.Component {
       },
     ]);
 
-    this.state = {editorState: EditorState.createWithContent(blocks, decorator)};
-
-
-
     this.state = {
       editorState: EditorState.createWithContent(blocks, decorator),
     };
@@ -110,27 +111,36 @@ class Amelietor extends React.Component {
     const {editorState} = this.state;
     return (
       <div>
-      <div className={`${s.editor}`}>
-          <Editor
-            editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
-            ref="editor"
-            spellCheck={true}
-          />
-          <Rec
-            onSearchChange={ this.onSearchChange }
-            suggestions={ this.state.suggestions }
-          />
+        <div className="mdl-grid">
+          <div className="mdl-cell mdl-cell--8-col">
+            <div className={`${s.editor}`}>
+                <Editor
+                  editorState={editorState}
+                  handleKeyCommand={this.handleKeyCommand}
+                  onChange={this.onChange}
+                  ref="editor"
+                  spellCheck={true}
+                />
+            </div>
+          </div>
+          <div className="mdl-cell mdl-cell--4-col">
+            <Rec
+              ref="rec"
+              suggestions = {this.state.suggestions}
+            />
+          </div>
+        </div>
+        <div className="mdl-grid">
+          <div className="mdl-cell mdl-cell--12-col">
+            <input
+                onClick={this.logState}
+                className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
+                type="button"
+                value="Log State"
+            />
+          </div>
+        </div>
       </div>
-      <input
-          onClick={this.logState}
-          className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-          type="button"
-          value="Log State"
-      />
-      </div>
-
     );
   }
 }
@@ -163,10 +173,12 @@ const TokenSpan = (props) => {
   const style = getDecoratedStyle(
     Entity.get(props.entityKey).getMutability()
   );
+  const data = Entity.get(props.entityKey).getData();
   return (
-    <span {...props} style={style}>
+    <span {...props} style={style} onClick={props.onTokenClick(data)}>
             {props.children}
-          </span>
+    </span>
+
   );
 };
 
