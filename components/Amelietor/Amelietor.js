@@ -1,7 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
+import {showRec} from '../../core/actions';
+import { connect } from 'react-redux'
+import store from '../../core/store';
 import Rec from '../Rec';
+import Token from '../Token';
+import CurRec from '../CurRec';
 import s from './Amelietor.css';
 import {
   Editor,
@@ -67,7 +72,7 @@ class Amelietor extends React.Component {
 
   constructor(props) {
     super(props);
-
+    //console.log(store.dispatch(showRec("asd")));
     this.onChange = (editorState) => this.setState({editorState});
     this.focus = () => this.refs.editor.focus();
 
@@ -76,28 +81,20 @@ class Amelietor extends React.Component {
       console.log(convertToRaw(content));
     };
 
-    this.onTokenClick = (data) => {
-      this.setState({
-        suggestions: data,
-      });
-    };
-
-
-
     const blocks = convertFromRaw(rawContent);
 
     const decorator = new CompositeDecorator([
       {
         strategy: getEntityStrategy('IMMUTABLE'),
-        component: TokenSpan,
+        component: ConfiguredToken,
       },
       {
         strategy: getEntityStrategy('MUTABLE'),
-        component: TokenSpan,
+        component: ConfiguredToken,
       },
       {
         strategy: getEntityStrategy('SEGMENTED'),
-        component: TokenSpan,
+        component: ConfiguredToken,
       },
     ]);
 
@@ -124,10 +121,7 @@ class Amelietor extends React.Component {
             </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
-            <Rec
-              ref="rec"
-              suggestions = {this.state.suggestions}
-            />
+            <CurRec href = ''/>
           </div>
         </div>
         <div className="mdl-grid">
@@ -169,16 +163,27 @@ function getDecoratedStyle(mutability) {
   }
 }
 
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onClick: () => {
+      store.dispatch(showRec(Entity.get(props.entityKey).getData().href));
+      console.log(store.getState());
+    }
+  }
+}
+const ConfiguredToken = connect(
+  mapDispatchToProps
+)(Token)
+
 const TokenSpan = (props) => {
   const style = getDecoratedStyle(
     Entity.get(props.entityKey).getMutability()
   );
   const data = Entity.get(props.entityKey).getData();
   return (
-    <span {...props} style={style} onClick={props.onTokenClick(data)}>
+    <span {...props} style={style}>
             {props.children}
     </span>
-
   );
 };
 
@@ -212,6 +217,7 @@ const styles = {
   },
 };
 
+//Amelietor = connect()(Amelietor);
 
 export default Amelietor;
 

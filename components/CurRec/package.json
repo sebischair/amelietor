@@ -1,0 +1,6 @@
+{
+  "name": "CurRec",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./CurRec.js"
+}

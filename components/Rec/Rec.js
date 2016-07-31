@@ -1,46 +1,57 @@
-import React from 'react';
+import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom';
-import cx from 'classnames';
+import { connect } from 'react-redux'
+import store from '../../core/store'
 import s from './Rec.css';
 
+let Rec = ({href}) => {
+  return (
+  <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
+    <div className="mdl-card__supporting-text">
+      {href}
+    </div>
+    <div className="mdl-card__actions mdl-card--border">
+      <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+        Details
+      </a>
+    </div>
+  </div>
+)};
 
-class Rec extends React.Component {
+Rec.propTypes = {
+  href: PropTypes.string.isRequired
+};
 
-  constructor(props) {
-    super(props);
+Rec = connect()(Rec);
 
-    this.state = {recState:{}};
-
-    this.onChange = (recState) => this.setState({recState});
-
-
-
-    this.logState = () => {
-      const content = this.state.recState;
-      console.log(content);
-    };
-
-
-  }
-
-
-  render() {
-    return (
-        <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
-          <div className="mdl-card__supporting-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Aenan convallis.
-          </div>
-          <div className="mdl-card__actions mdl-card--border">
-            <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onClick={this.logState}>
-              Details
-            </a>
-          </div>
-        </div>
-    );
-  }
-}
+export default Rec
 
 
-export default Rec;
-
+//class Rec extends React.Component {
+//
+//  constructor(props) {
+//    super(props);
+//    console.log(props);
+//  }
+//
+//
+//  render() {
+//    return (
+//        <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
+//          <div className="mdl-card__supporting-text">
+//
+//          </div>
+//          <div className="mdl-card__actions mdl-card--border">
+//            <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onClick={this.logState}>
+//              Details
+//            </a>
+//          </div>
+//        </div>
+//    );
+//  }
+//}
+//
+//Rec = connect()(Rec);
+//
+//export default Rec;
+//

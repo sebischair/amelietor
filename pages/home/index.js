@@ -9,9 +9,11 @@
  */
 
 import React, { PropTypes } from 'react';
+import { Provider } from 'react-redux';
 import Layout from '../../components/Layout';
 import Amelietor from '../../components/Amelietor';
 
+import store from '../../core/store'
 import s from './styles.css';
 import { title, html } from './index.md';
 
@@ -31,7 +33,7 @@ class HomePage extends React.Component {
         <div dangerouslySetInnerHTML={{ __html: html }} />
 
         <h4>Editor</h4>
-        <Amelietor />
+          <Amelietor />
         <h4>Articles</h4>
         <ul>
           {this.props.articles.map((article, i) =>
