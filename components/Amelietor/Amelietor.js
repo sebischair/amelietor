@@ -16,7 +16,9 @@ import {
   convertToRaw,
   CompositeDecorator,
   ContentState,
-  Entity
+  SelectionState,
+  Entity,
+  Modifier
   } from 'draft-js';
 
 const rawContent = {
@@ -28,7 +30,7 @@ const rawContent = {
         'as it is already the application server use for internal applications.'
       ),
       type: 'unstyled',
-      entityRanges: [{offset: 4, length: 9, key: 'first'}, {offset: 57, length: 4, key: 'second'} ],
+      entityRanges: [{offset: 4, length: 9, key: "first"}, {offset: 57, length: 4, key: 2} ],
     },
     {
       text: '',
@@ -40,7 +42,7 @@ const rawContent = {
         'Data persistence will be addressed using a relational database.'
       ),
       type: 'unstyled',
-      entityRanges: [{offset: 0, length: 4, key: 'second'}, {offset: 79, length: 19, key: 'third'}],
+      entityRanges: [{offset: 0, length: 4, key: 3}, {offset: 79, length: 19, key: 3}],
     },
     {
       text: '',
@@ -49,20 +51,20 @@ const rawContent = {
   ],
 
   entityMap: {
-    first: {
+    "first": {
       type: 'TOKEN',
-      mutability: 'IMMUTABLE',
+      mutability: 'MUTABLE',
       data: {'href':"http://dbpedia.org/page/MSQL"}
 
     },
-    second: {
+    2: {
       type: 'TOKEN',
       mutability: 'MUTABLE',
       data: {'href':"http://dbpedia.org/page/MSQL"}
     },
-    third: {
+    3: {
       type: 'TOKEN',
-      mutability: 'SEGMENTED',
+      mutability: 'MUTABLE',
       data: {'href':"http://dbpedia.org/page/Relational_database"}
     },
   },
@@ -72,9 +74,43 @@ class Amelietor extends React.Component {
 
   constructor(props) {
     super(props);
-    //console.log(store.dispatch(showRec("asd")));
-    this.onChange = (editorState) => this.setState({editorState});
+    store.dispatch(showRec("Click on annotation to see a hint"));
+    this.onChange = (editorState) => {
+      this.setState({editorState});
+
+    };
+
     this.focus = () => this.refs.editor.focus();
+
+    const decorator = new CompositeDecorator([
+      {
+        strategy: getEntityStrategy('MUTABLE'),
+        component: ConfiguredToken,
+      }
+    ]);
+
+    this.getNewDecorators = () => {
+
+      const entityKey = Entity.create('TOKEN', 'MUTABLE', {href: 'http://www.zombo.com'});
+      const selection = this.state.editorState.getSelection();
+      const targetRange = new SelectionState({
+        anchorKey: selection.getAnchorKey(),
+        anchorOffset: 40,
+        focusKey: selection.getAnchorKey(),
+        focusOffset: 48
+      });
+      console.log(targetRange);
+      const contentWithEntity = Modifier.applyEntity(
+        this.state.editorState.getCurrentContent(),
+        targetRange,
+        entityKey
+      );
+      console.log(convertToRaw(contentWithEntity));
+      this.state.editorState = EditorState.push(this.state.editorState, contentWithEntity, 'apply-entity');
+      const newEditorState = EditorState.set(this.state.editorState, {decorator: decorator});
+      this.setState({newEditorState});
+      //this.state.editorState = EditorState.createWithContent(this.state.editorState.getCurrentContent(), decorator);
+    };
 
     this.logState = () => {
       const content = this.state.editorState.getCurrentContent();
@@ -82,37 +118,24 @@ class Amelietor extends React.Component {
     };
 
     const blocks = convertFromRaw(rawContent);
-
-    const decorator = new CompositeDecorator([
-      {
-        strategy: getEntityStrategy('IMMUTABLE'),
-        component: ConfiguredToken,
-      },
-      {
-        strategy: getEntityStrategy('MUTABLE'),
-        component: ConfiguredToken,
-      },
-      {
-        strategy: getEntityStrategy('SEGMENTED'),
-        component: ConfiguredToken,
-      },
-    ]);
+    console.log(blocks);
 
     this.state = {
-      editorState: EditorState.createWithContent(blocks, decorator),
+      editorState: EditorState.createWithContent(blocks),
     };
+
   }
 
 
   render() {
-    const {editorState} = this.state;
+    //const {editorState} = this.state;
     return (
       <div>
         <div className="mdl-grid">
           <div className="mdl-cell mdl-cell--8-col">
-            <div className={`${s.editor}`}>
+            <div className={`${s.editor}`} onClick={this.focus}>
                 <Editor
-                  editorState={editorState}
+                  editorState={this.state.editorState}
                   handleKeyCommand={this.handleKeyCommand}
                   onChange={this.onChange}
                   ref="editor"
@@ -132,6 +155,12 @@ class Amelietor extends React.Component {
                 type="button"
                 value="Log State"
             />
+            <input
+              onClick={this.getNewDecorators}
+              className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
+              type="button"
+              value="Update decorators"
+            />
           </div>
         </div>
       </div>
@@ -144,6 +173,7 @@ function getEntityStrategy(mutability) {
     contentBlock.findEntityRanges(
       (character) => {
         const entityKey = character.getEntity();
+
         if (entityKey === null) {
           return false;
         }
@@ -154,14 +184,6 @@ function getEntityStrategy(mutability) {
   };
 }
 
-function getDecoratedStyle(mutability) {
-  switch (mutability) {
-    case 'IMMUTABLE': return styles.immutable;
-    case 'MUTABLE': return styles.mutable;
-    case 'SEGMENTED': return styles.segmented;
-    default: return null;
-  }
-}
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
@@ -171,53 +193,11 @@ const mapDispatchToProps = (dispatch, props) => {
     }
   }
 }
+
 const ConfiguredToken = connect(
   mapDispatchToProps
 )(Token)
 
-const TokenSpan = (props) => {
-  const style = getDecoratedStyle(
-    Entity.get(props.entityKey).getMutability()
-  );
-  const data = Entity.get(props.entityKey).getData();
-  return (
-    <span {...props} style={style}>
-            {props.children}
-    </span>
-  );
-};
-
-const styles = {
-  root: {
-    fontFamily: '\'Helvetica\', sans-serif',
-    padding: 20,
-    width: 600,
-  },
-  editor: {
-    border: '1px solid #ccc',
-    cursor: 'text',
-    minHeight: 80,
-    padding: 10,
-  },
-  button: {
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  immutable: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    padding: '2px 0',
-  },
-  mutable: {
-    backgroundColor: 'rgba(204, 204, 255, 1.0)',
-    padding: '2px 0',
-  },
-  segmented: {
-    backgroundColor: 'rgba(248, 222, 126, 1.0)',
-    padding: '2px 0',
-  },
-};
-
-//Amelietor = connect()(Amelietor);
 
 export default Amelietor;
 
