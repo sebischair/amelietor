@@ -77,7 +77,6 @@ class Amelietor extends React.Component {
     store.dispatch(showRec("Click on annotation to see a hint"));
     this.onChange = (editorState) => {
       this.setState({editorState});
-
     };
 
     this.focus = () => this.refs.editor.focus();
@@ -106,9 +105,11 @@ class Amelietor extends React.Component {
         entityKey
       );
       console.log(convertToRaw(contentWithEntity));
-      this.state.editorState = EditorState.push(this.state.editorState, contentWithEntity, 'apply-entity');
-      const newEditorState = EditorState.set(this.state.editorState, {decorator: decorator});
-      this.setState({newEditorState});
+
+      const newEditorState = EditorState.push(this.state.editorState, contentWithEntity, 'apply-entity');
+      //const newEditorState = EditorState.set(this.state.editorState, {decorator: decorator});
+      //this.setState({newEditorState});
+      this.onChange(newEditorState);
       //this.state.editorState = EditorState.createWithContent(this.state.editorState.getCurrentContent(), decorator);
     };
 
@@ -121,14 +122,14 @@ class Amelietor extends React.Component {
     console.log(blocks);
 
     this.state = {
-      editorState: EditorState.createWithContent(blocks),
+      editorState: EditorState.createWithContent(blocks, decorator),
     };
 
   }
 
 
   render() {
-    //const {editorState} = this.state;
+    const {editorState} = this.state;
     return (
       <div>
         <div className="mdl-grid">
