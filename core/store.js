@@ -8,32 +8,28 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { createStore } from 'redux';
-import { showRec } from './actions';
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { showRec } from './actions'
+import amelietor from './reducers'
+import createLogger from 'redux-logger'
 // Centralized application state
 // For more information visit http://redux.js.org/
 
-const initialState = {
-  href: ""
-};
-
-const store = createStore((state = initialState, action) => {
-  // TODO: Add action handlers (aka "reduces")
-  switch (action.type) {
-    case 'COUNT':
-      return { ...state, count: (state.count || 0) + 1 };
-    case 'SHOW_REC':
-      console.log("Show recommendation:")
-      console.log(action);
-      return Object.assign({}, state, {
-        href: action.href
-      });
-    default:
-      console.log("default type:")
-      console.log(action);
-      return state;
+export default function configureStore(preloadedState) {
+  const store = createStore(
+    amelietor,
+    preloadedState,
+    applyMiddleware(thunk, createLogger())
+  );
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers').default;
+      store.replaceReducer(nextRootReducer)
+    })
   }
-});
 
 
-export default store;
+return store;
+}

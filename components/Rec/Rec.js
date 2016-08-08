@@ -22,7 +22,7 @@ Rec.propTypes = {
   href: PropTypes.string.isRequired
 };
 
-Rec = connect()(Rec);
+//Rec = connect()(Rec);
 
 export default Rec
 

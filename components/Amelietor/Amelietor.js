@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
-import {showRec} from '../../core/actions';
+import {showRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
-import store from '../../core/store';
+
+//TODO: Clean up imports
+//import store from '../../core/store';
 import Rec from '../Rec';
 import Token from '../Token';
 import CurRec from '../CurRec';
 import s from './Amelietor.css';
+
 import {
   Editor,
   EditorState,
@@ -74,12 +77,18 @@ class Amelietor extends React.Component {
 
   constructor(props) {
     super(props);
-    store.dispatch(showRec("Click on annotation to see a hint"));
+    const { dispatch, selectedReddit } = this.props;
+    dispatch(showRec("Click on annotation to see a hint"));
+    //dispatch(selectKey(selectedKey));
     this.onChange = (editorState) => {
+
       this.setState({editorState});
+
+      //dispatch(newContent(convertToRaw(updated_content)['blocks']));
     };
 
     this.focus = () => this.refs.editor.focus();
+
 
     const decorator = new CompositeDecorator([
       {
@@ -89,6 +98,9 @@ class Amelietor extends React.Component {
     ]);
 
     this.getNewDecorators = () => {
+
+      const updated_content = this.state.editorState.getCurrentContent();
+      convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
 
       const entityKey = Entity.create('TOKEN', 'MUTABLE', {href: 'http://www.zombo.com'});
       const selection = this.state.editorState.getSelection();
@@ -119,7 +131,6 @@ class Amelietor extends React.Component {
     };
 
     const blocks = convertFromRaw(rawContent);
-    console.log(blocks);
 
     this.state = {
       editorState: EditorState.createWithContent(blocks, decorator),
@@ -127,6 +138,12 @@ class Amelietor extends React.Component {
 
   }
 
+
+  //componentDidMount() {
+  //  console.log(this.props);
+  //  const { dispatch, selectedKey } = this.props;
+  //  //dispatch(fetchPostsIfNeeded(selectedReddit))
+  //}
 
   render() {
     const {editorState} = this.state;
@@ -189,7 +206,7 @@ function getEntityStrategy(mutability) {
 const mapDispatchToProps = (dispatch, props) => {
   return {
     onClick: () => {
-      store.dispatch(showRec(Entity.get(props.entityKey).getData().href));
+      //store.dispatch(showRec(Entity.get(props.entityKey).getData().href));
       console.log(store.getState());
     }
   }
@@ -200,5 +217,34 @@ const ConfiguredToken = connect(
 )(Token)
 
 
-export default Amelietor;
+Amelietor.propTypes = {
+  blockKey: PropTypes.string.isRequired,
+  annotations: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  lastUpdated: PropTypes.number,
+  dispatch: PropTypes.func.isRequired
+};
+
+function mapStateToProps(state) {
+  console.log("mapStateToProps - state:");
+  console.log(state);
+  const { selectedKey, annotationsByKey } = state;
+  //const {
+  //  isFetching,
+  //  lastUpdated,
+  //  items: annotations
+  //  } = annotationsByKey[selectedKey] || {
+  //  isFetching: true,
+  //  items: []
+  //};
+  //
+  //return {
+  //  selectedKey,
+  //  annotations,
+  //  isFetching,
+  //  lastUpdated
+  //}
+}
+
+export default connect(mapStateToProps)(Amelietor);
 

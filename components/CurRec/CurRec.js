@@ -2,9 +2,8 @@ import { connect } from 'react-redux'
 import Rec from '../Rec'
 
 const mapHrefToProps = (props) => {
-  console.log(props);
   return {
-    href: props.href
+    href: props.recs.href
   }
 };
 
