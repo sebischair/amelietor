@@ -33,9 +33,6 @@ const rawContent = {
         'as it is already the application server use for internal applications.'
       ),
       type: 'unstyled',
-      //entityRanges: [
-        //{offset: 4, length: 9, key: "first"}, {offset: 57, length: 4, key: 2}
-      //],
     },
     {
       text: '',
@@ -46,10 +43,7 @@ const rawContent = {
         'J2EE security model will be reused. ' +
         'Data persistence will be addressed using a relational database.'
       ),
-      type: 'unstyled',
-      //entityRanges: [
-        //{offset: 0, length: 4, key: 3}, {offset: 79, length: 19, key: 3}
-      //],
+      type: 'unstyled'
     },
     {
       text: '',
@@ -58,22 +52,6 @@ const rawContent = {
   ],
 
   entityMap: {
-  //  "first": {
-  //    type: 'TOKEN',
-  //    mutability: 'MUTABLE',
-  //    data: {'href':"http://dbpedia.org/page/MSQL"}
-  //
-  //  },
-  //  2: {
-  //    type: 'TOKEN',
-  //    mutability: 'MUTABLE',
-  //    data: {'href':"http://dbpedia.org/page/MSQL"}
-  //  },
-  //  3: {
-  //    type: 'TOKEN',
-  //    mutability: 'MUTABLE',
-  //    data: {'href':"http://dbpedia.org/page/Relational_database"}
-  //  },
   },
 };
 
@@ -88,7 +66,23 @@ class Amelietor extends React.Component {
       this.setState({editorState});
     };
 
+    const sendRecUrl = (url) =>{
+      dispatch(showRec(url));
+    };
+
     this.focus = () => this.refs.editor.focus();
+
+    const mapDispatchToProps = (dispatch, props) => {
+      return {
+        onClick: () => {
+          sendRecUrl(Entity.get(props.entityKey).getData().href);
+        }
+      }
+    };
+
+    const ConfiguredToken = connect(
+      mapDispatchToProps
+    )(Token);
 
     const decorator = new CompositeDecorator([
       {
@@ -98,31 +92,8 @@ class Amelietor extends React.Component {
     ]);
 
     this.getNewDecorators = () => {
-
       const updated_content = this.state.editorState.getCurrentContent();
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
-
-      //const entityKey = Entity.create('TOKEN', 'MUTABLE', {href: 'http://www.zombo.com'});
-      //const selection = this.state.editorState.getSelection();
-      //const targetRange = new SelectionState({
-      //  anchorKey: selection.getAnchorKey(),
-      //  anchorOffset: 40,
-      //  focusKey: selection.getAnchorKey(),
-      //  focusOffset: 48
-      //});
-      ////console.log(targetRange);
-      //const contentWithEntity = Modifier.applyEntity(
-      //  this.state.editorState.getCurrentContent(),
-      //  targetRange,
-      //  entityKey
-      //);
-      ////console.log(convertToRaw(contentWithEntity));
-      //
-      //const newEditorState = EditorState.push(this.state.editorState, contentWithEntity, 'apply-entity');
-      ////const newEditorState = EditorState.set(this.state.editorState, {decorator: decorator});
-      ////this.setState({newEditorState});
-      //this.onChange(newEditorState);
-      ////this.state.editorState = EditorState.createWithContent(this.state.editorState.getCurrentContent(), decorator);
     };
 
     this.logState = () => {
@@ -157,17 +128,15 @@ class Amelietor extends React.Component {
       });
     };
 
-    //const blocks = convertFromRaw(rawContent);
+    const blocks = convertFromRaw(rawContent);
 
     this.state = {
-      editorState: EditorState.createEmpty(decorator),
+      editorState: EditorState.createWithContent(blocks,decorator),
     };
 
   }
 
   render() {
-    const {editorState} = this.state;
-
     return (
       <div>
         <div className="mdl-grid">
@@ -189,17 +158,18 @@ class Amelietor extends React.Component {
         <div className="mdl-grid">
           <div className="mdl-cell mdl-cell--12-col">
             <input
-                onClick={this.logState}
-                className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-                type="button"
-                value="Log State"
-            />
-            <input
               onClick={this.getNewDecorators}
               className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
               type="button"
               value="Update decorators"
             />
+            <input
+                onClick={this.logState}
+                className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
+                type="button"
+                value="Show decorators"
+            />
+
           </div>
         </div>
       </div>
@@ -222,21 +192,6 @@ function getEntityStrategy(mutability) {
     );
   };
 }
-
-
-const mapDispatchToProps = (dispatch, props) => {
-    return {
-    onClick: () => {
-      dispatch(showRec(Entity.get(props.entityKey).getData().href));
-    }
-  }
-};
-
-
-
-const ConfiguredToken = connect(
-  mapDispatchToProps
-)(Token);
 
 
 Amelietor.propTypes = {
