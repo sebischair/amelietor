@@ -19,17 +19,12 @@ const annotations = (state = {
 }, action) => {
   switch (action.type) {
     case REQUEST_ANNOTATIONS:
-        console.log("Request annotations for block with key:");
-        console.log(action.key);
+
         return Object.assign({}, state, {
           key: action.key,
           isFetching:true
         });
     case RECEIVE_ANNOTATIONS:
-      concole.log("Recieved annotations for the block with key:");
-      console.log(action.key);
-      concole.log("Annotations:");
-      console.log(action.annotations);
       return Object.assign({}, state, {
         key: action.key,
         isFetching: false,

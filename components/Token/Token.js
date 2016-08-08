@@ -14,7 +14,8 @@ const Token = ({children, onClick }) => {
 
 Token.propTypes = {
   children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired
 }
 
 export default Token

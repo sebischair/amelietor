@@ -5,7 +5,7 @@ export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
 export const INVALIDATE_KEY = 'INVALIDATE_KEY';
 export const SELECT_KEY = 'SELECT_KEY';
 
-const API_ROOT = "http://131.159.30.93:9000/";
+const API_ROOT = "http://131.159.30.93:9999/";
 const PROCESS_DOCUMENT = "processDocument";
 
 export const showRec = (href) => {
@@ -31,13 +31,14 @@ export const fetchAnnotationsPerBlock = (block) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: {content: block.text},
+      body: JSON.stringify({content: block.text}),
     })
     .then(response => {
-      console.log(response);
-      response.json()
+      return response.json();
     })
-    .then(json => dispatch(receiveAnnotations(block.key, json)))
+    .then(json => {
+      dispatch(receiveAnnotations(block.key, json));
+    })
   }
 }
 
@@ -48,11 +49,12 @@ function requestAnnotations(key) {
   }
 }
 
-function receiveAnnotations(kez, json) {
+function receiveAnnotations(key, json) {
+
   return {
     type: RECEIVE_ANNOTATIONS,
     key,
-    annotations: json.data.children.map(child => child.data),
+    annotations: json.data.map(child => child),
     receivedAt: Date.now()
   }
 }
