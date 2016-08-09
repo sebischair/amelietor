@@ -95,7 +95,7 @@ class Amelietor extends React.Component {
       const updated_content = this.state.editorState.getCurrentContent();
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
-    
+
     this.logState = () => {
       const content = this.state.editorState.getCurrentContent();
       console.log(convertToRaw(content));
@@ -150,26 +150,25 @@ class Amelietor extends React.Component {
                   spellCheck={true}
                 />
             </div>
+            <div className="mdl-grid">
+              <div className="mdl-cell mdl-cell--12-col">
+                <input
+                  onClick={this.getNewDecorators}
+                  className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
+                  type="button"
+                  value="Update decorators"
+                />
+                <input
+                  onClick={this.logState}
+                  className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
+                  type="button"
+                  value="Show decorators"
+                />
+              </div>
+            </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
             <RecContainer />
-          </div>
-        </div>
-        <div className="mdl-grid">
-          <div className="mdl-cell mdl-cell--12-col">
-            <input
-              onClick={this.getNewDecorators}
-              className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-              type="button"
-              value="Update decorators"
-            />
-            <input
-                onClick={this.logState}
-                className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-                type="button"
-                value="Show decorators"
-            />
-
           </div>
         </div>
       </div>
