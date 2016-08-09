@@ -95,7 +95,7 @@ class Amelietor extends React.Component {
       const updated_content = this.state.editorState.getCurrentContent();
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
-
+    
     this.logState = () => {
       const content = this.state.editorState.getCurrentContent();
       console.log(convertToRaw(content));
@@ -203,8 +203,6 @@ Amelietor.propTypes = {
 };
 
 function mapStateToProps(state) {
-  console.log("mapStateToProps - state:");
-  console.log(state);
   const annotations = state.rootAnnotationsReducer.annotationsByKey;
   return {annotations};
 

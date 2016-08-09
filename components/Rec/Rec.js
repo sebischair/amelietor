@@ -1,62 +1,48 @@
 import React, { PropTypes, Component} from 'react'
 import ReactDOM from 'react-dom';
 
+import { Card, CardText, Tab, Tabs } from 'react-mdl';
+
 import s from './Rec.css';
 
 export default class Rec extends Component {
 
-  render(){
+  constructor(props) {
+    super(props)
+    this.state = { activeTab: 2 };
+  }
 
+  render(){
     return (
-      <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
-        <div className="mdl-card__supporting-text">
-          {props.info}
-        </div>
-        <div className="mdl-card__actions mdl-card--border">
-          <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-            Details
-          </a>
-        </div>
-      </div>
+      <Card shadow={0} style={{width: '512px', margin: 'auto'}}>
+        <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
+          <Tab>Meta</Tab>
+          <Tab>Alternatives</Tab>
+          <Tab>Software solutions</Tab>
+        </Tabs>
+        <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
+          <section>
+            <div className="content"> {this.state.activeTab} {this.props.info}</div>
+          </section>
+        </CardText>
+      </Card>
     )
   };
 }
 
 Rec.propTypes = {
-//  href: PropTypes.string.isRequired,
   info: PropTypes.string.isRequired,
-//  isFetching: PropTypes.bool.isRequired,
-//  lastUpdated: PropTypes.number,
-//  dispatch: PropTypes.func.isRequired
 };
 
 
+//<div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
+//  <div className="mdl-card__supporting-text">
+//    {this.props.info}
+//  </div>
+//  <div className="mdl-card__actions mdl-card--border">
+//    <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+//      Details
+//    </a>
+//  </div>
+//</div>
 
-//class Rec extends React.Component {
-//
-//  constructor(props) {
-//    super(props);
-//    console.log(props);
-//  }
-//
-//
-//  render() {
-//    return (
-//        <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
-//          <div className="mdl-card__supporting-text">
-//
-//          </div>
-//          <div className="mdl-card__actions mdl-card--border">
-//            <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onClick={this.logState}>
-//              Details
-//            </a>
-//          </div>
-//        </div>
-//    );
-//  }
-//}
-//
-//Rec = connect()(Rec);
-//
-//export default Rec;
-//

@@ -1,5 +1,6 @@
 import React, { PropTypes, Component} from 'react'
 import { connect } from 'react-redux'
+import {fetchRecMeta} from '../../core/actions';
 import Rec from '../Rec'
 
 
@@ -11,13 +12,12 @@ class RecContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.href !== this.props.href) {
       const { dispatch, href } = nextProps;
-      dispatch(fetchMeta(href))
+      dispatch(fetchRecMeta(href));
     }
   }
 
   render() {
     const { info } = this.props;
-
     return (
       <Rec info={info} />
     )

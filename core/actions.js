@@ -22,13 +22,14 @@ export const selectRec = (href) => {
 export const fetchRecMeta = (href) => {
   return dispatch => {
     dispatch(requestRecMeta(href));
+
     return fetch(`${API_ROOT}${GET_META_INFORMATION}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({uri: href.href}),
+      body: JSON.stringify({uri: href}),
     })
       .then(response => {
         return response.json();
