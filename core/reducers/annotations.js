@@ -1,15 +1,6 @@
 import { combineReducers } from 'redux'
 
-import {REQUEST_ANNOTATIONS, RECEIVE_ANNOTATIONS, INVALIDATE_KEY, SELECT_KEY} from '../actions';
-
-function selectedKey(state = '', action) {
-  switch (action.type) {
-    case SELECT_KEY:
-      return action.key;
-    default:
-      return state
-  }
-}
+import {REQUEST_ANNOTATIONS, RECEIVE_ANNOTATIONS, INVALIDATE_KEY} from '../actions';
 
 const annotations = (state = {
   key:null,
@@ -19,11 +10,10 @@ const annotations = (state = {
 }, action) => {
   switch (action.type) {
     case REQUEST_ANNOTATIONS:
-
-        return Object.assign({}, state, {
-          key: action.key,
-          isFetching:true
-        });
+      return Object.assign({}, state, {
+        key: action.key,
+        isFetching:true
+      });
     case RECEIVE_ANNOTATIONS:
       return Object.assign({}, state, {
         key: action.key,
@@ -31,7 +21,7 @@ const annotations = (state = {
         didInvalidate: false,
         items: action.annotations,
         lastUpdated: action.receivedAt
-      })
+      });
     default:
         return state
   }
@@ -51,8 +41,7 @@ function annotationsByKey(state = { }, action) {
 }
 
 const rootAnnotationsReducer = combineReducers({
-  annotationsByKey,
-  selectedKey
+  annotationsByKey
 });
 
 export default rootAnnotationsReducer

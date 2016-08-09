@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
-import {showRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
+import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
 
 //TODO: Clean up imports
 //import store from '../../core/store';
 import Rec from '../Rec';
 import Token from '../Token';
-import CurRec from '../CurRec';
+import RecContainer from '../RecContainer/RecContainer';
 import s from './Amelietor.css';
 
 import {
@@ -61,13 +61,13 @@ class Amelietor extends React.Component {
     super(props);
     const { dispatch } = this.props;
 
-    dispatch(showRec("Click on annotation to see a hint"));
+    dispatch(selectRec("Click on annotation to see a hint"));
     this.onChange = (editorState) => {
       this.setState({editorState});
     };
 
     const sendRecUrl = (url) =>{
-      dispatch(showRec(url));
+      dispatch(selectRec(url));
     };
 
     this.focus = () => this.refs.editor.focus();
@@ -152,7 +152,7 @@ class Amelietor extends React.Component {
             </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
-            <CurRec href = ''/>
+            <RecContainer />
           </div>
         </div>
         <div className="mdl-grid">

@@ -27,7 +27,6 @@ const container = document.getElementById('container');
 
 function renderComponent(component) {
   const store = configureStore();
-  console.log(store);
   ReactDOM.render(<Provider store={store}>{component}</Provider>, container);
 }
 

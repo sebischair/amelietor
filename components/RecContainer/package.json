@@ -1,0 +1,6 @@
+{
+  "name": "RecContainer",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./RecContainer.js"
+}

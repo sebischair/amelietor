@@ -1,30 +1,35 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component} from 'react'
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux'
-import store from '../../core/store'
+
 import s from './Rec.css';
 
-let Rec = ({href}) => {
-  return (
-  <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
-    <div className="mdl-card__supporting-text">
-      {href}
-    </div>
-    <div className="mdl-card__actions mdl-card--border">
-      <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-        Details
-      </a>
-    </div>
-  </div>
-)};
+export default class Rec extends Component {
+
+  render(){
+
+    return (
+      <div className={`demo-card-square mdl-card mdl-shadow--2dp ${s.recommendation}`}>
+        <div className="mdl-card__supporting-text">
+          {props.info}
+        </div>
+        <div className="mdl-card__actions mdl-card--border">
+          <a className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            Details
+          </a>
+        </div>
+      </div>
+    )
+  };
+}
 
 Rec.propTypes = {
-  href: PropTypes.string.isRequired
+//  href: PropTypes.string.isRequired,
+  info: PropTypes.string.isRequired,
+//  isFetching: PropTypes.bool.isRequired,
+//  lastUpdated: PropTypes.number,
+//  dispatch: PropTypes.func.isRequired
 };
 
-//Rec = connect()(Rec);
-
-export default Rec
 
 
 //class Rec extends React.Component {
