@@ -1,7 +1,7 @@
 import React, { PropTypes, Component} from 'react'
 import ReactDOM from 'react-dom';
 
-import { Card, CardText, Tab, Tabs } from 'react-mdl';
+
 
 import s from './Rec.css';
 
@@ -9,23 +9,15 @@ export default class Rec extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { activeTab: 2 };
+
+
   }
 
   render(){
     return (
-      <Card shadow={0} style={{width: '512px', margin: 'auto'}}>
-        <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })} ripple>
-          <Tab>Meta</Tab>
-          <Tab>Alternatives</Tab>
-          <Tab>Software solutions</Tab>
-        </Tabs>
-        <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
           <section>
-            <div className="content"> {this.state.activeTab} {this.props.info}</div>
+            <div className="content">{this.props.info}</div>
           </section>
-        </CardText>
-      </Card>
     )
   };
 }
