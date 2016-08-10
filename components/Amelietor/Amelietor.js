@@ -4,9 +4,6 @@ import cx from 'classnames';
 import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
 
-//TODO: Clean up imports
-//import store from '../../core/store';
-import Rec from '../Rec';
 import Token from '../Token';
 import RecContainer from '../RecContainer/RecContainer';
 import s from './Amelietor.css';
