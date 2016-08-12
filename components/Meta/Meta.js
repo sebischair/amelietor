@@ -11,10 +11,10 @@ class Meta extends Component {
   }
 
   render(){
-    const {info} = this.props;
+    const {info} = this.props  ;
     return (
         <section>
-          <div className="content">{info.data}</div>
+          <div className="content">{info.data || "Click on annotation"}</div>
         </section>
     )
   };
@@ -22,7 +22,7 @@ class Meta extends Component {
 
 Meta.propTypes = {
   info: PropTypes.shape({
-    data: PropTypes.string.isRequired,
+    data: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
     didInvalidate: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number.isRequired

@@ -13,7 +13,7 @@ export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
 
 
 
-const API_ROOT = "http://131.159.30.93:9999/";
+const API_ROOT = "https://131.159.30.93:9000/";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 const GET_ALTERNATIVES = "getAlternatives";

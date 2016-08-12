@@ -57,8 +57,6 @@ class Amelietor extends React.Component {
   constructor(props) {
     super(props);
     const { dispatch } = this.props;
-
-    dispatch(selectRec("Click on annotation to see a hint"));
     this.onChange = (editorState) => {
       this.setState({editorState});
     };
@@ -134,6 +132,7 @@ class Amelietor extends React.Component {
   }
 
   render() {
+    const {selectedAnnotation} = this.props;
     return (
       <div>
         <div className="mdl-grid">
@@ -165,7 +164,7 @@ class Amelietor extends React.Component {
             </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
-            <RecContainer />
+            {selectedAnnotation && <RecContainer />}
           </div>
         </div>
       </div>
@@ -191,16 +190,15 @@ function getEntityStrategy(mutability) {
 
 
 Amelietor.propTypes = {
-  //blockKey: PropTypes.string.isRequired,
+  selectedAnnotation: PropTypes.string,
   annotations: PropTypes.object.isRequired,
-  //isFetching: PropTypes.bool.isRequired,
-  //lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
   const annotations = state.rootAnnotationsReducer.annotationsByKey;
-  return {annotations};
+  const selectedAnnotation = state.recs.href;
+  return {annotations, selectedAnnotation};
 
 }
 

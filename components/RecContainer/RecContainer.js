@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {fetchRecMeta, fetchRecAlternatives, fetchRecSoftware} from '../../core/actions';
 import Meta from '../Meta'
 import Alternatives from '../Alternatives'
-import { Card, CardText, Tab, Tabs } from 'react-mdl';
+import { Card, CardText, Tab, Tabs, Spinner } from 'react-mdl';
 
 
 class RecContainer extends Component {
@@ -17,12 +17,20 @@ class RecContainer extends Component {
 
   }
 
+  componentDidMount() {
+    const { dispatch, href } = this.props
+    dispatch(fetchRecMeta(href));
+    dispatch(fetchRecAlternatives(href));
+    dispatch(fetchRecSoftware(href));
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.href !== this.props.href) {
       const { dispatch, href } = nextProps;
       dispatch(fetchRecMeta(href));
       dispatch(fetchRecAlternatives(href));
       dispatch(fetchRecSoftware(href));
+
     }
   }
 
@@ -31,14 +39,14 @@ class RecContainer extends Component {
     return (
       <Card shadow={0} style={{width: '512px', margin: 'auto'}}>
         <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-          <Tab>Meta</Tab>
-          <Tab>Alternatives</Tab>
-          <Tab>Software solutions</Tab>
+          <Tab>Meta {info.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}} />}</Tab>
+          <Tab>Alternatives {alternatives.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}}/>}</Tab>
+          <Tab>Software solutions {alternatives.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}}/>}</Tab>
         </Tabs>
         <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
-          {this.isVisible(0) && <Meta info={info} /> }
-          {this.isVisible(1) && <Alternatives alternatives={alternatives} /> }
-          {this.isVisible(2) && <Alternatives alternatives={software} /> }
+          {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
+          {this.isVisible(1) && !alternatives.isFetching && <Alternatives alternatives={alternatives} /> }
+          {this.isVisible(2) && !software.isFetching && <Alternatives alternatives={software} /> }
         </CardText>
       </Card>
     )
@@ -51,7 +59,7 @@ const mapStateToProps = (state) => {
     info,
     alternatives,
     software
-  } = state.recs;
+  } = state.recs || {info:{isFetching:true, data:""}, alternatives:{isFetching:true, data:[]}, software:{isFetching:true, data:[]} };
 
   return {
     href,

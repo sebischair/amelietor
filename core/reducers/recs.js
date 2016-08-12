@@ -20,7 +20,9 @@ const recs = (state = {
     case REQUEST_REC_META:
       return Object.assign({}, state, {
         href: action.href,
-        info:{isFetching:true}
+        info:{
+          isFetching:true
+        }
       });
     case RECEIVE_REC_META:
       return Object.assign({}, state, {
@@ -35,7 +37,9 @@ const recs = (state = {
     case REQUEST_ALTERNATIVES:
       return Object.assign({}, state, {
         href: action.href,
-        alternatives:{isFetching:true}
+        alternatives:{
+          isFetching:true
+        }
       });
     case RECEIVE_ALTERNATIVES:
       return Object.assign({}, state, {
@@ -50,7 +54,9 @@ const recs = (state = {
     case REQUEST_SOFTWARE:
       return Object.assign({}, state, {
         href: action.href,
-        software:{isFetching:true}
+        software:{
+          isFetching:true
+        }
       });
     case RECEIVE_SOFTWARE:
       return Object.assign({}, state, {
