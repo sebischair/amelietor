@@ -13,16 +13,16 @@ export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
 
 
 
-const API_ROOT = "https://131.159.30.93:9000/";
+const API_ROOT = "http://131.159.30.93:9999/";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 const GET_ALTERNATIVES = "getAlternatives";
 const GET_SOFTWARE = "getSoftwareSolutions";
 
-export const selectRec = (href) => {
+export const selectRec = (tokenData) => {
   return {
     type: SELECT_REC,
-    href
+    tokenData
   }
 };
 
@@ -58,7 +58,7 @@ function receiveRecSoftware(href, json) {
   return {
     type: RECEIVE_SOFTWARE,
     href,
-    software: json.data.map(child => child),
+    software: json.map(child => child),
     receivedAt: Date.now()
   }
 }
@@ -95,7 +95,7 @@ function receiveRecAlternatives(href, json) {
   return {
     type: RECEIVE_ALTERNATIVES,
     href,
-    alternatives: json.data.map(child => child),
+    alternatives: json.map(child => child),
     receivedAt: Date.now()
   }
 }
@@ -133,7 +133,7 @@ function receiveRecMeta(href, json) {
   return {
     type: RECEIVE_REC_META,
     href,
-    info: json.data['http://dbpedia.org/ontology/abstract']
+    info: json['http://dbpedia.org/ontology/abstract']
       .map(child => {return child['lang'] === "en"?child['value']:null})
       .filter(child => child != null)[0],
     receivedAt: Date.now()

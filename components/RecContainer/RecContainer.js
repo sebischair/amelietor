@@ -18,7 +18,8 @@ class RecContainer extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, href } = this.props
+    const { dispatch, href } = this.props;
+    console.log(href);
     dispatch(fetchRecMeta(href));
     dispatch(fetchRecAlternatives(href));
     dispatch(fetchRecSoftware(href));
@@ -27,10 +28,10 @@ class RecContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.href !== this.props.href) {
       const { dispatch, href } = nextProps;
+      console.log(href);
       dispatch(fetchRecMeta(href));
       dispatch(fetchRecAlternatives(href));
       dispatch(fetchRecSoftware(href));
-
     }
   }
 
@@ -55,11 +56,12 @@ class RecContainer extends Component {
 
 const mapStateToProps = (state) => {
 
-  const { href,
+  const {
+    href,
     info,
     alternatives,
     software
-  } = state.recs || {info:{isFetching:true, data:""}, alternatives:{isFetching:true, data:[]}, software:{isFetching:true, data:[]} };
+  } = state.recs || { info:{isFetching:true, data:""}, alternatives:{isFetching:true, data:[]}, software:{isFetching:true, data:[]} };
 
   return {
     href,

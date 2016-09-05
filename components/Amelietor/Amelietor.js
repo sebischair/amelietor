@@ -5,6 +5,7 @@ import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions
 import { connect } from 'react-redux'
 
 import Token from '../Token';
+import TokenManager from '../TokenManager/TokenManager'
 import RecContainer from '../RecContainer/RecContainer';
 import s from './Amelietor.css';
 
@@ -61,8 +62,8 @@ class Amelietor extends React.Component {
       this.setState({editorState});
     };
 
-    const sendRecUrl = (url) =>{
-      dispatch(selectRec(url));
+    const sendRecUrl = (tokenData) =>{
+      dispatch(selectRec(tokenData));
     };
 
     this.focus = () => this.refs.editor.focus();
@@ -70,7 +71,7 @@ class Amelietor extends React.Component {
     const mapDispatchToProps = (dispatch, props) => {
       return {
         onClick: () => {
-          sendRecUrl(Entity.get(props.entityKey).getData().href);
+          sendRecUrl(Entity.get(props.entityKey).getData());
         }
       }
     };
@@ -93,18 +94,15 @@ class Amelietor extends React.Component {
 
     this.logState = () => {
       const content = this.state.editorState.getCurrentContent();
-      console.log(convertToRaw(content));
       const { annotations } = this.props;
       let {editorState} = this.state;
       let onChange = (newState) => {
-        console.log(newState);
         this.onChange(newState)
       };
       Object.keys(annotations).forEach(function (key) {
         let obj = annotations[key];
         obj.items.map(item => {
-          console.log(item);
-          let entityKey = Entity.create('TOKEN', 'MUTABLE', {href: item.URI});
+          let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
           let targetRange = new SelectionState({
             anchorKey: key,
             anchorOffset: item.begin,
@@ -128,7 +126,6 @@ class Amelietor extends React.Component {
     this.state = {
       editorState: EditorState.createWithContent(blocks,decorator),
     };
-
   }
 
   render() {
@@ -164,6 +161,8 @@ class Amelietor extends React.Component {
             </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
+            {selectedAnnotation && <TokenManager />}
+            <br/>
             {selectedAnnotation && <RecContainer />}
           </div>
         </div>

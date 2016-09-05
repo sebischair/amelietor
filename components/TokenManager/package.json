@@ -1,0 +1,6 @@
+{
+  "name": "TokenManager",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TokenManager.js"
+}

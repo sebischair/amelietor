@@ -15,7 +15,8 @@ const recs = (state = {
   switch (action.type) {
     case SELECT_REC:
       return Object.assign({}, state, {
-        href: action.href
+        href: action.tokenData.URI,
+        tokenData: action.tokenData
       });
     case REQUEST_REC_META:
       return Object.assign({}, state, {
