@@ -1,25 +1,41 @@
 import React, { PropTypes, Component} from 'react'
-import ReactDOM from 'react-dom';
-
-import s from './Alternatives.css';
+import { FABButton, Button, Icon, List, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
 
 class Alternatives extends Component {
 
   constructor(props) {
     super(props);
-
   }
 
   render(){
-    const {alternatives} = this.props;
+    const {alternatives, type} = this.props;
+    const inputLabel = "New "+type;
     return (
         <section>
           <div className="content">
-            <ul>
+            <List style={{padding: 0}}>
+              <ListItem>
+                <ListItemContent icon="label">
+                  <Textfield
+                    onChange={() => {}}
+                    label={inputLabel}
+                    floatingLabel
+                    style={{width: '200px', }}
+                  />
+                </ListItemContent>
+                <ListItemAction>
+                  <Button raised colored ripple> Add new</Button>
+                </ListItemAction>
+              </ListItem>
               {alternatives.data.map((alt, i) =>
-                  <li key={i}><a href={alt.url}>{alt.title}</a></li>
-              )}
-            </ul>
+                <ListItem key={alt.key}>
+                  <ListItemContent icon="label">{alt.title}</ListItemContent>
+                  <ListItemAction>
+                    <a href={alt.url}><Icon name="delete" /></a>
+                  </ListItemAction>
+                </ListItem>
+                )}
+            </List>
           </div>
         </section>
     )
@@ -27,6 +43,7 @@ class Alternatives extends Component {
 }
 
 Alternatives.propTypes = {
+  type: PropTypes.string.isRequired,
   alternatives: PropTypes.shape({
     data: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,

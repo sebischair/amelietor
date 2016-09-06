@@ -19,7 +19,6 @@ class RecContainer extends Component {
 
   componentDidMount() {
     const { dispatch, href } = this.props;
-    console.log(href);
     dispatch(fetchRecMeta(href));
     dispatch(fetchRecAlternatives(href));
     dispatch(fetchRecSoftware(href));
@@ -28,7 +27,6 @@ class RecContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.href !== this.props.href) {
       const { dispatch, href } = nextProps;
-      console.log(href);
       dispatch(fetchRecMeta(href));
       dispatch(fetchRecAlternatives(href));
       dispatch(fetchRecSoftware(href));
@@ -46,8 +44,8 @@ class RecContainer extends Component {
         </Tabs>
         <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
           {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
-          {this.isVisible(1) && !alternatives.isFetching && <Alternatives alternatives={alternatives} /> }
-          {this.isVisible(2) && !software.isFetching && <Alternatives alternatives={software} /> }
+          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alterantive" alternatives={alternatives} /> }
+          {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} /> }
         </CardText>
       </Card>
     )

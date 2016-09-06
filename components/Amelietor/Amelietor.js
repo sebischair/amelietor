@@ -92,7 +92,7 @@ class Amelietor extends React.Component {
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
 
-    this.logState = () => {
+    this.showDecorators = () => {
       const content = this.state.editorState.getCurrentContent();
       const { annotations } = this.props;
       let {editorState} = this.state;
@@ -152,7 +152,7 @@ class Amelietor extends React.Component {
                   value="Update decorators"
                 />
                 <input
-                  onClick={this.logState}
+                  onClick={this.showDecorators}
                   className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
                   type="button"
                   value="Show decorators"
@@ -176,7 +176,6 @@ function getEntityStrategy(mutability) {
     contentBlock.findEntityRanges(
       (character) => {
         const entityKey = character.getEntity();
-
         if (entityKey === null) {
           return false;
         }
