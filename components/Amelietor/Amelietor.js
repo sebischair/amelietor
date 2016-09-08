@@ -4,6 +4,8 @@ import cx from 'classnames';
 import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
 
+import { Spinner } from 'react-mdl';
+
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
 import RecContainer from '../RecContainer/RecContainer';
@@ -90,35 +92,7 @@ class Amelietor extends React.Component {
     this.getNewDecorators = () => {
       const updated_content = this.state.editorState.getCurrentContent();
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
-    };
 
-    this.showDecorators = () => {
-      const content = this.state.editorState.getCurrentContent();
-      const { annotations } = this.props;
-      let {editorState} = this.state;
-      let onChange = (newState) => {
-        this.onChange(newState)
-      };
-      Object.keys(annotations).forEach(function (key) {
-        let obj = annotations[key];
-        obj.items.map(item => {
-          let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
-          let targetRange = new SelectionState({
-            anchorKey: key,
-            anchorOffset: item.begin,
-            focusKey: key,
-            focusOffset: item.end
-          });
-          let contentWithEntity = Modifier.applyEntity(
-            editorState.getCurrentContent(),
-            targetRange,
-            entityKey
-          );
-          let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
-          onChange(newEditorState);
-          editorState = newEditorState;
-        });
-      });
     };
 
     const blocks = convertFromRaw(rawContent);
@@ -126,6 +100,33 @@ class Amelietor extends React.Component {
     this.state = {
       editorState: EditorState.createWithContent(blocks,decorator),
     };
+  }
+
+  componentWillReceiveProps(nextProps){
+    let {editorState} = this.state;
+    let onChange = (newState) => {
+      this.onChange(newState)
+    };
+    Object.keys(nextProps.annotations).forEach(function (key) {
+      let obj = nextProps.annotations[key];
+      obj.items.map(item => {
+        let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+        let targetRange = new SelectionState({
+          anchorKey: key,
+          anchorOffset: item.begin,
+          focusKey: key,
+          focusOffset: item.end
+        });
+        let contentWithEntity = Modifier.applyEntity(
+          editorState.getCurrentContent(),
+          targetRange,
+          entityKey
+        );
+        let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
+        onChange(newEditorState);
+        editorState = newEditorState;
+      });
+    });
   }
 
   render() {
