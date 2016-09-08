@@ -4,7 +4,7 @@ import cx from 'classnames';
 import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
 
-import { Spinner } from 'react-mdl';
+import { Button, Icon } from 'react-mdl';
 
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
@@ -92,7 +92,6 @@ class Amelietor extends React.Component {
     this.getNewDecorators = () => {
       const updated_content = this.state.editorState.getCurrentContent();
       convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
-
     };
 
     const blocks = convertFromRaw(rawContent);
@@ -109,23 +108,25 @@ class Amelietor extends React.Component {
     };
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
-      obj.items.map(item => {
-        let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
-        let targetRange = new SelectionState({
-          anchorKey: key,
-          anchorOffset: item.begin,
-          focusKey: key,
-          focusOffset: item.end
+      if (!obj.isFetching){
+        obj.items.map(item => {
+          let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+          let targetRange = new SelectionState({
+            anchorKey: key,
+            anchorOffset: item.begin,
+            focusKey: key,
+            focusOffset: item.end
+          });
+          let contentWithEntity = Modifier.applyEntity(
+            editorState.getCurrentContent(),
+            targetRange,
+            entityKey
+          );
+          let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
+          onChange(newEditorState);
+          editorState = newEditorState;
         });
-        let contentWithEntity = Modifier.applyEntity(
-          editorState.getCurrentContent(),
-          targetRange,
-          entityKey
-        );
-        let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
-        onChange(newEditorState);
-        editorState = newEditorState;
-      });
+      }
     });
   }
 
@@ -135,7 +136,7 @@ class Amelietor extends React.Component {
       <div>
         <div className="mdl-grid">
           <div className="mdl-cell mdl-cell--8-col">
-            <div className={`${s.editor}`} onClick={this.focus}>
+            <div className={`${s.editor}`} onClick={this.focus} style={{heightMin:'200px'}}>
                 <Editor
                   editorState={this.state.editorState}
                   handleKeyCommand={this.handleKeyCommand}
@@ -146,18 +147,7 @@ class Amelietor extends React.Component {
             </div>
             <div className="mdl-grid">
               <div className="mdl-cell mdl-cell--12-col">
-                <input
-                  onClick={this.getNewDecorators}
-                  className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-                  type="button"
-                  value="Update decorators"
-                />
-                <input
-                  onClick={this.showDecorators}
-                  className={`mdl-button mdl-js-button mdl-button--accent ${s.button}`}
-                  type="button"
-                  value="Show decorators"
-                />
+                <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button>
               </div>
             </div>
           </div>
