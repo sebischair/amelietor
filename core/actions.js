@@ -9,8 +9,9 @@ export const REQUEST_REC_META = 'REQUEST_REC_META';
 export const RECEIVE_REC_META = 'RECEIVE_REC_META';
 export const REQUEST_ALTERNATIVES = 'REQUEST_ALTERNATIVES';
 export const RECEIVE_ALTERNATIVES = 'RECEIVE_ALTERNATIVES';
+export const REQUEST_ALTERNATIVE_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION';
 export const REQUEST_SOFTWARE = 'REQUEST_SOFTWARE';
-export const REQUEST_SOFTWARE_SOLUTION_DELITION = 'REQUEST_SOFTWARE_SOLUTION_DELITION';
+export const REQUEST_SOFTWARE_SOLUTION_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION';
 export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
 
 
@@ -18,9 +19,12 @@ export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
 const API_ROOT = "http://131.159.30.93:9999/";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
+
 const GET_ALTERNATIVES = "getAlternatives";
-const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
+const DELETE_ALTERNATIVE = "removeAlternative";
+
 const GET_SOFTWARE = "getSoftwareSolutions";
+const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
 
 export const selectRec = (tokenData) => {
   return {
@@ -31,7 +35,7 @@ export const selectRec = (tokenData) => {
 
 export const deleteSoftwareSolution = (href, token) =>{
   return dispatch => {
-    // dispatch(requestSoftwareSolutionDelition(href, token));
+    // dispatch(requestSoftwareSolutionDeletion(href, token));
 
     return fetch(`${API_ROOT}${DELETE_SOFTWARE_SOLUTION}`, {
       method: 'post',
@@ -50,13 +54,44 @@ export const deleteSoftwareSolution = (href, token) =>{
   }
 };
 
-function requestSoftwareSolutionDelition(href, token) {
+export const deleteAlternative = (href, token) =>{
+  return dispatch => {
+    // dispatch(requestAlternativeDeletion(href, token));
+
+    return fetch(`${API_ROOT}${DELETE_ALTERNATIVE}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({uri: href, title:token}),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(fetchRecAlternatives(href));
+      })
+  }
+};
+
+
+function requestSoftwareSolutionDeletion(href, token) {
   return {
-    type: DELETE_SOFTWARE_SOLUTION,
+    type: REQUEST_SOFTWARE_SOLUTION_DELETION,
     href,
     token
   }
 }
+
+function requestAlternativeDeletion(href, token) {
+  return {
+    type: REQUEST_ALTERNATIVE_DELETION,
+    href,
+    token
+  }
+}
+
 
 export const fetchRecSoftware = (href) => {
   return dispatch => {

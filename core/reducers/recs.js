@@ -5,7 +5,8 @@ import {SELECT_REC,
   RECEIVE_ALTERNATIVES,
   REQUEST_SOFTWARE,
   RECEIVE_SOFTWARE,
-  REQUEST_SOFTWARE_SOLUTION_DELITION
+  REQUEST_SOFTWARE_SOLUTION_DELETION,
+  REQUEST_ALTERNATIVE_DELETION
 } from '../actions';
 
 const recs = (state = {
@@ -19,10 +20,15 @@ const recs = (state = {
         href: action.tokenData.URI,
         tokenData: action.tokenData
       });
-    case REQUEST_SOFTWARE_SOLUTION_DELITION:
+    case REQUEST_SOFTWARE_SOLUTION_DELETION:
       return Object.assign({}, state, {
-        href: action.tokenData.URI,
-        tokenData: action.tokenData
+        href: action.href,
+        tokenData: action.token
+      });
+    case REQUEST_ALTERNATIVE_DELETION:
+      return Object.assign({}, state, {
+        href: action.href,
+        tokenData: action.token
       });
     case REQUEST_REC_META:
       return Object.assign({}, state, {

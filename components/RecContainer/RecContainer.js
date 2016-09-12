@@ -44,7 +44,7 @@ class RecContainer extends Component {
         </Tabs>
         <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
           {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
-          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alterantive" alternatives={alternatives} href={href}/> }
+          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alternative" alternatives={alternatives} href={href}/> }
           {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} href={href}/> }
         </CardText>
       </Card>
