@@ -34,7 +34,7 @@ class RecContainer extends Component {
   }
 
   render() {
-    const { info, alternatives, software } = this.props;
+    const { href, info, alternatives, software } = this.props;
     return (
       <Card shadow={0} style={{width: '512px', margin: 'auto'}}>
         <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
@@ -44,8 +44,8 @@ class RecContainer extends Component {
         </Tabs>
         <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
           {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
-          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alterantive" alternatives={alternatives} /> }
-          {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} /> }
+          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alterantive" alternatives={alternatives} href={href}/> }
+          {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} href={href}/> }
         </CardText>
       </Card>
     )

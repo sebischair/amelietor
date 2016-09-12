@@ -1,14 +1,24 @@
 import React, { PropTypes, Component} from 'react'
 import { FABButton, Button, Icon, List, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
+import { connect } from 'react-redux'
+import {deleteSoftwareSolution} from '../../core/actions';
+
 
 class Alternatives extends Component {
 
   constructor(props) {
     super(props);
+
+    this.deleteSoftware = (href, token) => {
+      const {dispatch} = this.props;
+      dispatch(deleteSoftwareSolution(href,token));
+    }
   }
 
+
+
   render(){
-    const {alternatives, type} = this.props;
+    const {alternatives, type, href} = this.props;
     const inputLabel = "New "+type;
     return (
         <section>
@@ -28,10 +38,11 @@ class Alternatives extends Component {
                 </ListItemAction>
               </ListItem>
               {alternatives.data.map((alt, i) =>
-                <ListItem key={alt.key}>
+                <ListItem key={i}>
                   <ListItemContent icon="label">{alt.title}</ListItemContent>
                   <ListItemAction>
-                    <a href={alt.url}><Icon name="delete" /></a>
+                    <a href="#" onClick={this.deleteSoftware(href, alt.title)}><Icon name="delete"/></a>
+                    {/*<a href={alt.url}><Icon name="delete"/></a>*/}
                   </ListItemAction>
                 </ListItem>
                 )}
@@ -43,6 +54,7 @@ class Alternatives extends Component {
 }
 
 Alternatives.propTypes = {
+  href: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alternatives: PropTypes.shape({
     data: PropTypes.array.isRequired,
@@ -53,6 +65,6 @@ Alternatives.propTypes = {
 
 };
 
-export default Alternatives;
+export default connect() (Alternatives);
 
 

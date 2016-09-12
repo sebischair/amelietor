@@ -4,7 +4,7 @@ import cx from 'classnames';
 import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
 import { connect } from 'react-redux'
 
-import { Button, Icon } from 'react-mdl';
+import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
 
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
@@ -97,7 +97,9 @@ class Amelietor extends React.Component {
     const blocks = convertFromRaw(rawContent);
 
     this.state = {
-      editorState: EditorState.createWithContent(blocks,decorator),
+      loadingStatus: false,
+      errorMessage: "",
+      editorState: EditorState.createWithContent(blocks, decorator),
     };
   }
 
@@ -108,7 +110,7 @@ class Amelietor extends React.Component {
     };
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
-      if (!obj.isFetching){
+      if (!obj.isFetching && !obj.isError){
         obj.items.map(item => {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
           let targetRange = new SelectionState({
@@ -131,25 +133,36 @@ class Amelietor extends React.Component {
   }
 
   render() {
-    const {selectedAnnotation} = this.props;
+    const checkAllFetched = (element, index, array) => {
+      return element.isFetching === false;
+    };
+    const checkNoErrors = (element, index, array) => {
+      return element.isError === false;
+    };
+    const {selectedAnnotation, annotations} = this.props;
+    let annotations_list = [];
+    Object.keys(annotations).forEach(function (key) {
+      annotations_list.push(annotations[key]);
+    });
+    const allFetched = annotations_list.every(checkAllFetched);
+    const noErrors = annotations_list.every(checkNoErrors);
     return (
       <div>
         <div className="mdl-grid">
           <div className="mdl-cell mdl-cell--8-col">
             <div className={`${s.editor}`} onClick={this.focus} style={{heightMin:'200px'}}>
-                <Editor
-                  editorState={this.state.editorState}
-                  handleKeyCommand={this.handleKeyCommand}
-                  onChange={this.onChange}
-                  ref="editor"
-                  spellCheck={true}
-                />
+              <Editor
+                editorState={this.state.editorState}
+                handleKeyCommand={this.handleKeyCommand}
+                onChange={this.onChange}
+                ref="editor"
+                spellCheck={true}
+              />
             </div>
-            <div className="mdl-grid">
-              <div className="mdl-cell mdl-cell--12-col">
-                <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button>
-              </div>
-            </div>
+            {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button> }
+            {!allFetched && <ProgressBar indeterminate />}
+            {!allFetched && <i>Processing... </i> }
+            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. show logs</Button>}
           </div>
           <div className="mdl-cell mdl-cell--4-col">
             {selectedAnnotation && <TokenManager />}
