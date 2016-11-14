@@ -66,17 +66,20 @@ function resolve(routes, context) {
         ...keys.map(key => {
           const query = route.data[key];
           const method = query.substring(0, query.indexOf(' ')); // GET
-          const url = query.substr(query.indexOf(' ') + 1);      // /api/tasks/$id
-          // TODO: Replace query parameters with actual values coming from `params`
+          let url = query.substr(query.indexOf(' ') + 1);      // /api/tasks/$id
+          // TODO: Optimize
+          Object.keys(params).forEach((k) => {
+            url = url.replace(`${k}`, params[k]);
+          });
           return fetch(url, { method }).then(resp => resp.json());
         }),
       ]).then(([Page, ...data]) => {
         const props = keys.reduce((result, key, i) => ({ ...result, [key]: data[i] }), {});
-        return <Page route={route} error={context.error} {...props} />;
+        return <Page route={{ ...route, params }} error={context.error} {...props} />;
       });
     }
 
-    return route.load().then(Page => <Page route={route} error={context.error} />);
+    return route.load().then(Page => <Page route={{ ...route, params }} error={context.error} />);
   }
 
   const error = new Error('Page not found');

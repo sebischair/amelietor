@@ -6,7 +6,7 @@
 > significantly reduces cost by eliminating the need for servers such as EC2 instances because the
 > entire site can be hosted directly from CDN ([Firebase](https://www.firebase.com/), [GitHub
 > Pages](https://pages.github.com/), [Amazon S3](http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html),
-> or other similar cloud storage). Sites built with RSB cab be fully functional with REST API or
+> or other similar cloud storage). Sites built with RSB can be fully functional with REST API or
 > GraphQL calls to micro-services such as [Amazon Lambda](https://aws.amazon.com/lambda/),
 > [Azure Functions](https://azure.microsoft.com/services/functions/), or dynamic Docker endpoints
 > hosted on [DigitalOcean](https://www.digitalocean.com/?refcode=eef302dbae9f&utm_source=github&utm_medium=oss_sponsorships&utm_campaign=opencollective).
@@ -48,7 +48,7 @@
 **Demo**: https://rsb.kriasoft.com &nbsp;|&nbsp; **View** [docs](./docs) &nbsp;|&nbsp; **Follow us** on
 [Gitter](https://gitter.im/kriasoft/react-static-boilerplate), [Twitter](https://twitter.com/ReactStatic),
 or [ProductHunt](https://www.producthunt.com/tech/react-static-boilerplate) &nbsp;|&nbsp;
-**Send feedback** to [@koistya](https://twitter.com/koistya)
+**Learn** to [React.js and ES6](#learn-reactjs-and-es6)
 
 
 ### Directory Layout
@@ -58,7 +58,7 @@ or [ProductHunt](https://www.producthunt.com/tech/react-static-boilerplate) &nbs
 ├── /components/                # Shared or generic UI components
 │   ├── /Button/                # Button component
 │   ├── /Layout/                # Website layout component
-│   ├── /Link  /                # Link component to be used insted of <a>
+│   ├── /Link  /                # Link component to be used instead of <a>
 │   └── /...                    # etc.
 ├── /core/                      # Core framework
 │   ├── /history.js             # Handles client-side navigation
@@ -166,6 +166,25 @@ $ npm install
 ```
 
 
+### Learn React.js and ES6
+
+:mortar_board: &nbsp; **[React.js Training Program](http://www.reactjsprogram.com/?asdf=36750_q0pu0tfa)** by Tyler McGinnis<br>
+:mortar_board: &nbsp; **[React for Beginners](https://reactforbeginners.com/friend/konstantin)** and **[ES6 Training Course](https://es6.io/friend/konstantin)** by Wes Bos<br>
+:green_book: &nbsp; **[React: Up & Running: Building Web Applications](http://amzn.to/2bBgqhl)** by Stoyan Stefanov (Aug, 2016)<br>
+:green_book: &nbsp; **[Getting Started with React](http://amzn.to/2bmwP5V)** by Doel Sengupta and Manu Singhal (Apr, 2016)<br>
+:green_book: &nbsp; **[You Don't Know JS: ES6 & Beyond](http://amzn.to/2bBfVnp)** by Kyle Simpson (Dec, 2015)<br>
+
+
+### Related Projects
+
+* [React App SDK](https://github.com/kriasoft/react-app) — Create React apps with just a single dev dependency and zero configuration
+* [React Starter Kit](https://github.com/kriasoft/react-starter-kit) — Isomorphic web app boilerplate (Node.js, React, GraphQL, Webpack, CSS Modules)
+* [ASP.NET Core Starter Kit](https://github.com/kriasoft/aspnet-starter-kit) — Cross-platform single-page application boilerplate (ASP.NET Core, React, Redux)
+* [Babel Starter Kit](https://github.com/kriasoft/babel-starter-kit) — JavaScript library boilerplate (ES2015, Babel, Rollup, Mocha, Chai, Sinon, Rewire)
+* [Universal Router](https://github.com/kriasoft/universal-router) — Isomorphic router for web and single-page applications (SPA)
+* [History](https://github.com/mjackson/history) — HTML5 History API wrapper library that handle navigation in single-page apps
+
+
 ### How to Contribute
 
 Anyone and everyone is welcome to [contribute](CONTRIBUTING.md) to this project. The best way to
@@ -174,24 +193,6 @@ start is by checking our [open issues](https://github.com/kriasoft/react-static-
 [feature request](https://github.com/kriasoft/react-static-boilerplate/issues/new?labels=enhancement),
 participate in discussions, upvote or downvote the issues you like or dislike, send [pull
 requests](CONTRIBUTING.md#pull-requests).
-
-
-### Related Projects
-
-* [React Starter Kit](https://github.com/kriasoft/react-starter-kit) — Isomorphic web app boilerplate (Node.js, React, GraphQL, Webpack, CSS Modules)
-* [ASP.NET Core Starter Kit](https://github.com/kriasoft/aspnet-starter-kit) — Cross-platform single-page application boilerplate (ASP.NET Core, React, Redux)
-* [Babel Starter Kit](https://github.com/kriasoft/babel-starter-kit) — JavaScript library boilerplate (ES2015, Babel, Rollup, Mocha, Chai, Sinon, Rewire)
-* [Universal Router](https://github.com/kriasoft/universal-router) — Isomorphic router for web and single-page applications (SPA)
-* [History](https://github.com/mjackson/history) — HTML5 History API wrapper library that handle navigation in single-page apps
-
-
-### Learn More
-
-* [Getting Started with React.js](http://facebook.github.io/react/)
-* [Getting Started with GraphQL and Relay](https://quip.com/oLxzA1gTsJsE)
-* [React.js Questions on StackOverflow](http://stackoverflow.com/questions/tagged/reactjs)
-* [React.js Discussion Board](https://discuss.reactjs.org/)
-* [Learn ES6](https://babeljs.io/docs/learn-es6/), [ES6 Features](https://github.com/lukehoban/es6features#readme)
 
 
 ### License
