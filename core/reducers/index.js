@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 import recs from './recs'
-import rootAnnotationsReducer from './annotations'
+import annotationsByKey from './annotations'
 
 const amelietor = combineReducers({
   recs,
-  rootAnnotationsReducer
+  annotationsByKey
 });
 
 export default amelietor

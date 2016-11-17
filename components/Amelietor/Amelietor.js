@@ -50,7 +50,6 @@ const rawContent = {
       type: 'unstyled',
     },
   ],
-
   entityMap: {
   },
 };
@@ -108,8 +107,39 @@ class Amelietor extends React.Component {
     let onChange = (newState) => {
       this.onChange(newState)
     };
+    let findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
+      Object.keys(oldAnnotations).forEach(function (key) {
+        let obj = oldAnnotations[key];
+
+        if (!obj.isFetching && !obj.isError){
+          obj.items.map(item => {
+            let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+            let targetRange = new SelectionState({
+              anchorKey: key,
+              anchorOffset: item.begin,
+              focusKey: key,
+              focusOffset: item.end
+            });
+            let contentWithEntity = Modifier.applyEntity(
+              editorState.getCurrentContent(),
+              targetRange,
+              null
+            );
+            let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
+            onChange(newEditorState);
+            editorState = newEditorState;
+          });
+        }
+      });
+    };
+
+    let oldAnnotations = this.props.annotations;
+
+    findAndDeleteObsoleteAnnotations(oldAnnotations);
+
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
+
       if (!obj.isFetching && !obj.isError){
         obj.items.map(item => {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
@@ -130,6 +160,7 @@ class Amelietor extends React.Component {
         });
       }
     });
+
   }
 
   render() {
@@ -165,7 +196,7 @@ class Amelietor extends React.Component {
             {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. show logs</Button>}
           </div>
           <div className="mdl-cell mdl-cell--4-col">
-            {selectedAnnotation && <TokenManager />}
+            {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}
             <br/>
             {selectedAnnotation && <RecContainer />}
           </div>
@@ -198,7 +229,7 @@ Amelietor.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const annotations = state.rootAnnotationsReducer.annotationsByKey;
+  const annotations = state.annotationsByKey;
   const selectedAnnotation = state.recs.href;
   return {annotations, selectedAnnotation};
 

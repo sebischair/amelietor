@@ -5,6 +5,7 @@ export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS_FAILED = 'RECEIVE_ANNOTATIONS_FAILED';
 export const INVALIDATE_KEY = 'INVALIDATE_KEY';
 export const SELECT_REC = 'SELECT_REC';
+export const REMOVE_REC = 'REMOVE_REC';
 export const REQUEST_REC_META = 'REQUEST_REC_META';
 export const RECEIVE_REC_META = 'RECEIVE_REC_META';
 export const REQUEST_ALTERNATIVES = 'REQUEST_ALTERNATIVES';
@@ -13,7 +14,6 @@ export const REQUEST_ALTERNATIVE_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION'
 export const REQUEST_SOFTWARE = 'REQUEST_SOFTWARE';
 export const REQUEST_SOFTWARE_SOLUTION_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION';
 export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
-
 
 
 const API_ROOT = "https://spotlight.in.tum.de/";
@@ -26,10 +26,30 @@ const DELETE_ALTERNATIVE = "removeAlternative";
 const GET_SOFTWARE = "getSoftwareSolutions";
 const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
 
+const REMOVE_TOKEN = "removeToken?token=";
+
 export const selectRec = (tokenData) => {
   return {
     type: SELECT_REC,
     tokenData
+  }
+};
+
+export const removeRec = (token) => {
+  return dispatch => {
+    return fetch(`${API_ROOT}${REMOVE_TOKEN}${token}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(selectRec("{}"));
+      })
   }
 };
 
@@ -74,23 +94,6 @@ export const deleteAlternative = (href, token) =>{
       })
   }
 };
-
-
-function requestSoftwareSolutionDeletion(href, token) {
-  return {
-    type: REQUEST_SOFTWARE_SOLUTION_DELETION,
-    href,
-    token
-  }
-}
-
-function requestAlternativeDeletion(href, token) {
-  return {
-    type: REQUEST_ALTERNATIVE_DELETION,
-    href,
-    token
-  }
-}
 
 
 export const fetchRecSoftware = (href) => {
