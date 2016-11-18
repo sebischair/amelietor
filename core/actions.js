@@ -21,11 +21,12 @@ const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 
 const GET_ALTERNATIVES = "getAlternatives";
+const ADD_ALTERNATIVE = "addAlternative";
 const DELETE_ALTERNATIVE = "removeAlternative";
 
 const GET_SOFTWARE = "getSoftwareSolutions";
 const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
-
+const ADD_SOFTWARE = "addSoftware";
 const REMOVE_TOKEN = "removeToken?token=";
 
 export const selectRec = (tokenData) => {
@@ -55,8 +56,6 @@ export const removeRec = (token) => {
 
 export const deleteSoftwareSolution = (href, token) =>{
   return dispatch => {
-    // dispatch(requestSoftwareSolutionDeletion(href, token));
-
     return fetch(`${API_ROOT}${DELETE_SOFTWARE_SOLUTION}`, {
       method: 'post',
       headers: {
@@ -70,6 +69,45 @@ export const deleteSoftwareSolution = (href, token) =>{
       })
       .then(json => {
         dispatch(fetchRecSoftware(href));
+      })
+  }
+};
+
+export const addSoftware = (href, token) =>{
+  return dispatch => {
+    return fetch(`${API_ROOT}${ADD_SOFTWARE}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({uri: href, title:token}),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(fetchRecSoftware(href));
+      })
+  }
+};
+
+
+export const addAlternative = (href, token) =>{
+  return dispatch => {
+    return fetch(`${API_ROOT}${ADD_ALTERNATIVE}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({uri: href, title:token}),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(fetchRecAlternatives(href));
       })
   }
 };

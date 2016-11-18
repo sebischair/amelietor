@@ -1,7 +1,7 @@
 import React, { PropTypes, Component} from 'react'
 import { connect } from 'react-redux'
-import { Card, CardTitle, CardActions, Button, Icon } from 'react-mdl';
-import {removeRec, fetchAnnotationsPerBlock} from '../../core/actions';
+import { Button, Icon } from 'react-mdl';
+import { removeRec, fetchAnnotationsPerBlock } from '../../core/actions';
 
 class TokenManager extends Component {
   constructor(props) {
