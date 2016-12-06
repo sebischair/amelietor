@@ -14,9 +14,12 @@ export const REQUEST_ALTERNATIVE_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION'
 export const REQUEST_SOFTWARE = 'REQUEST_SOFTWARE';
 export const REQUEST_SOFTWARE_SOLUTION_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION';
 export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
-
+export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
+export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
+export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
 const API_ROOT = "https://spotlight.in.tum.de/";
+const URL_CONTENT_EXTRACTION = "https://spotlight.in.tum.de/getFileContent";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 
@@ -191,6 +194,79 @@ export const fetchRecAlternatives = (href) => {
       })
   }
 };
+
+export const uploadFile = (file) => {
+  return dispatch => {
+    dispatch(uploadStarted(file.name));
+    let data = new FormData();
+    data.append('file', file);
+    return fetch(`${URL_CONTENT_EXTRACTION}`, {
+      method: 'post',
+      body: data
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        dispatch(receiveFileContent(response.fileName, response.content));
+      }).catch(error => {
+        dispatch(receiveFileContentFailed(error.fileName, error.error));
+      });
+  }
+};
+
+function uploadStarted(fileName) {
+  return {
+    type: REQUEST_FILE_CONTENT,
+    fileName: fileName
+
+  }
+}
+
+function receiveFileContent(fileName, fileContent) {
+  return {
+    type: RECEIVE_FILE_CONTENT,
+    fileName: fileName,
+    fileContent: {'entityMap': {
+    },'blocks':
+      fileContent.documentSectionModelList.map(child =>{
+        let chapter = [];
+        chapter.push(
+          //crazy trick
+          [{
+            'text':child.title,
+            'type':'header-four'
+          }]
+        );
+        chapter.push(child.paragraphs.map(child => {
+          return{
+              'text':child,
+              'type':'unstyled'
+          }
+        }));
+        return chapter;
+      })
+      .reduce(function(heading, para) {
+        return heading.concat(para);
+      }, [])
+      .reduce((prev, curr) =>{
+        return [...prev, ...curr];
+      }, [])
+
+     },
+    receivedAt: Date.now()
+  }
+}
+
+function receiveFileContentFailed(fileName, error) {
+  return {
+    type: RECEIVE_FILE_CONTENT_FAILED,
+    fileName: fileName,
+    error: error,
+    receivedAt: Date.now()
+  }
+}
+
 
 function requestRecAlternatives(href) {
   return {

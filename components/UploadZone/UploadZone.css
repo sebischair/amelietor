@@ -1,0 +1,11 @@
+.uploadzone{
+  -webkit-box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
+  -moz-box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
+  box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
+  background-color: gainsboro;
+  text-align: center;
+  line-height: 40px;
+  height: 180px;
+  margin:20px;
+  padding:40px;
+}

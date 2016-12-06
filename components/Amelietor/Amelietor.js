@@ -9,6 +9,9 @@ import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
 import RecContainer from '../RecContainer/RecContainer';
+
+import UploadZone from '../UploadZone';
+
 import s from './Amelietor.css';
 
 import {
@@ -104,9 +107,19 @@ class Amelietor extends React.Component {
 
   componentWillReceiveProps(nextProps){
     let {editorState} = this.state;
+
     let onChange = (newState) => {
       this.onChange(newState)
     };
+    if (nextProps.content.isFinished && !nextProps.content.isError && this.props.content.lastUpdated != nextProps.content.lastUpdated) {
+      console.log(nextProps.content.fileContent);
+      const newContent = convertFromRaw(nextProps.content.fileContent);
+      console.log(newContent);
+      let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
+      onChange(newEditorState);
+      editorState = newEditorState;
+    }
+
     let findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
       Object.keys(oldAnnotations).forEach(function (key) {
         let obj = oldAnnotations[key];
@@ -191,9 +204,10 @@ class Amelietor extends React.Component {
               />
             </div>
             {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button> }
+            <UploadZone />
             {!allFetched && <ProgressBar indeterminate />}
             {!allFetched && <i>Processing... </i> }
-            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. show logs</Button>}
+            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
           </div>
           <div className="mdl-cell mdl-cell--4-col">
             {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}
@@ -231,7 +245,8 @@ Amelietor.propTypes = {
 function mapStateToProps(state) {
   const annotations = state.annotationsByKey;
   const selectedAnnotation = state.recs.href;
-  return {annotations, selectedAnnotation};
+  const content = state.content;
+  return {annotations, selectedAnnotation, content};
 
 }
 
