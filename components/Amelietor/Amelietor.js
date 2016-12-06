@@ -114,7 +114,6 @@ class Amelietor extends React.Component {
     if (nextProps.content.isFinished && !nextProps.content.isError && this.props.content.lastUpdated != nextProps.content.lastUpdated) {
       console.log(nextProps.content.fileContent);
       const newContent = convertFromRaw(nextProps.content.fileContent);
-      console.log(newContent);
       let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
       onChange(newEditorState);
       editorState = newEditorState;
