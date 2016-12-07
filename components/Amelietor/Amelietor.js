@@ -203,10 +203,10 @@ class Amelietor extends React.Component {
               />
             </div>
             {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button> }
-            <UploadZone />
             {!allFetched && <ProgressBar indeterminate />}
             {!allFetched && <i>Processing... </i> }
             {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
+            <UploadZone />
           </div>
           <div className="mdl-cell mdl-cell--4-col">
             {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}

@@ -246,7 +246,7 @@ function receiveFileContent(fileName, fileContent) {
         }));
         return chapter;
       })
-      .reduce(function(heading, para) {
+      .reduce((heading, para) => {
         return heading.concat(para);
       }, [])
       .reduce((prev, curr) =>{
