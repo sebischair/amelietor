@@ -10,8 +10,8 @@ DBpedia ontology to support architects during the decision-making process (more 
 To implement this client application the [React Static Boilerplate](https://github.com/kriasoft/react-static-boilerplate) has been used.
 
 To try it out:
-1) Enter your text/drop the doc(x) document in upload area/ use provided text;
-2) Press "Refresh" button to get the text processed;
+1) Enter your text / drop a doc(x) document in upload area / use our mocked text;
+2) Press **Refresh** button to get the text processed;
 3) Click one of the annotations to see generated recommendations.
 
 For the feedback/suggestions don't hesitate to contact us at [ResearchGate](https://www.researchgate.net/project/Software-architecture-knowledge-management).
