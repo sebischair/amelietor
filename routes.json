@@ -17,6 +17,10 @@
     "page": "./pages/about"
   },
   {
+    "path": "/privacy",
+    "page": "./pages/privacy"
+  },
+  {
     "path": "/tasks/:status(pending|completed)?",
     "page": "./pages/home"
   }
