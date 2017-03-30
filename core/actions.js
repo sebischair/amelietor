@@ -18,8 +18,9 @@ export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
 export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
 export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
-const API_ROOT = "https://spotlight.in.tum.de/";
-const URL_CONTENT_EXTRACTION = "https://spotlight.in.tum.de/getFileContent";
+// const API_ROOT = "https://spotlight.in.tum.de/";
+const API_ROOT = "http://localhost:9000/";
+const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 
@@ -200,7 +201,7 @@ export const uploadFile = (file) => {
     dispatch(uploadStarted(file.name));
     let data = new FormData();
     data.append('file', file);
-    return fetch(`${URL_CONTENT_EXTRACTION}`, {
+    return fetch(`${API_ROOT}${GET_CONTENT_EXTRACTION}`, {
       method: 'post',
       body: data
     })
