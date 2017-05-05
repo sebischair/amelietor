@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux'
-
 import {REQUEST_ANNOTATIONS, RECEIVE_ANNOTATIONS, INVALIDATE_KEY, RECEIVE_ANNOTATIONS_FAILED} from '../actions';
 
 const annotations = (state = {
