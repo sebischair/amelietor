@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
+let jsSHA = require("jssha");
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
-import {selectRec, fetchAnnotationsPerBlock, selectKey} from '../../core/actions';
+import {selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession} from '../../core/actions';
 import { connect } from 'react-redux'
 
 import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
@@ -64,6 +65,8 @@ class Amelietor extends React.Component {
       this.setState({editorState});
     };
 
+    fetchSession();
+
     const sendRecUrl = (tokenData) =>{
       dispatch(selectRec(tokenData));
     };
@@ -91,7 +94,18 @@ class Amelietor extends React.Component {
 
     this.getNewDecorators = () => {
       const updated_content = this.state.editorState.getCurrentContent();
-      convertToRaw(updated_content)['blocks'].map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      //get document hash
+      let shaObj = new jsSHA("SHA-1", "TEXT");
+      shaObj.update(updated_content.getPlainText());
+      let hash = shaObj.getHash("HEX");
+      //update fields for saving
+      let blocks = convertToRaw(updated_content)['blocks'];
+      blocks.map((block, key) => {
+          block.paragraphNumber = key;
+          block.paragraphsCount = blocks.length;
+          block.documentHash = hash;
+      });
+      blocks.map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
 
     const blocks = convertFromRaw(rawContent);

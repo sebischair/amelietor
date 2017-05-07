@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { sessionService } from 'redux-react-session';
 
 export const REQUEST_ANNOTATIONS = 'REQUEST_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
@@ -26,6 +27,8 @@ const DELETE_ALTERNATIVE = "removeAlternative";
 const GET_SOFTWARE = "getSoftwareSolutions";
 const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
 
+const CREATE_SESSION = "createSession";
+
 export const selectRec = (tokenData) => {
   return {
     type: SELECT_REC,
@@ -52,6 +55,24 @@ export const deleteSoftwareSolution = (href, token) =>{
         dispatch(fetchRecSoftware(href));
       })
   }
+};
+
+export const fetchSession = (href, token) =>{
+  return fetch(`${API_ROOT}${CREATE_SESSION}`, {
+      method: 'post'
+    }).then(response => {
+      return response.json();
+    }).catch(() => {
+      console.log("no session received");
+    }).then(json => {
+      //if session doesn't exists in local storage, create a new one
+      sessionService.loadSession().catch(() => {
+        sessionService.saveSession(json.session).then(() => {
+          //throws error it no user specified
+          sessionService.saveUser({});
+        });
+      });
+    })
 };
 
 export const deleteAlternative = (href, token) =>{
@@ -211,25 +232,35 @@ function receiveRecMeta(href, json) {
 export const fetchAnnotationsPerBlock = (block) => {
   return dispatch => {
     dispatch(requestAnnotations(block.key));
-    return fetch(`${API_ROOT}${PROCESS_DOCUMENT}`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({content: block.text}),
-    })
-    .then(response => {
-      return response.json();
-    })
-    .then(json => {
-      if (!json.status === "OK") {
-        return Promise.reject(json).then(receiveAnnotationsFailed(block.key, json))
-      }
-      dispatch(receiveAnnotations(block.key, json));
-    }).catch(error => {
-      dispatch(receiveAnnotationsFailed(block.key, error));
-    });
+    return sessionService.loadSession()
+      .then(currentSession => {
+        return fetch(`${API_ROOT}${PROCESS_DOCUMENT}`, {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            content: block.text,
+            parNum: block.paragraphNumber,
+            parMax: block.paragraphsCount,
+            docHash: block.documentHash,
+            uuid: currentSession
+          }),
+        })
+          .then(response => {
+            return response.json();
+          })
+          .then(json => {
+            if (!json.status === "OK") {
+              return Promise.reject(json).then(receiveAnnotationsFailed(block.key, json))
+            }
+            dispatch(receiveAnnotations(block.key, json));
+          }).catch(error => {
+            dispatch(receiveAnnotationsFailed(block.key, error));
+          });
+      });
   };
 };
 
