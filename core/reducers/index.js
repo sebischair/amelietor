@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux'
 import { sessionReducer } from 'redux-react-session';
 import recs from './recs'
-import rootAnnotationsReducer from './annotations'
+import annotationsByKey from './annotations'
+import content from './content'
 
 const amelietor = combineReducers({
   recs,
-  rootAnnotationsReducer,
-  session: sessionReducer
+  session: sessionReducer,
+  annotationsByKey,
+  content
 });
 
 export default amelietor

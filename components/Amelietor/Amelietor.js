@@ -10,6 +10,9 @@ import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
 import RecContainer from '../RecContainer/RecContainer';
+
+import UploadZone from '../UploadZone';
+
 import s from './Amelietor.css';
 
 import {
@@ -51,7 +54,6 @@ const rawContent = {
       type: 'unstyled',
     },
   ],
-
   entityMap: {
   },
 };
@@ -119,11 +121,51 @@ class Amelietor extends React.Component {
 
   componentWillReceiveProps(nextProps){
     let {editorState} = this.state;
+
     let onChange = (newState) => {
       this.onChange(newState)
     };
+    if (nextProps.content.isFinished && !nextProps.content.isError && this.props.content.lastUpdated != nextProps.content.lastUpdated) {
+      console.log(nextProps.content.fileContent);
+      const newContent = convertFromRaw(nextProps.content.fileContent);
+      let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
+      onChange(newEditorState);
+      editorState = newEditorState;
+    }
+
+    let findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
+      Object.keys(oldAnnotations).forEach(function (key) {
+        let obj = oldAnnotations[key];
+
+        if (!obj.isFetching && !obj.isError){
+          obj.items.map(item => {
+            let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+            let targetRange = new SelectionState({
+              anchorKey: key,
+              anchorOffset: item.begin,
+              focusKey: key,
+              focusOffset: item.end
+            });
+            let contentWithEntity = Modifier.applyEntity(
+              editorState.getCurrentContent(),
+              targetRange,
+              null
+            );
+            let newEditorState = EditorState.push(editorState, contentWithEntity, 'apply-entity');
+            onChange(newEditorState);
+            editorState = newEditorState;
+          });
+        }
+      });
+    };
+
+    let oldAnnotations = this.props.annotations;
+
+    findAndDeleteObsoleteAnnotations(oldAnnotations);
+
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
+
       if (!obj.isFetching && !obj.isError){
         obj.items.map(item => {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
@@ -144,6 +186,7 @@ class Amelietor extends React.Component {
         });
       }
     });
+
   }
 
   render() {
@@ -176,10 +219,11 @@ class Amelietor extends React.Component {
             {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button> }
             {!allFetched && <ProgressBar indeterminate />}
             {!allFetched && <i>Processing... </i> }
-            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. show logs</Button>}
+            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
+            <UploadZone />
           </div>
           <div className="mdl-cell mdl-cell--4-col">
-            {selectedAnnotation && <TokenManager />}
+            {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}
             <br/>
             {selectedAnnotation && <RecContainer />}
           </div>
@@ -212,9 +256,10 @@ Amelietor.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const annotations = state.rootAnnotationsReducer.annotationsByKey;
+  const annotations = state.annotationsByKey;
   const selectedAnnotation = state.recs.href;
-  return {annotations, selectedAnnotation};
+  const content = state.content;
+  return {annotations, selectedAnnotation, content};
 
 }
 

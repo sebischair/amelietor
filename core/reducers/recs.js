@@ -6,7 +6,8 @@ import {SELECT_REC,
   REQUEST_SOFTWARE,
   RECEIVE_SOFTWARE,
   REQUEST_SOFTWARE_SOLUTION_DELETION,
-  REQUEST_ALTERNATIVE_DELETION
+  REQUEST_ALTERNATIVE_DELETION,
+  REMOVE_REC
 } from '../actions';
 
 const recs = (state = {
@@ -16,6 +17,11 @@ const recs = (state = {
 }, action) => {
   switch (action.type) {
     case SELECT_REC:
+      return Object.assign({}, state, {
+        href: action.tokenData.URI,
+        tokenData: action.tokenData
+      });
+    case REMOVE_REC:
       return Object.assign({}, state, {
         href: action.tokenData.URI,
         tokenData: action.tokenData

@@ -3,11 +3,7 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
-
-# THANKS
-
-    <name>
+    <klym shumaiev> -- <maintener> -- <@klimksh>
 
 # TECHNOLOGY COLOPHON
 

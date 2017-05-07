@@ -59,7 +59,7 @@ const mapStateToProps = (state) => {
     info,
     alternatives,
     software
-  } = state.recs || { info:{isFetching:true, data:""}, alternatives:{isFetching:true, data:[]}, software:{isFetching:true, data:[]} };
+  } = state.recs ;
 
   return {
     href,

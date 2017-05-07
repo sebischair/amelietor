@@ -2,6 +2,7 @@ import React, { PropTypes, Component} from 'react'
 import { FABButton, Button, Icon, List, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
 import { connect } from 'react-redux'
 import {deleteSoftwareSolution, deleteAlternative} from '../../core/actions';
+import AddAlternative from '../AddAlternative'
 
 
 class Alternatives extends Component {
@@ -12,12 +13,12 @@ class Alternatives extends Component {
     this.deleteItem = (href, token) => {
       const {dispatch, type} = this.props;
       switch (type){
-      case "software":
-        dispatch(deleteSoftwareSolution(href,token));
-        return true;
-      case "alternative":
-        dispatch(deleteAlternative(href,token));
-        return true;
+        case "software":
+          dispatch(deleteSoftwareSolution(href,token));
+          return true;
+        case "alternative":
+          dispatch(deleteAlternative(href,token));
+          return true;
       }
     }
   }
@@ -29,19 +30,20 @@ class Alternatives extends Component {
         <section>
           <div className="content">
             <List style={{padding: 0}}>
-              <ListItem>
-                <ListItemContent icon="label">
-                  <Textfield
-                    onChange={() => {}}
-                    label={inputLabel}
-                    floatingLabel
-                    style={{width: '200px', }}
-                  />
-                </ListItemContent>
-                <ListItemAction>
-                  <Button raised colored ripple> Add new</Button>
-                </ListItemAction>
-              </ListItem>
+              {/*<ListItem>*/}
+                {/*<ListItemContent icon="label">*/}
+                  {/*<Textfield*/}
+                    {/*onChange={() => {}}*/}
+                    {/*label={inputLabel}*/}
+                    {/*floatingLabel*/}
+                    {/*style={{width: '200px', }}*/}
+                  {/*/>*/}
+                {/*</ListItemContent>*/}
+                {/*<ListItemAction>*/}
+                  {/*<Button raised colored ripple> Add new</Button>*/}
+                {/*</ListItemAction>*/}
+              {/*</ListItem>*/}
+              <AddAlternative type={type} href={href}/>
               {alternatives.data.map((alt, i) =>
                 <ListItem key={i}>
                   <ListItemContent icon="label">{alt.title}</ListItemContent>

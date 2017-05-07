@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux'
-
 import {REQUEST_ANNOTATIONS, RECEIVE_ANNOTATIONS, INVALIDATE_KEY, RECEIVE_ANNOTATIONS_FAILED} from '../actions';
 
 const annotations = (state = {
@@ -42,7 +40,6 @@ const annotations = (state = {
 
 function annotationsByKey(state = { }, action) {
   switch (action.type) {
-    case INVALIDATE_KEY:
     case RECEIVE_ANNOTATIONS:
     case RECEIVE_ANNOTATIONS_FAILED:
     case REQUEST_ANNOTATIONS:
@@ -54,8 +51,7 @@ function annotationsByKey(state = { }, action) {
   }
 }
 
-const rootAnnotationsReducer = combineReducers({
-  annotationsByKey
-});
 
-export default rootAnnotationsReducer
+
+
+export default annotationsByKey

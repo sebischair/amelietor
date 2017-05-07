@@ -6,6 +6,7 @@ export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS_FAILED = 'RECEIVE_ANNOTATIONS_FAILED';
 export const INVALIDATE_KEY = 'INVALIDATE_KEY';
 export const SELECT_REC = 'SELECT_REC';
+export const REMOVE_REC = 'REMOVE_REC';
 export const REQUEST_REC_META = 'REQUEST_REC_META';
 export const RECEIVE_REC_META = 'RECEIVE_REC_META';
 export const REQUEST_ALTERNATIVES = 'REQUEST_ALTERNATIVES';
@@ -14,18 +15,24 @@ export const REQUEST_ALTERNATIVE_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION'
 export const REQUEST_SOFTWARE = 'REQUEST_SOFTWARE';
 export const REQUEST_SOFTWARE_SOLUTION_DELETION = 'REQUEST_SOFTWARE_SOLUTION_DELETION';
 export const RECEIVE_SOFTWARE = 'RECEIVE_SOFTWARE';
-
-
+export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
+export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
+export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
 const API_ROOT = "https://spotlight.in.tum.de/";
+// const API_ROOT = "http://localhost:9000/";
+const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
 
 const GET_ALTERNATIVES = "getAlternatives";
+const ADD_ALTERNATIVE = "addAlternative";
 const DELETE_ALTERNATIVE = "removeAlternative";
 
 const GET_SOFTWARE = "getSoftwareSolutions";
 const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
+const ADD_SOFTWARE = "addSoftware";
+const REMOVE_TOKEN = "removeToken?token=";
 
 const CREATE_SESSION = "createSession";
 
@@ -36,10 +43,26 @@ export const selectRec = (tokenData) => {
   }
 };
 
+export const removeRec = (token) => {
+  return dispatch => {
+    return fetch(`${API_ROOT}${REMOVE_TOKEN}${token}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(selectRec("{}"));
+      })
+  }
+};
+
 export const deleteSoftwareSolution = (href, token) =>{
   return dispatch => {
-    // dispatch(requestSoftwareSolutionDeletion(href, token));
-
     return fetch(`${API_ROOT}${DELETE_SOFTWARE_SOLUTION}`, {
       method: 'post',
       headers: {
@@ -57,7 +80,7 @@ export const deleteSoftwareSolution = (href, token) =>{
   }
 };
 
-export const fetchSession = (href, token) =>{
+export const fetchSession = () =>{
   return fetch(`${API_ROOT}${CREATE_SESSION}`, {
       method: 'post'
     }).then(response => {
@@ -73,6 +96,45 @@ export const fetchSession = (href, token) =>{
         });
       });
     })
+};
+
+export const addSoftware = (href, token) =>{
+  return dispatch => {
+    return fetch(`${API_ROOT}${ADD_SOFTWARE}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({uri: href, title:token}),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(fetchRecSoftware(href));
+      })
+  }
+};
+
+
+export const addAlternative = (href, token) =>{
+  return dispatch => {
+    return fetch(`${API_ROOT}${ADD_ALTERNATIVE}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({uri: href, title:token}),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        dispatch(fetchRecAlternatives(href));
+      })
+  }
 };
 
 export const deleteAlternative = (href, token) =>{
@@ -95,23 +157,6 @@ export const deleteAlternative = (href, token) =>{
       })
   }
 };
-
-
-function requestSoftwareSolutionDeletion(href, token) {
-  return {
-    type: REQUEST_SOFTWARE_SOLUTION_DELETION,
-    href,
-    token
-  }
-}
-
-function requestAlternativeDeletion(href, token) {
-  return {
-    type: REQUEST_ALTERNATIVE_DELETION,
-    href,
-    token
-  }
-}
 
 
 export const fetchRecSoftware = (href) => {
@@ -171,6 +216,79 @@ export const fetchRecAlternatives = (href) => {
       })
   }
 };
+
+export const uploadFile = (file) => {
+  return dispatch => {
+    dispatch(uploadStarted(file.name));
+    let data = new FormData();
+    data.append('file', file);
+    return fetch(`${API_ROOT}${GET_CONTENT_EXTRACTION}`, {
+      method: 'post',
+      body: data
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        dispatch(receiveFileContent(response.fileName, response.content));
+      }).catch(error => {
+        dispatch(receiveFileContentFailed(error.fileName, error.error));
+      });
+  }
+};
+
+function uploadStarted(fileName) {
+  return {
+    type: REQUEST_FILE_CONTENT,
+    fileName: fileName
+
+  }
+}
+
+function receiveFileContent(fileName, fileContent) {
+  return {
+    type: RECEIVE_FILE_CONTENT,
+    fileName: fileName,
+    fileContent: {'entityMap': {
+    },'blocks':
+      fileContent.documentSectionModelList.map(child =>{
+        let chapter = [];
+        chapter.push(
+          //crazy trick
+          [{
+            'text':child.title,
+            'type':'header-four'
+          }]
+        );
+        chapter.push(child.paragraphs.map(child => {
+          return{
+              'text':child,
+              'type':'unstyled'
+          }
+        }));
+        return chapter;
+      })
+      .reduce((heading, para) => {
+        return heading.concat(para);
+      }, [])
+      .reduce((prev, curr) =>{
+        return [...prev, ...curr];
+      }, [])
+
+     },
+    receivedAt: Date.now()
+  }
+}
+
+function receiveFileContentFailed(fileName, error) {
+  return {
+    type: RECEIVE_FILE_CONTENT_FAILED,
+    fileName: fileName,
+    error: error,
+    receivedAt: Date.now()
+  }
+}
+
 
 function requestRecAlternatives(href) {
   return {
