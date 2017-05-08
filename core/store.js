@@ -13,6 +13,7 @@ import thunk from 'redux-thunk'
 import { showRec } from './actions'
 import amelietor from './reducers'
 import createLogger from 'redux-logger';
+import { sessionService } from 'redux-react-session';
 // Centralized application state
 // For more information visit http://redux.js.org/
 
@@ -30,5 +31,6 @@ export default function configureStore(preloadedState) {
      });
   }
 
-return store;
+  sessionService.initSessionService(store);
+  return store;
 }
