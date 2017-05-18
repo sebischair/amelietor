@@ -8,20 +8,12 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
-import { Provider } from 'react-redux';
+import React from 'react';
 import Layout from '../../components/Layout';
-import Amelietor from '../../components/Amelietor';
-
-import store from '../../core/store'
 import s from './styles.css';
 import { title, html } from './index.md';
 
-class HomePage extends React.Component {
-
-  static propTypes = {
-    articles: PropTypes.array.isRequired,
-  };
+class AboutPage extends React.Component {
 
   componentDidMount() {
     document.title = title;
@@ -30,19 +22,15 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
-
-        <h4>Editor</h4>
-          <Amelietor />
-
-        <p>
-          <br /><br />
-        </p>
+        <h1>{title}</h1>
+        <div
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       </Layout>
-
     );
   }
 
 }
 
-export default HomePage;
+export default AboutPage;

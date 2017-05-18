@@ -10,26 +10,26 @@
 
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import { showRec } from './actions'
-import amelietor from './reducers'
-import createLogger from 'redux-logger';
+import { showRec } from './../core/actions'
+import amelietor from './../core/reducers'
+import {createLogger} from 'redux-logger';
 import { sessionService } from 'redux-react-session';
 // Centralized application state
 // For more information visit http://redux.js.org/
-
 export default function configureStore(preloadedState) {
   const store = createStore(
     amelietor,
     preloadedState,
     applyMiddleware(thunk, createLogger())
   );
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./reducers', () => {
-      const nextRootReducer = require('./reducers').default;
-      store.replaceReducer(nextRootReducer)
-     });
-  }
+  // if (module.hot) {
+  //   // Enable Webpack hot module replacement for reducers
+  //   module.hot.accept('./reducers', () => {
+  //     const nextRootReducer = require('./reducers').default;
+  //     store.replaceReducer(nextRootReducer)
+  //    });
+  //
+  // }
 
   sessionService.initSessionService(store);
   return store;
