@@ -20,7 +20,7 @@ export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
 export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
 const API_ROOT = "https://spotlight.in.tum.de/";
-// const API_ROOT = "http://localhost:9000/";
+//const API_ROOT = "http://localhost:9000/";
 const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";

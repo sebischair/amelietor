@@ -22,14 +22,6 @@ export default function configureStore(preloadedState) {
     preloadedState,
     applyMiddleware(thunk, createLogger())
   );
-  // if (module.hot) {
-  //   // Enable Webpack hot module replacement for reducers
-  //   module.hot.accept('./reducers', () => {
-  //     const nextRootReducer = require('./reducers').default;
-  //     store.replaceReducer(nextRootReducer)
-  //    });
-  //
-  // }
 
   sessionService.initSessionService(store);
   return store;
