@@ -1,6 +1,6 @@
 import React, { PropTypes, Component} from 'react'
 import { connect } from 'react-redux'
-import {fetchRecMeta, fetchRecAlternatives, fetchRecSoftware} from '../../core/actions';
+import {fetchRecMeta, fetchRecAlternatives, fetchRecSoftware} from '../../core/actions/actions';
 import Meta from '../Meta'
 import Alternatives from '../Alternatives'
 import { Card, CardText, Tab, Tabs, Spinner } from 'react-mdl';

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component} from 'react'
 import { FABButton, Button, Icon, List, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
 import { connect } from 'react-redux'
-import {deleteSoftwareSolution, deleteAlternative} from '../../core/actions';
+import {deleteSoftwareSolution, deleteAlternative} from '../../core/actions/actions';
 import AddAlternative from '../AddAlternative'
 
 

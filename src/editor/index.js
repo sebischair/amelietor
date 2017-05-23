@@ -8,12 +8,15 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
+import Amelietor from '../../components/Amelietor';
+
+
 import s from './styles.css';
 import { title, html } from './index.md';
 
-class HomePage extends React.Component {
+class EditorPage extends React.Component {
 
   componentDidMount() {
     document.title = title;
@@ -23,13 +26,14 @@ class HomePage extends React.Component {
     return (
       <Layout className={s.content}>
         <div
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: html }}
         />
+        <h4>Editor</h4>
+          <Amelietor />
       </Layout>
     );
   }
 
 }
 
-export default HomePage;
+export default EditorPage;

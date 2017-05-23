@@ -1,6 +1,6 @@
 import React, { PropTypes, Component} from 'react'
 import { connect } from 'react-redux'
-import {uploadFile} from '../../core/actions';
+import {uploadFile} from '../../core/actions/actions';
 import Dropzone from 'react-dropzone'
 import s from './UploadZone.css';
 

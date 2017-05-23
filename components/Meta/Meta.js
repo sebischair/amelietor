@@ -1,7 +1,4 @@
 import React, { PropTypes, Component} from 'react'
-import ReactDOM from 'react-dom';
-
-import s from './Meta.css';
 
 class Meta extends Component {
 

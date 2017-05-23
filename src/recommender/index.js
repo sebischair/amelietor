@@ -13,7 +13,7 @@ import Layout from '../../components/Layout';
 import s from './styles.css';
 import { title, html } from './index.md';
 
-class AboutPage extends React.Component {
+class RecommenderPage extends React.Component {
 
   componentDidMount() {
     document.title = title;
@@ -22,7 +22,6 @@ class AboutPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <h1>{title}</h1>
         <div
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: html }}
@@ -33,4 +32,4 @@ class AboutPage extends React.Component {
 
 }
 
-export default AboutPage;
+export default RecommenderPage;

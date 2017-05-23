@@ -1,7 +1,7 @@
 import React, { PropTypes, Component} from 'react'
 import { Button, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
 import { connect } from 'react-redux'
-import {addAlternative, addSoftware} from '../../core/actions';
+import {addAlternative, addSoftware} from '../../core/actions/actions';
 
 
 class AddAlternative extends Component {

@@ -2,10 +2,7 @@
   {
     "path": "/",
     "page": "./home",
-    "chunk": "main",
-    "data": {
-      "articles": "GET https://gist.githubusercontent.com/koistya/a32919e847531320675764e7308b796a/raw/articles.json"
-    }
+    "chunk": "main"
   },
   {
     "path": "/error",
@@ -13,15 +10,17 @@
     "chunk": "main"
   },
   {
-    "path": "/about",
-    "page": "./about"
+    "path": "/editor",
+    "page": "./editor",
+    "chunk": "main"
+  },
+  {
+    "path": "/recommender",
+    "page": "./recommender",
+    "chunk": "main"
   },
   {
     "path": "/privacy",
     "page": "./privacy"
-  },
-  {
-    "path": "/tasks/:status(pending|completed)?",
-    "page": "./home"
   }
 ]

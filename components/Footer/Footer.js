@@ -19,6 +19,7 @@ function Footer() {
         <ul className="mdl-mini-footer__link-list">
           <li><Link to="/privacy">Privacy & Terms</Link></li>
           <li><Link to="/not-found">Not Found</Link></li>
+          <li>Powered by <Link to="https://github.com/kriasoft/react-static-boilerplate">React Static Boilerplate</Link></li>
         </ul>
       </div>
       <div className="mdl-mini-footer__right-section">

@@ -10,9 +10,8 @@
 
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import { showRec } from './../core/actions'
 import amelietor from './../core/reducers'
-import {createLogger} from 'redux-logger';
+import { createLogger } from 'redux-logger';
 import { sessionService } from 'redux-react-session';
 // Centralized application state
 // For more information visit http://redux.js.org/

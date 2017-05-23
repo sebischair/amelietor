@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 let jsSHA = require("jssha");
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
-import {selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession} from '../../core/actions';
+import {selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession} from '../../core/actions/actions';
 import { connect } from 'react-redux'
 
 import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
