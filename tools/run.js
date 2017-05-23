@@ -45,7 +45,7 @@ module.exports = task('run', () => new Promise((resolve) => {
     count += 1;
     if (count === 1) {
       bs.init({
-        port: process.env.PORT || 3000,
+        port: process.env.PORT || 3001,
         ui: { port: Number(process.env.PORT || 3000) + 1 },
         server: {
           baseDir: 'public',

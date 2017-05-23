@@ -19,8 +19,8 @@ export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
 export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
 export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
-const API_ROOT = "https://spotlight.in.tum.de/";
-//const API_ROOT = "http://localhost:9000/";
+//const API_ROOT = "https://spotlight.in.tum.de/";
+const API_ROOT = "http://localhost:9000/";
 const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "processDocument";
 const GET_META_INFORMATION = "getMetaInformation";
@@ -232,6 +232,7 @@ export const uploadFile = (file) => {
       .then(response => {
         dispatch(receiveFileContent(response.fileName, response.content));
       }).catch(error => {
+        console.log(error);
         dispatch(receiveFileContentFailed(error.fileName, error.error));
       });
   }
@@ -251,30 +252,18 @@ function receiveFileContent(fileName, fileContent) {
     fileName: fileName,
     fileContent: {'entityMap': {
     },'blocks':
-      fileContent.documentSectionModelList.map(child =>{
-        let chapter = [];
-        chapter.push(
-          //crazy trick
-          [{
-            'text':child.title,
-            'type':'header-four'
-          }]
-        );
-        chapter.push(child.paragraphs.map(child => {
-          return{
-              'text':child,
-              'type':'unstyled'
-          }
-        }));
-        return chapter;
-      })
-      .reduce((heading, para) => {
-        return heading.concat(para);
-      }, [])
-      .reduce((prev, curr) =>{
-        return [...prev, ...curr];
-      }, [])
-
+      fileContent.map(child =>{
+          return {
+            'text':child.paragraph,
+            'type':'unstyled'
+          }}
+        )
+      // .reduce((heading, para) => {
+      //   return heading.concat(para);
+      // }, [])
+      // .reduce((prev, curr) =>{
+      //   return [...prev, ...curr];
+      // }, [])
      },
     receivedAt: Date.now()
   }
