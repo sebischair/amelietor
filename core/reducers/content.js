@@ -1,4 +1,4 @@
-import {REQUEST_FILE_CONTENT, RECEIVE_FILE_CONTENT,RECEIVE_FILE_CONTENT_FAILED} from '../actions';
+import {REQUEST_FILE_CONTENT, RECEIVE_FILE_CONTENT,RECEIVE_FILE_CONTENT_FAILED} from '../actions/actions';
 
 const content = (state = {
   fileName:null,

@@ -12,5 +12,5 @@ module.exports = {
   title: 'Amelie editor',        // Your website title
   url: 'https://amelietor.com',          // Your website URL
   project: 'amelietor-9f8c3',      // Firebase project. See README.md -> How to Deploy
-  trackingID: 'UA-52068106-3',                 // Google Analytics Site's ID
+  trackingID: 'UA-52068106-3', // Google Analytics Site's ID
 };

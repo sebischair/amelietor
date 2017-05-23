@@ -8,7 +8,7 @@ import {SELECT_REC,
   REQUEST_SOFTWARE_SOLUTION_DELETION,
   REQUEST_ALTERNATIVE_DELETION,
   REMOVE_REC
-} from '../actions';
+} from '../actions/actions';
 
 const recs = (state = {
   href: null,
