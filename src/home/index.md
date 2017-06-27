@@ -1,9 +1,6 @@
 ---
 title: AMELIE
 ---
-
-### About the project
-
 #### An ontology-based approach for software architecture recommendations
 
 This is a prototypical implementation of web editor that provides authors of software architecture documentation with 

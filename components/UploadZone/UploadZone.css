@@ -2,10 +2,10 @@
   -webkit-box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
   -moz-box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
   box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
-  background-color: gainsboro;
+  background-color: rgba(20, 57, 162, 0.21);
   text-align: center;
-  line-height: 40px;
-  height: 180px;
-  margin:20px;
-  padding:40px;
+  line-height: 0px;
+  height: 90px;
+  margin-top: 20px;
+  padding:5px;
 }

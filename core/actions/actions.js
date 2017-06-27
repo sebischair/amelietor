@@ -230,7 +230,7 @@ export const uploadFile = (file) => {
         return response.json();
       })
       .then(response => {
-        dispatch(receiveFileContent(response.fileName, response.content));
+        dispatch(receiveFileContent(response.fileName, response.paragraphs));
       }).catch(error => {
         console.log(error);
         dispatch(receiveFileContentFailed(error.fileName, error.error));
@@ -254,7 +254,7 @@ function receiveFileContent(fileName, fileContent) {
     },'blocks':
       fileContent.map(child =>{
           return {
-            'text':child.paragraph,
+            'text':child,
             'type':'unstyled'
           }}
         )

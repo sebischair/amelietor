@@ -1,11 +1,9 @@
 import React, {PropTypes} from 'react';
 let jsSHA = require("jssha");
-import ReactDOM from 'react-dom';
-import cx from 'classnames';
 import {selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession} from '../../core/actions/actions';
 import { connect } from 'react-redux'
 
-import { Button, Icon, ProgressBar, Spinner, Snackbar} from 'react-mdl';
+import { Button, Icon, Textfield, ProgressBar} from 'react-mdl';
 
 import Token from '../Token';
 import TokenManager from '../TokenManager/TokenManager'
@@ -18,11 +16,9 @@ import s from './Amelietor.css';
 import {
   Editor,
   EditorState,
-  RichUtils,
   convertFromRaw,
   convertToRaw,
   CompositeDecorator,
-  ContentState,
   SelectionState,
   Entity,
   Modifier
@@ -126,7 +122,6 @@ class Amelietor extends React.Component {
       this.onChange(newState)
     };
     if (nextProps.content.isFinished && !nextProps.content.isError && this.props.content.lastUpdated != nextProps.content.lastUpdated) {
-      console.log(nextProps.content.fileContent);
       const newContent = convertFromRaw(nextProps.content.fileContent);
       let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
       onChange(newEditorState);
@@ -204,10 +199,14 @@ class Amelietor extends React.Component {
     const allFetched = annotations_list.every(checkAllFetched);
     const noErrors = annotations_list.every(checkNoErrors);
     return (
-      <div>
         <div className="mdl-grid">
           <div className="mdl-cell mdl-cell--8-col">
-            <div className={`${s.editor}`} onClick={this.focus} style={{heightMin:'200px'}}>
+            <Textfield
+              onChange={() => {}}
+              label="Document name"
+              style={{width: '600px'}}
+            />
+            <div className={`${s.editor}`} onClick={this.focus} style={{heightMin:'600px'}}>
               <Editor
                 editorState={this.state.editorState}
                 handleKeyCommand={this.handleKeyCommand}
@@ -216,7 +215,7 @@ class Amelietor extends React.Component {
                 spellCheck={true}
               />
             </div>
-            {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Refresh</Button> }
+            {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Annotate </Button> }
             {!allFetched && <ProgressBar indeterminate />}
             {!allFetched && <i>Processing... </i> }
             {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
@@ -228,7 +227,6 @@ class Amelietor extends React.Component {
             {selectedAnnotation && <RecContainer />}
           </div>
         </div>
-      </div>
     );
   }
 }

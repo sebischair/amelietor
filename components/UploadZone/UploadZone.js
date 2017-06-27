@@ -18,7 +18,7 @@ class UploadZone extends Component {
     return (
       <div>
         <Dropzone onDrop={this.onDrop} className={`${s.uploadzone}`}>
-          <h2>Upload area</h2>
+          <h4>Upload area</h4>
           <div>Drop some files here, or click and select files to upload</div>
         </Dropzone>
       </div>

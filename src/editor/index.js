@@ -28,7 +28,6 @@ class EditorPage extends React.Component {
         <div
           dangerouslySetInnerHTML={{ __html: html }}
         />
-        <h4>Editor</h4>
           <Amelietor />
       </Layout>
     );
