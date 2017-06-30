@@ -18,12 +18,12 @@ const recs = (state = {
   switch (action.type) {
     case SELECT_REC:
       return Object.assign({}, state, {
-        href: action.tokenData.URI,
+        href: action.tokenData.token,
         tokenData: action.tokenData
       });
     case REMOVE_REC:
       return Object.assign({}, state, {
-        href: action.tokenData.URI,
+        href: action.tokenData.token,
         tokenData: action.tokenData
       });
     case REQUEST_SOFTWARE_SOLUTION_DELETION:
