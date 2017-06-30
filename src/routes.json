@@ -22,5 +22,10 @@
   {
     "path": "/privacy",
     "page": "./privacy"
+  },
+  {
+    "path": "/projects",
+    "page": "./projects",
+    "chunk": "main"
   }
 ]

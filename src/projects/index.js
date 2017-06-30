@@ -8,15 +8,13 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Layout from '../../components/Layout';
-import Amelietor from '../../components/Amelietor';
-
-
 import s from './styles.css';
 import { title, html } from './index.md';
+import ProjectCard from '../../components/ProjectCard';
 
-class EditorPage extends React.Component {
+class Projects extends React.Component {
 
   componentDidMount() {
     document.title = title;
@@ -25,14 +23,12 @@ class EditorPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <div
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-        <Amelietor />
+        <div dangerouslySetInnerHTML={{ __html: html }} />
+        <ProjectCard />
       </Layout>
     );
   }
 
 }
 
-export default EditorPage;
+export default Projects;
