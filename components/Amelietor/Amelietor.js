@@ -103,7 +103,7 @@ class Amelietor extends React.Component {
           block.paragraphsCount = blocks.length;
           block.documentHash = hash;
       });
-      blocks.map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
 
     const blocks = convertFromRaw(rawContent);
