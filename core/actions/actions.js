@@ -349,7 +349,11 @@ export const fetchAnnotationsPerBlock = (block) => {
           },
           body: JSON.stringify({
             content: block.text,
-            tags: ["MD", "JJS"],
+            tags: ["MD", "JJS", "JJR", "RBS", "RBR"], // MD: verb, modal auxillaryverb, modal auxillary,
+                                                      // JJS: adjective, superlative,
+                                                      // JJR: adjective, comparative
+                                                      // RBS: adverb, superlative
+                                                      // RBR: adverb, comparative
             parNum: block.paragraphNumber,
             parMax: block.paragraphsCount,
             docHash: block.documentHash,
