@@ -12,6 +12,7 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
 import { title, html } from './index.md';
+import Project from '../../components/Project';
 
 class RecommenderPage extends React.Component {
 
@@ -22,14 +23,11 @@ class RecommenderPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <div
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <div dangerouslySetInnerHTML={{ __html: html }} />
+        <Project />
       </Layout>
     );
   }
-
 }
 
 export default RecommenderPage;

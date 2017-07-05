@@ -1,0 +1,70 @@
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {Table, TableHeader, Textfield} from 'react-mdl';
+import {fetchProjects, selectProject} from '../../core/actions/scactions';
+import history from '../../src/history';
+import s from './Projects.css';
+
+class Projects extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {searchString: ""};
+    if (this.props.projects.length == 0) {
+      this.props.dispatch(fetchProjects());
+    }
+  }
+
+  handleChange = (event) => {
+    this.setState({searchString: event.target.value});
+  };
+
+  onRowSelection = (event) => {
+    if (event.length === 1) {
+      let sp = this.props.projects[event[0]];
+      this.props.dispatch(selectProject(sp));
+      history.push({
+        pathname: '/recommender',
+        search: '?id=' + sp.projectId
+      });
+    }
+  };
+
+  render() {
+    let projects = this.props.projects;
+    let searchString = this.state.searchString.trim().toLowerCase();
+    if (searchString.length > 0) {
+      projects = projects.filter(project => {
+        return ((project.name.toLowerCase().indexOf(searchString) !== -1) ||
+        (project.description.toLowerCase().indexOf(searchString) !== -1) ||
+        (project.projectCategory.toLowerCase().indexOf(searchString) !== -1));
+      });
+    }
+
+    return (
+      <div>
+        <Textfield value={this.state.searchString} onChange={this.handleChange} label="Search..."
+                   style={{width: '400px'}}/>
+        <Table sortable selectable rowKeyColumn="id" shadow={0} rows={projects} className={`${s.customWidth}`}
+               onSelectionChanged={this.onRowSelection}>
+          <TableHeader name="name" tooltip="Project Name"
+                       sortFn={(a, b, isAsc) => (isAsc ? a : b).localeCompare((isAsc ? b : a))}>Project
+            Name</TableHeader>
+          <TableHeader name="shortDescription" tooltip="Description">Description</TableHeader>
+          <TableHeader name="projectCategory" tooltip="Category">Category</TableHeader>
+        </Table>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  const {projects} = state.screcs;
+  return {projects};
+};
+
+Projects.propTypes = {
+  projects: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
+
+export default connect(mapStateToProps)(Projects);

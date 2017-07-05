@@ -25,7 +25,6 @@
 
 .controls {
   position: fixed;
-  left: 200px;
   bottom: 74px;
   width: inherit;
   background: rgba(255, 255, 255, 0.89);

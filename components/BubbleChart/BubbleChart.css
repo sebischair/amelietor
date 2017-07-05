@@ -1,0 +1,32 @@
+/* Center the contents of the bubble chart */
+.bubbleChart {
+  flex: 1;
+  position: relative;
+  display: flex;
+  user-select: none;
+  justify-content: center;
+}
+
+.bubbleChart .text {
+ font: 18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+ text-anchor: middle;
+ pointer-events: none;
+}
+
+.bubbleChart .node:hover circle {
+  fill: orange;
+}
+
+.bubbleChart div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
