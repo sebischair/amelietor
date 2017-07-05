@@ -11,7 +11,8 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
-import { title, html } from './index.md';
+import { title } from './home.md';
+import Link from '../../components/Link';
 
 class HomePage extends React.Component {
 
@@ -22,10 +23,18 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <div
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <h4> An ontology-based approach for software architecture recommendations </h4>
+        <p>
+          This is a prototypical implementation of web editor that provides authors of software architecture documentation with
+          context related recommendations. Two types of recommendations are provided using existing broad cross-domain
+          DBpedia ontology to support architects during the decision-making process (more details could be found [here](https://wwwmatthes.in.tum.de/pages/9cr85n66nn6c/An-ontology-based-approach-for-software-architecture-recommendations)).
+        </p>
+        <Link to="/editor">Demo</Link>
+        <h4>Expertise browser for design desicion making </h4>
+        <p>
+
+        </p>
+        <Link to="/recommender">Demo</Link>
       </Layout>
     );
   }
