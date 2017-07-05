@@ -27,7 +27,7 @@ class HomePage extends React.Component {
         <p>
           This is a prototypical implementation of web editor that provides authors of software architecture documentation with
           context related recommendations. Two types of recommendations are provided using existing broad cross-domain
-          DBpedia ontology to support architects during the decision-making process (more details could be found [here](https://wwwmatthes.in.tum.de/pages/9cr85n66nn6c/An-ontology-based-approach-for-software-architecture-recommendations)).
+          DBpedia ontology to support architects during the decision-making process (more details could be found <a target="_blank" href="https://wwwmatthes.in.tum.de/pages/9cr85n66nn6c">here</a>.
         </p>
         <Link to="/editor">Demo</Link>
         <h4>Expertise browser for design desicion making </h4>
