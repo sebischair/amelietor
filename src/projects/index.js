@@ -12,9 +12,9 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
 import { title, html } from './index.md';
-import ProjectCard from '../../components/ProjectCard';
+import Projects from '../../components/Projects';
 
-class Projects extends React.Component {
+class ProjectsPage extends React.Component {
 
   componentDidMount() {
     document.title = title;
@@ -24,11 +24,11 @@ class Projects extends React.Component {
     return (
       <Layout className={s.content}>
         <div dangerouslySetInnerHTML={{ __html: html }} />
-        <ProjectCard />
+        <Projects />
       </Layout>
     );
   }
 
 }
 
-export default Projects;
+export default ProjectsPage;

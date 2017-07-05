@@ -1,11 +1,11 @@
-import fetch from 'isomorphic-fetch'
-import { sessionService } from 'redux-react-session';
+import fetch from 'isomorphic-fetch';
 
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
+export const SELECTED_PROJECT = 'SELECTED_PROJECT';
 
 const API_ROOT = "https://server.sociocortex.com/api/v1/";
-const WORKSPACEID = "1iksmphpafkxq"
+const WORKSPACEID = "1iksmphpafkxq";
 const SCPROJECTID = "fo7es9m27wpv";
 const SCTASKSID = "1vk4hqzziw3jp";
 const ENTITIES = "entities";
@@ -20,21 +20,14 @@ export const fetchProjects = () => {
     }).then((data) => {
       let p = [];
       let projects = [];
-      for(var i = 0; i < data.length; i++) {
-        let e = data[i];
-        //if(i > 10) break;
+      data = data.slice(0, 10);
+      data.map(e => {
         p.push(getFromSC(e.href).then(r => {return r.json();}).then((entity) => {
-          entity.attributes.map(a => {
-            if(a.name === "projectCategory" && a.values.length > 0 && a.values[0].name !== "Retired") {
-              let newEntity = {};
-              newEntity.name = entity.name;
-              newEntity.description = getAttribute(entity, "description");
-              newEntity.projectCategory = a.values[0].name;
-              projects.push(newEntity);
-            }
-          });
+          if(isNotRetiredProject(entity)) {
+            projects.push(getProjectDetails(entity));
+          }
         }));
-      }
+      });
 
       Promise.all(p).then(() => {
         dispatch(receiveProjects(projects));
@@ -43,21 +36,48 @@ export const fetchProjects = () => {
   }
 };
 
+export const fetchSelctedProject = (projectId) => {
+  return dispatch => {
+    return getFromSC(`${API_ROOT}${ENTITIES}/${projectId}`).then(response => {
+      return response.json();
+    }).then((project) => {
+        dispatch(selectProject(getProjectDetails(project)));
+    });
+  }
+};
+
+function isNotRetiredProject(entity) {
+  return entity.attributes.map(a => {
+    return (a.name === "projectCategory" && a.values.length > 0 && a.values[0].name !== "Retired")
+  });
+}
+
+function getProjectDetails(entity) {
+  let newEntity = {};
+  newEntity.projectId = entity.id;
+  newEntity.href = entity.href;
+  newEntity.name = entity.name;
+  newEntity.description = getAttribute(entity, "description");
+  newEntity.shortDescription = truncate(newEntity.description);
+  newEntity.projectCategory = getAttribute(entity, "projectCategory").name;
+  return newEntity;
+}
+
 function getAttribute(project, attributeName) {
   for(let i=0; i<project.attributes.length; i++) {
     if(project.attributes[i].name === attributeName && project.attributes[i].values.length > 0) {
-      return truncate(project.attributes[i].values[0]);
+      return project.attributes[i].values[0];
     }
   }
   return "";
 }
 
 function truncate(string){
-  if (string.length > 30)
-    return string.substring(0, 30)+'...';
+  if (string.length > 50)
+    return string.substring(0, 50)+'...';
   else
     return string;
-};
+}
 
 function getFromSC(url) {
   return fetch(url, {
@@ -83,3 +103,9 @@ export const requestProjects = () => {
   };
 };
 
+export const selectProject = (project) => {
+  return {
+    type: SELECTED_PROJECT,
+    selectedProject: project
+  }
+};
