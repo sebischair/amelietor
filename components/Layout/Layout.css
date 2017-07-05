@@ -12,4 +12,9 @@
   margin: 0 auto;
   max-width: 2200px;
   width: 100%;
+  margin-bottom: 56px;
+}
+
+.main {
+  margin-bottom: 56px;
 }

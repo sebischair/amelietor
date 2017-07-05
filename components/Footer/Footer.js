@@ -10,10 +10,11 @@
 
 import React from 'react';
 import Link from '../Link';
+import s from './Footer.css';
 
 function Footer() {
   return (
-    <footer className="mdl-mini-footer">
+    <footer className={`mdl-mini-footer ${s.footer}`}>
       <div className="mdl-mini-footer__left-section">
         <div className="mdl-logo">©sebis</div>
         <ul className="mdl-mini-footer__link-list">

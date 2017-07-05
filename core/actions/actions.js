@@ -349,11 +349,23 @@ export const fetchAnnotationsPerBlock = (block) => {
           },
           body: JSON.stringify({
             content: block.text,
-            tags: ["MD", "JJS", "JJR", "RBS", "RBR"], // MD: verb, modal auxillaryverb, modal auxillary,
-                                                      // JJS: adjective, superlative,
-                                                      // JJR: adjective, comparative
-                                                      // RBS: adverb, superlative
-                                                      // RBR: adverb, comparative
+            tags: [
+              "MD",  // MD: verb, modal auxillaryverb, modal auxillary,
+              "JJS", // JJS: adjective, superlative,
+              "JJR", // JJR: adjective, comparative
+              "RBS", // RBS: adverb, superlative
+              "RBR", // RBR: adverb, comparative
+              //"JJ",  // JJ: adjective
+              "PRP$",// PRP$: pronoun, possessive
+              "PDT"  // PDT: predeterminer
+            ],
+
+
+
+
+
+
+
             parNum: block.paragraphNumber,
             parMax: block.paragraphsCount,
             docHash: block.documentHash,

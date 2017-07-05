@@ -93,15 +93,15 @@ class Amelietor extends React.Component {
     this.getNewDecorators = () => {
       const updated_content = this.state.editorState.getCurrentContent();
       //get document hash
-      let shaObj = new jsSHA("SHA-1", "TEXT");
-      shaObj.update(updated_content.getPlainText());
-      let hash = shaObj.getHash("HEX");
+      //let shaObj = new jsSHA("SHA-1", "TEXT");
+      //shaObj.update(updated_content.getPlainText());
+      //let hash = shaObj.getHash("HEX");
       //update fields for saving
       let blocks = convertToRaw(updated_content)['blocks'];
       blocks.map((block, key) => {
           block.paragraphNumber = key;
           block.paragraphsCount = blocks.length;
-          block.documentHash = hash;
+          //block.documentHash = hash;
       });
       blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
@@ -215,11 +215,13 @@ class Amelietor extends React.Component {
                 spellCheck={true}
               />
             </div>
-            {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Annotate </Button> }
-            {!allFetched && <ProgressBar indeterminate />}
-            {!allFetched && <i>Processing... </i> }
-            {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
+            <div className={`${s.controls}`}>
+                  {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Annotate </Button> }
+                  {!allFetched && <ProgressBar indeterminate />}
+                  {!allFetched && <i>Processing... </i> }
+                  {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
             <UploadZone />
+            </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
             {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}

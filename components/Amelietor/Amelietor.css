@@ -1,6 +1,7 @@
 .editor {
   font-size: 16px;
   border-style: hidden;
+  margin-bottom: 110px;
 }
 
 .button {
@@ -20,4 +21,14 @@
 .segmented {
   background-color: rgba(248, 222, 126, 1.0);
   padding: 2px 0;
+}
+
+.controls {
+  position: fixed;
+  left: 200px;
+  bottom: 74px;
+  width: inherit;
+  background: rgba(255, 255, 255, 0.89);
+  box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
+  padding: 10px;
 }
