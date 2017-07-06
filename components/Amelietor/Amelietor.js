@@ -73,6 +73,7 @@ class Amelietor extends React.Component {
 
     const mapDispatchToProps = (dispatch, props) => {
       return {
+        data: Entity.get(props.entityKey).getData(),
         onClick: () => {
           sendRecUrl(Entity.get(props.entityKey).getData());
         }
@@ -134,7 +135,7 @@ class Amelietor extends React.Component {
 
         if (!obj.isFetching && !obj.isError){
           obj.items.map(item => {
-            let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+            Entity.create('TOKEN', 'MUTABLE', item);
             let targetRange = new SelectionState({
               anchorKey: key,
               anchorOffset: item.offsets.begin,

@@ -355,9 +355,10 @@ export const fetchAnnotationsPerBlock = (block) => {
               "JJR", // JJR: adjective, comparative
               "RBS", // RBS: adverb, superlative
               "RBR", // RBR: adverb, comparative
-              //"JJ",  // JJ: adjective
-              "PRP$",// PRP$: pronoun, possessive
-              "PDT"  // PDT: predeterminer
+              //"JJ", // JJ: adjective
+              "PRP$", // PRP$: pronoun, possessive
+              "PDT",  // PDT: predeterminer
+              "RB"    // RB:adverb
             ],
 
 

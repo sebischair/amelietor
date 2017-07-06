@@ -1,21 +1,25 @@
 import React, { PropTypes } from 'react'
+import s from "./Token.css"
 
-const Token = ({children, onClick }) => {
-
+const Token = (props) => {
+  console.log(props.data);
   return (
     <span style={{ backgroundColor: '#5bc0de'}} onClick={e => {
-         e.preventDefault()
-         onClick()
+         e.preventDefault();
+         props.onClick();
        }}>
-      {children}
+
+      {props.children}
+      <span className={`${s.pos}`}>
+        {props.data.tag}
+      </span>
     </span>
   )
-}
+};
 
 Token.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired
-}
+};
 
 export default Token
