@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 
 function getNode(data) {
   let viz = document.createElement('div');
-
   let width = 960, height = 640, color = d3.scaleOrdinal(d3.schemeCategory20c);
 
   let bubble  = d3.pack()

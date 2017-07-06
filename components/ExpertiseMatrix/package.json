@@ -1,0 +1,6 @@
+{
+  "name": "ExpertiseMatrix",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ExpertiseMatrix.js"
+}

@@ -1,0 +1,37 @@
+.heatMap rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:2px;
+}
+
+.heatMap text.mono {
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+.heatMap text.axis-workweek {
+  fill: #000;
+}
+
+.heatMap text.axis-worktime {
+  fill: #000;
+}
+
+.heatMap .axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.heatMap .axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+.heatMap .bar { fill: steelblue; }
+
+#hmap
+{
+  overflow: auto; overflow-y: hidden;
+}

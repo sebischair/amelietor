@@ -4,6 +4,8 @@ import {Card, CardTitle, CardText, CardActions, Tabs, Tab} from 'react-mdl';
 import history from '../../src/history';
 import {fetchSelctedProject} from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
+import ArchitecturalElements from '../ArchitecturalElements';
+import ExpertiseMatrix from '../ExpertiseMatrix';
 
 class Project extends React.Component {
   constructor(props) {
@@ -18,7 +20,7 @@ class Project extends React.Component {
   render() {
     return (
       <div>
-        <Card shadow={0} style={{width: '80%', height: 'auto', margin: 'auto'}}>
+        <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto'}}>
           <CardTitle expand style={{color: 'black'}}>{ this.props.selectedProject.name }</CardTitle>
           <CardText>
             { this.props.selectedProject.description }
@@ -27,16 +29,16 @@ class Project extends React.Component {
             <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({activeTab: tabId})} ripple>
               <Tab>Quality Attributes</Tab>
               <Tab>Architectural Elements</Tab>
-              <Tab>Expert Matrix</Tab>
-              <Tab>Expert Matrix</Tab>
+              <Tab>Expertise Matrix</Tab>
+              <Tab>Expert Recommender</Tab>
               <Tab>Design Decisions</Tab>
             </Tabs>
             <section>
               <br />
               <div className="content">
                 {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId}/> }
-                {this.state.activeTab === 1 &&
-                <div className="content">Content for the tab: {this.state.activeTab}</div> }
+                {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
+                {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
               </div>
             </section>
           </CardActions>
