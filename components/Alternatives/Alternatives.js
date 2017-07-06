@@ -40,7 +40,7 @@ class Alternatives extends Component {
                       </a>
                   </ListItemAction>
                 </ListItem>
-                )}gi
+                )}
             </List>
           </div>
         </section>
