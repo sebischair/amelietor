@@ -8,6 +8,7 @@ import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
 import Experts from '../Experts';
+import DesignDecisions from '../DesignDecisions';
 
 class Project extends React.Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class Project extends React.Component {
                 {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
                 {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
                 {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
+                {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId}/> }
               </div>
             </section>
           </CardActions>

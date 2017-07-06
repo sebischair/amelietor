@@ -42,7 +42,7 @@ class Projects extends React.Component {
 
     return (
       <div>
-        <Textfield value={this.state.searchString} onChange={this.handleChange} label="Search..."
+        <Textfield id='searchProjects' value={this.state.searchString} onChange={this.handleChange} label="Search..."
                    style={{width: '400px'}}/>
         <Table sortable selectable rowKeyColumn="id" shadow={0} rows={projects} className={`${s.customWidth}`}
                onSelectionChanged={this.onRowSelection}>
