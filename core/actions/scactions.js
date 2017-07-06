@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import HelperFunctions from '../../components/HelperFunctions';
 
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
@@ -58,7 +59,7 @@ function getProjectDetails(entity) {
   newEntity.href = entity.href;
   newEntity.name = entity.name;
   newEntity.description = getAttribute(entity, "description");
-  newEntity.shortDescription = truncate(newEntity.description);
+  newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
   newEntity.projectCategory = getAttribute(entity, "projectCategory").name;
   return newEntity;
 }
@@ -70,13 +71,6 @@ function getAttribute(project, attributeName) {
     }
   }
   return "";
-}
-
-function truncate(string){
-  if (string.length > 50)
-    return string.substring(0, 50)+'...';
-  else
-    return string;
 }
 
 function getFromSC(url) {

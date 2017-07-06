@@ -1,0 +1,281 @@
+[
+  {
+    "text": "split sparkr mllib r into multiple files SparkR mllib R is getting bigger as we add more ML wrappers I d like to split it into multiple files to make us easy to maintain mllibClassification R mllibRegression R mllibClustering R mllibFeature R or mllib classification R mllib regression R mllib clustering R mllib features R For R convention it s more prefer the first way And I m not sure whether R supports the second organized way will check later Please let me know your preference I think the start of a new release cycle is a good opportunity to do this since it will involves less conflicts If this proposal was approved I can work on it cc felixcheung josephkb mengxr",
+    "assignee": "Yanbo Liang",
+    "predictions": [
+      {
+        "personName": "yanbo liang",
+        "score": 2
+      },
+      {
+        "personName": "sean busbey",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "text": "spark sql do not support for column datatype of char In spark sql when we create a table using the command as follwing create table tablename col char Hive will support for creating the table but when we desc the table desc tablename spark will report the error org apache spark sql types DataTypeException Unsupported dataType char If you have a struct and a field name of it has any special characters please use backticks to quote that field name e g x y Please note that backtick itself is not supported in a field name",
+    "assignee": "Xiu (Joe) Guo",
+    "predictions": []
+  },
+  {
+    "text": "refactor jdbcrdd to expose jdbc sparksql conversion functionality It would be useful if more of JDBCRDD s JDBC Spark SQL functionality was usable from outside of JDBCRDD this would make it easier to write test harnesses comparing Spark output against other JDBC databases",
+    "assignee": "Josh Rosen",
+    "predictions": [
+      {
+        "personName": "reynold xin",
+        "score": 18
+      },
+      {
+        "personName": "hyukjin kwon",
+        "score": 14
+      },
+      {
+        "personName": "josh rosen",
+        "score": 13
+      },
+      {
+        "personName": "xiao li",
+        "score": 12
+      },
+      {
+        "personName": "davies liu",
+        "score": 6
+      },
+      {
+        "personName": "djvulee",
+        "score": 6
+      },
+      {
+        "personName": "liwei lin(inactive)",
+        "score": 6
+      },
+      {
+        "personName": "peter lee",
+        "score": 4
+      },
+      {
+        "personName": "yanbo liang",
+        "score": 2
+      },
+      {
+        "personName": "michael armbrust",
+        "score": 2
+      },
+      {
+        "personName": "dongjoon hyun",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "text": "cleanup options for dataframe reader api in python There are some duplicated code for options we should simplify them",
+    "assignee": "Davies Liu",
+    "predictions": [
+      {
+        "personName": "reynold xin",
+        "score": 13
+      },
+      {
+        "personName": "xiao li",
+        "score": 8
+      },
+      {
+        "personName": "davies liu",
+        "score": 7
+      },
+      {
+        "personName": "xiangrui meng",
+        "score": 7
+      },
+      {
+        "personName": "yanbo liang",
+        "score": 5
+      },
+      {
+        "personName": "joseph k. bradley",
+        "score": 5
+      },
+      {
+        "personName": "josh rosen",
+        "score": 4
+      },
+      {
+        "personName": "dongjoon hyun",
+        "score": 4
+      },
+      {
+        "personName": "burak yavuz",
+        "score": 3
+      },
+      {
+        "personName": "larry mccay",
+        "score": 3
+      },
+      {
+        "personName": "yuhao yang",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "text": "remove unneeded commons httpclient dependencies from pom files in hadoop and sub projects In branch and later the patches for various child and related bugs listed in HADOOP most recently including HADOOP HADOOP HADOOP HADOOP and HDFS eliminate all use of commons httpclient from Hadoop and its sub projects except for hadoop tools hadoop openstack see HADOOP However after incorporating these patches commons httpclient is still listed as a dependency in these POM files hadoop project pom xml hadoop yarn project hadoop yarn hadoop yarn registry pom xml We wish to remove these but since commons httpclient is still used in many files in hadoop tools hadoop openstack we ll need to add the dependency to hadoop tools hadoop openstack pom xml We ll add a note to HADOOP to undo this when commons httpclient is removed from hadoop openstack In this was mostly done by HADOOP but the version info formerly inherited from hadoop project pom xml also needs to be added so that is in the branch version of the patch Other projects with undeclared transitive dependencies on commons httpclient previously provided via hadoop common or hadoop client may find this to be an incompatible change Of course that also means such project is exposed to the commons httpclient CVE and needs to be fixed for that reason as well",
+    "assignee": "Matt Foley",
+    "predictions": [
+      {
+        "personName": "allen wittenauer",
+        "score": 246
+      },
+      {
+        "personName": "larry mccay",
+        "score": 120
+      },
+      {
+        "personName": "matt foley",
+        "score": 79
+      },
+      {
+        "personName": "vishwajeet dusane",
+        "score": 72
+      },
+      {
+        "personName": "jiajia li",
+        "score": 72
+      },
+      {
+        "personName": "xiaoyu yao",
+        "score": 72
+      },
+      {
+        "personName": "jerome boulon",
+        "score": 48
+      },
+      {
+        "personName": "brahma reddy battula",
+        "score": 48
+      },
+      {
+        "personName": "tsuyoshi ozawa",
+        "score": 48
+      },
+      {
+        "personName": "chris nauroth",
+        "score": 48
+      },
+      {
+        "personName": "andrew wang",
+        "score": 48
+      }
+    ]
+  },
+  {
+    "text": "avoid per record type dispatch in jdbc when writing This is similar with https issues apache org jira browse SPARK Currently JdbcUtils savePartition is doing type based dispatch for each row to write appropriate values So appropriate writers can be created first according to the schema and then apply them to each row This approach is similar with CatalystWriteSupport",
+    "assignee": "Hyukjin Kwon",
+    "predictions": [
+      {
+        "personName": "hyukjin kwon",
+        "score": 4
+      },
+      {
+        "personName": "josh rosen",
+        "score": 2
+      },
+      {
+        "personName": "djvulee",
+        "score": 2
+      },
+      {
+        "personName": "liwei lin(inactive)",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "text": "ugi should contain authentication method The UserGroupInformation should contain authentication method in its subject This will be used in HDFS to issue delegation tokens only to kerberos authenticated clients",
+    "assignee": "Jitendra Nath Pandey",
+    "predictions": [
+      {
+        "personName": "jitendra nath pandey",
+        "score": 3
+      },
+      {
+        "personName": "hrishikesh gadre",
+        "score": 3
+      },
+      {
+        "personName": "marcelo vanzin",
+        "score": 2
+      },
+      {
+        "personName": "kan zhang",
+        "score": 2
+      },
+      {
+        "personName": "larry mccay",
+        "score": 2
+      },
+      {
+        "personName": "huizhi lu",
+        "score": 2
+      },
+      {
+        "personName": "robert kanter",
+        "score": 1
+      },
+      {
+        "personName": "jiajia li",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "text": "jdk set minimum version of hadoop to jdk Set minimum version of trunk to JDK",
+    "assignee": "Robert Kanter",
+    "predictions": [
+      {
+        "personName": "allen wittenauer",
+        "score": 13
+      },
+      {
+        "personName": "tsuyoshi ozawa",
+        "score": 5
+      },
+      {
+        "personName": "andrew wang",
+        "score": 5
+      },
+      {
+        "personName": "larry mccay",
+        "score": 5
+      },
+      {
+        "personName": "robert kanter",
+        "score": 4
+      },
+      {
+        "personName": "matt foley",
+        "score": 3
+      },
+      {
+        "personName": "vishwajeet dusane",
+        "score": 3
+      },
+      {
+        "personName": "jiajia li",
+        "score": 3
+      },
+      {
+        "personName": "sean busbey",
+        "score": 3
+      },
+      {
+        "personName": "xiaoyu yao",
+        "score": 3
+      },
+      {
+        "personName": "jerome boulon",
+        "score": 2
+      }
+    ]
+  }
+]

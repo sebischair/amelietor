@@ -2,15 +2,17 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Card, CardTitle, CardText, CardActions, Tabs, Tab} from 'react-mdl';
 import history from '../../src/history';
+import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject} from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
+import Experts from '../Experts';
 
 class Project extends React.Component {
   constructor(props) {
     super(props);
-    let projectId = getParameterByName("id", history.location.search);
+    let projectId = HelperFunctions.getParameterByName("id", history.location.search);
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
@@ -39,6 +41,7 @@ class Project extends React.Component {
                 {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId}/> }
                 {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
                 {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
+                {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
               </div>
             </section>
           </CardActions>

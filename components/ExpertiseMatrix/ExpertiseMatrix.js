@@ -15,7 +15,7 @@ class ExpertiseMatrix extends React.Component {
 
   render() {
     return (
-      <div id='hmap'><HeatMap data={this.state.data} /></div>
+      <div id='hmap'><HeatMap data={this.state.data}/></div>
     );
   }
 }
