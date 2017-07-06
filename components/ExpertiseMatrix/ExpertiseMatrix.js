@@ -1,7 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import HeatMap from '../HeatMap/HeatMap';
 import aeData from './data.json';
-import d3HeatMap from '../HeatMap/d3HeatMap';
 
 class ExpertiseMatrix extends React.Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class ExpertiseMatrix extends React.Component {
 
   render() {
     return (
-      <div id ='hmap'><HeatMap data={this.state.data} /></div>
+      <div id='hmap'><HeatMap data={this.state.data} /></div>
     );
   }
 }

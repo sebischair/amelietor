@@ -4,7 +4,7 @@ import colorbrewer from 'colorbrewer';
 function getNode(data) {
   let viz = document.createElement('div');
   viz.setAttribute('id', 'doublescroll');
-  viz.setAttribute('style', 'overflow: auto; overflow-y: hidden;');
+  //viz.setAttribute('style', 'overflow: auto; overflow-y: hidden;');
 
 
   data = data.map(function (item) {

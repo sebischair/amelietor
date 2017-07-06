@@ -20,7 +20,7 @@ class Project extends React.Component {
   render() {
     return (
       <div>
-        <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto'}}>
+        <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto'}}>
           <CardTitle expand style={{color: 'black'}}>{ this.props.selectedProject.name }</CardTitle>
           <CardText>
             { this.props.selectedProject.description }
