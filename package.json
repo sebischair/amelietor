@@ -9,6 +9,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "classnames": "^2.2.5",
+    "colorbrewer": "^1.0.0",
     "d3": "^4.9.1",
     "d3-measure-text": "0.0.2",
     "draft-js": "^0.7.0",

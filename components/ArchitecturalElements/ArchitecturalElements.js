@@ -4,12 +4,12 @@ import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject} from '../../core/actions/scactions';
 import BubbleChart from '../BubbleChart/BubbleChart';
-import qaData from './data.json';
+import aeData from './data.json';
 
-class QualityAttributes extends React.Component {
+class ArchitecturalElements extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: qaData};
+    this.state = {data: aeData};
     let projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
@@ -28,8 +28,8 @@ const mapStateToProps = (state) => {
   return {selectedProject};
 };
 
-QualityAttributes.propTypes = {
+ArchitecturalElements.propTypes = {
   dispatch: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps)(QualityAttributes);
+export default connect(mapStateToProps)(ArchitecturalElements);
