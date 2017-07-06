@@ -26,8 +26,14 @@
 .controls {
   position: fixed;
   bottom: 74px;
-  width: inherit;
+  width: 59%;
   background: rgba(255, 255, 255, 0.89);
   box-shadow: 2px -4px 44px -8px rgba(0,0,0,0.28);
   padding: 10px;
+}
+
+.recommendations{
+  position: fixed;
+  left: 63%;
+  bottom: inherit;
 }

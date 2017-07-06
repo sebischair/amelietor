@@ -223,7 +223,7 @@ class Amelietor extends React.Component {
             <UploadZone />
             </div>
           </div>
-          <div className="mdl-cell mdl-cell--4-col">
+          <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
             {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}
             <br/>
             {selectedAnnotation && <RecContainer />}
