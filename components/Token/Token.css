@@ -1,7 +1,11 @@
 .pos{
   position: relative;
-  right: 10px;
   bottom: 10px;
   font-size: 10px;
   background: white;
+}
+
+.annotation {
+  border-bottom: 3px double;
+  border-bottom-color: blue;
 }

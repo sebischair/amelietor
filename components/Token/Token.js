@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react'
 import s from "./Token.css"
 
 const Token = (props) => {
-  console.log(props.data);
+
   return (
-    <span style={{ backgroundColor: '#5bc0de'}} onClick={e => {
+    <span className={`${s.annotation}`} onClick={e => {
          e.preventDefault();
          props.onClick();
        }}>
@@ -20,6 +20,7 @@ const Token = (props) => {
 Token.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired
 };
 
 export default Token
