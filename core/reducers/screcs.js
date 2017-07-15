@@ -1,7 +1,8 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT} from '../actions/scactions';
+import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT, REQUEST_DESIGN_DECISIONS, RECEIVE_DESIGN_DECISIONS} from '../actions/scactions';
 const screcs = (state = {
   projects: [],
-  selectedProject: {}
+  selectedProject: {},
+  designDecisions: []
 }, action) => {
   switch (action.type) {
     case REQUEST_PROJECTS:
@@ -18,6 +19,16 @@ const screcs = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         selectedProject: action.selectedProject
+      });
+    case REQUEST_DESIGN_DECISIONS:
+      return Object.assign({}, state, {
+        isFetching:true,
+        designDecisions: []
+      });
+    case RECEIVE_DESIGN_DECISIONS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        designDecisions: action.designDecisions
       });
     default:
       return state;

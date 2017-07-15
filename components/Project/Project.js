@@ -8,6 +8,7 @@ import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
 import Experts from '../Experts';
+import DesignDecisions from '../DesignDecisions';
 
 class Project extends React.Component {
   constructor(props) {
@@ -20,6 +21,41 @@ class Project extends React.Component {
   }
 
   render() {
+    console.log(this.props.selectedProject);
+    let actionsView = null;
+    if(this.props.selectedProject.issuesCount > 0) {
+      actionsView =
+        <CardActions border>
+        <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({activeTab: tabId})} ripple>
+          <Tab>Quality Attributes</Tab>
+          <Tab>Architectural Elements</Tab>
+          <Tab>Expertise Matrix</Tab>
+          <Tab>Expert Recommender</Tab>
+          <Tab>Design Decisions</Tab>
+        </Tabs>
+        <section>
+          <br />
+          <div className="content">
+            {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId}/> }
+          </div>
+        </section>
+      </CardActions>
+    } else {
+      actionsView =
+        <CardActions border>
+          <section>
+            <br />
+            <div className="content">
+              Please import the project!
+            </div>
+          </section>
+        </CardActions>
+    }
+
     return (
       <div>
         <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto'}}>
@@ -27,24 +63,7 @@ class Project extends React.Component {
           <CardText>
             { this.props.selectedProject.description }
           </CardText>
-          <CardActions border>
-            <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({activeTab: tabId})} ripple>
-              <Tab>Quality Attributes</Tab>
-              <Tab>Architectural Elements</Tab>
-              <Tab>Expertise Matrix</Tab>
-              <Tab>Expert Recommender</Tab>
-              <Tab>Design Decisions</Tab>
-            </Tabs>
-            <section>
-              <br />
-              <div className="content">
-                {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId}/> }
-                {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
-                {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
-                {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
-              </div>
-            </section>
-          </CardActions>
+          {actionsView}
         </Card>
       </div>
     );

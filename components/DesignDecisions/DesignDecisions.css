@@ -1,9 +1,4 @@
 .customWidth {
   width: 100%;
-}
-
-.customWidthTR {
-  text-align:left;
-  width: 60%;
   white-space: normal !important;
 }

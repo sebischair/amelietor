@@ -52,7 +52,7 @@ class Experts extends React.Component {
                 <td className={`mdl-data-table__cell--non-numeric ${s.customWidthTR}`}>{ add.text }</td>
                 <td>
                   {add.predictions.map(function(pre, j) {
-                    return <p key={j} style={{'textAlign': 'center'}}>{pre.personName} -- {pre.score}</p>
+                    return <p key={j}>{pre.personName} -- {pre.score}</p>
                   })}
                 </td>
               </tr>
