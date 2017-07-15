@@ -37,8 +37,11 @@ export const fetchProjects = () => {
     }).then((data) => {
       let p = [];
       let projects = [];
-      data = data.slice(0, 10);
-      data.map(e => {
+      let filteredData = data.filter(d => {
+        return (d.name === "Hadoop Common" || d.name === "Spark")
+      });
+      filteredData = filteredData.concat(data.slice(0, 10));
+      filteredData.map(e => {
         p.push(getFromSC(e.href).then(r => {
           return r.json();
         }).then((entity) => {
@@ -78,7 +81,10 @@ function getProjectDetails(entity) {
   newEntity.name = entity.name;
   newEntity.description = getAttribute(entity, 'description');
   newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
-  newEntity.projectCategory = getAttribute(entity, 'projectCategory').name;
+  newEntity.projectCategory = (getAttribute(entity, 'projectCategory') !== "" ? getAttribute(entity, 'projectCategory').name : "");
+  if(entity.derivedAttributes.length > 0) {
+    newEntity.issuesCount = getDerivedAttribute(entity, 'issuesCount');
+  }
   return newEntity;
 }
 
@@ -86,6 +92,15 @@ function getAttribute(project, attributeName) {
   for (let i = 0; i < project.attributes.length; i++) {
     if (project.attributes[i].name === attributeName && project.attributes[i].values.length > 0) {
       return project.attributes[i].values[0];
+    }
+  }
+  return '';
+}
+
+function getDerivedAttribute(project, attributeName) {
+  for (let i = 0; i < project.derivedAttributes.length; i++) {
+    if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values.length > 0) {
+      return project.derivedAttributes[i].values[0];
     }
   }
   return '';
