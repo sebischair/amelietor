@@ -1,9 +1,9 @@
 import React, { PropTypes, Component} from 'react'
-import { FABButton, Button, Icon, List, Textfield, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
+import { Icon, List, ListItemAction, ListItem, ListItemContent  } from 'react-mdl';
 import { connect } from 'react-redux'
 import {deleteSoftwareSolution, deleteAlternative} from '../../core/actions/actions';
 import AddAlternative from '../AddAlternative'
-
+import s from './Alternatives.css';
 
 class Alternatives extends Component {
 
@@ -28,21 +28,8 @@ class Alternatives extends Component {
     const inputLabel = "New "+type;
     return (
         <section>
-          <div className="content">
+          <div className={`content`}>
             <List style={{padding: 0}}>
-              {/*<ListItem>*/}
-                {/*<ListItemContent icon="label">*/}
-                  {/*<Textfield*/}
-                    {/*onChange={() => {}}*/}
-                    {/*label={inputLabel}*/}
-                    {/*floatingLabel*/}
-                    {/*style={{width: '200px', }}*/}
-                  {/*/>*/}
-                {/*</ListItemContent>*/}
-                {/*<ListItemAction>*/}
-                  {/*<Button raised colored ripple> Add new</Button>*/}
-                {/*</ListItemAction>*/}
-              {/*</ListItem>*/}
               <AddAlternative type={type} href={href}/>
               {alternatives.data.map((alt, i) =>
                 <ListItem key={i}>

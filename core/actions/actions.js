@@ -21,8 +21,9 @@ export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
 //const API_ROOT = "https://spotlight.in.tum.de/";
 const API_ROOT = "http://localhost:9000/";
+const SPACY_ROOT = "http://131.159.30.9:5001/";
 const GET_CONTENT_EXTRACTION = "getFileContent";
-const PROCESS_DOCUMENT = "processDocument";
+const PROCESS_DOCUMENT = "annotate";
 const GET_META_INFORMATION = "getMetaInformation";
 
 const GET_ALTERNATIVES = "getAlternatives";
@@ -342,14 +343,29 @@ export const fetchAnnotationsPerBlock = (block) => {
     return sessionService.loadSession()
       .then(currentSession => {
         return fetch(`${API_ROOT}${PROCESS_DOCUMENT}`, {
-          method: 'post',
+          method: 'POST',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify({
             content: block.text,
+            tags: [
+              "MD",  // MD: verb, modal auxillaryverb, modal auxillary,
+              "JJS", // JJS: adjective, superlative,
+              "JJR", // JJR: adjective, comparative
+              "RBS", // RBS: adverb, superlative
+              "RBR", // RBR: adverb, comparative
+              //"JJ",  // JJ: adjective
+              "PRP$",// PRP$: pronoun, possessive
+              "PDT"  // PDT: predeterminer
+            ],
+
+
+
+
+
+
+
             parNum: block.paragraphNumber,
             parMax: block.paragraphsCount,
             docHash: block.documentHash,

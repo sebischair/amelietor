@@ -4,6 +4,7 @@ import {fetchRecMeta, fetchRecAlternatives, fetchRecSoftware} from '../../core/a
 import Meta from '../Meta'
 import Alternatives from '../Alternatives'
 import { Card, CardText, Tab, Tabs, Spinner } from 'react-mdl';
+import s from './RecContainer.css';
 
 
 class RecContainer extends Component {
@@ -36,13 +37,13 @@ class RecContainer extends Component {
   render() {
     const { href, info, alternatives, software } = this.props;
     return (
-      <Card shadow={0} style={{width: '512px', margin: 'auto'}}>
+      <Card shadow={0} className={`${s.card}`} >
         <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
-          <Tab>Meta {info.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}} />}</Tab>
-          <Tab>Alternatives {alternatives.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}}/>}</Tab>
-          <Tab>Software solutions {alternatives.isFetching && <Spinner singleColor style={{ width: '14px', height: '14px', marginTop: '14px', lineHeight: '0px'}}/>}</Tab>
+          <Tab>Meta {info.isFetching && <Spinner singleColor className={`${s.spinner}`} />}</Tab>
+          <Tab>Alternatives {alternatives.isFetching && <Spinner singleColor className={`${s.spinner}`} />}</Tab>
+          <Tab>Software solutions {alternatives.isFetching && <Spinner singleColor className={`${s.spinner}`} />}</Tab>
         </Tabs>
-        <CardText style={{color: '#000', fontSize: '14px', fontWeight: '100'}}>
+        <CardText className={`${s.cardText}`}>
           {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
           {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alternative" alternatives={alternatives} href={href}/> }
           {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} href={href}/> }
