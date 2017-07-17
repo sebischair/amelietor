@@ -8,6 +8,8 @@ export const RECEIVE_DESIGN_DECISIONS = 'RECEIVE_DESIGN_DECISIONS';
 export const REQUEST_DESIGN_DECISIONS = 'REQUEST_DESIGN_DECISIONS';
 export const RECEIVE_QA = 'RECEIVE_QA';
 export const REQUEST_QA = 'REQUEST_QA';
+export const RECEIVE_AE = 'RECEIVE_AE';
+export const REQUEST_AE = 'REQUEST_AE';
 
 const API_ROOT = 'https://server.sociocortex.com/api/v1/';
 const WORKSPACEID = '1iksmphpafkxq';
@@ -19,6 +21,18 @@ const WORKSPACES = 'workspaces';
 const MXLQUERY = 'mxlQuery';
 const AKRESERVER = 'http://131.159.30.93:9000/';
 const QADATA = 'getQAData?projectId=';
+const AEDATA = 'getAE?projectId=';
+
+export const fetchAEData = (projectId) => {
+  return dispatch => {
+    dispatch(requestAEData());
+    return getFrom(`${AKRESERVER}${AEDATA}${projectId}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      dispatch(receiveAEData(data));
+    });
+  }
+};
 
 export const fetchQAData = (projectId) => {
   return dispatch => {
@@ -188,6 +202,20 @@ export const receiveQAData = (json) => {
   return {
     type: RECEIVE_QA,
     qaData: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestAEData = () => {
+  return {
+    type: REQUEST_AE
+  };
+};
+
+export const receiveAEData = (json) => {
+  return {
+    type: RECEIVE_AE,
+    aeData: json,
     receivedAt: Date.now()
   }
 };
