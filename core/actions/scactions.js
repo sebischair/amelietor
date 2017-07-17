@@ -74,11 +74,11 @@ export const fetchQAData = (projectId) => {
   }
 };
 
-export const fetchDesignDecisions = () => {
+export const fetchDesignDecisions = (projectId) => {
   return dispatch => {
     dispatch(requestDesignDecisions());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': 'getDesignDecisions()'}).then(response => {
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "getDesignDecisions(\""+projectId+"\")"}).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveDesignDecisions(data.value));
