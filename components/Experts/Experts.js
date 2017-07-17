@@ -1,22 +1,23 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Table, TableHeader, Textfield} from 'react-mdl';
+import {Textfield} from 'react-mdl';
 import HelperFunctions from '../HelperFunctions';
-import {fetchSelctedProject} from '../../core/actions/scactions';
+import {fetchSelctedProject, fetchERData} from '../../core/actions/scactions';
 import history from '../../src/history';
-import edata from './data.json';
 import s from './Experts.css';
+import {Spinner} from 'react-mdl';
 
 class Experts extends React.Component {
   constructor(props) {
     super(props);
-    let experts = edata.filter(e => {
-      return e.predictions.length > 0;
-    });
-    this.state = {data: experts, searchString: ""};
+    this.state = {searchString: ""};
     let projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
+    }
+
+    if(this.props.erData.length === 0) {
+      this.props.dispatch(fetchERData(projectId));
     }
   }
 
@@ -25,7 +26,9 @@ class Experts extends React.Component {
   };
 
   render() {
-    let adds = this.state.data;
+    let adds = this.props.erData.filter(e => {
+      return e.predictions.length > 0;
+    });
     let searchString = this.state.searchString.trim().toLowerCase();
     if (searchString.length > 0) {
       adds = adds.filter(add => {
@@ -38,6 +41,8 @@ class Experts extends React.Component {
       <div>
         <Textfield value={this.state.searchString} onChange={this.handleChange} label="Search..."
                    style={{width: '400px'}}/>
+
+        <div style={{'textAlign': 'center'}}> {adds.length === 0 && <Spinner /> } </div>
 
         <table className={`mdl-data-table mdl-js-data-table mdl-shadow--2dp ${s.customWidth}`}>
           <thead>
@@ -65,11 +70,12 @@ class Experts extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const {selectedProject} = state.screcs;
-  return {selectedProject};
+  const {selectedProject, erData} = state.screcs;
+  return {selectedProject, erData};
 };
 
 Experts.propTypes = {
+  erData: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 

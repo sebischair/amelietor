@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Card, CardTitle, CardText, CardActions, Tabs, Tab} from 'react-mdl';
+import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button} from 'react-mdl';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject} from '../../core/actions/scactions';
@@ -21,7 +21,6 @@ class Project extends React.Component {
   }
 
   render() {
-    console.log(this.props.selectedProject);
     let actionsView = null;
     if(this.props.selectedProject.issuesCount > 0) {
       actionsView =
@@ -50,7 +49,7 @@ class Project extends React.Component {
           <section>
             <br />
             <div className="content">
-              Please import the project!
+              Import this project using <Button raised accent ripple>Syncpipes</Button>
             </div>
           </section>
         </CardActions>
