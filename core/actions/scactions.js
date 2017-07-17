@@ -10,6 +10,10 @@ export const RECEIVE_QA = 'RECEIVE_QA';
 export const REQUEST_QA = 'REQUEST_QA';
 export const RECEIVE_AE = 'RECEIVE_AE';
 export const REQUEST_AE = 'REQUEST_AE';
+export const RECEIVE_EM = 'RECEIVE_EM';
+export const REQUEST_EM = 'REQUEST_EM';
+export const RECEIVE_ER = 'RECEIVE_ER';
+export const REQUEST_ER = 'REQUEST_ER';
 
 const API_ROOT = 'https://server.sociocortex.com/api/v1/';
 const WORKSPACEID = '1iksmphpafkxq';
@@ -22,6 +26,30 @@ const MXLQUERY = 'mxlQuery';
 const AKRESERVER = 'http://131.159.30.93:9000/';
 const QADATA = 'getQAData?projectId=';
 const AEDATA = 'getAE?projectId=';
+const EMDATA = 'getAssignee?projectId=';
+const ERDATA = 'predictAssignee?projectId=';
+
+export const fetchERData = (projectId) => {
+  return dispatch => {
+    dispatch(requestERData());
+    return getFrom(`${AKRESERVER}${ERDATA}${projectId}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      dispatch(receiveERData(data));
+    });
+  }
+};
+
+export const fetchEMData = (projectId) => {
+  return dispatch => {
+    dispatch(requestEMData());
+    return getFrom(`${AKRESERVER}${EMDATA}${projectId}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      dispatch(receiveEMData(data));
+    });
+  }
+};
 
 export const fetchAEData = (projectId) => {
   return dispatch => {
@@ -216,6 +244,34 @@ export const receiveAEData = (json) => {
   return {
     type: RECEIVE_AE,
     aeData: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestEMData = () => {
+  return {
+    type: REQUEST_EM
+  };
+};
+
+export const receiveEMData = (json) => {
+  return {
+    type: RECEIVE_EM,
+    emData: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestERData = () => {
+  return {
+    type: REQUEST_ER
+  };
+};
+
+export const receiveERData = (json) => {
+  return {
+    type: RECEIVE_ER,
+    erData: json,
     receivedAt: Date.now()
   }
 };
