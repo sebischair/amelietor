@@ -22,7 +22,6 @@ class Projects extends React.Component {
     if (event.length === 1) {
       let sp = this.findSelectedProject(event[0]);
       this.props.dispatch(selectProject(sp));
-      console.log(sp);
       history.push({
         pathname: '/recommender',
         search: '?id=' + sp.projectId
@@ -54,7 +53,7 @@ class Projects extends React.Component {
       <div>
         <Textfield id='searchProjects' value={this.state.searchString} onChange={this.handleChange} label="Search..."
                    style={{width: '400px'}}/>
-        <div style={{'text-align': 'center'}}>
+        <div style={{'textAlign': 'center'}}>
           {this.props.projects.length === 0 && <Spinner /> }
         </div>
         <div>

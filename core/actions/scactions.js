@@ -6,6 +6,8 @@ export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
 export const SELECTED_PROJECT = 'SELECTED_PROJECT';
 export const RECEIVE_DESIGN_DECISIONS = 'RECEIVE_DESIGN_DECISIONS';
 export const REQUEST_DESIGN_DECISIONS = 'REQUEST_DESIGN_DECISIONS';
+export const RECEIVE_QA = 'RECEIVE_QA';
+export const REQUEST_QA = 'REQUEST_QA';
 
 const API_ROOT = 'https://server.sociocortex.com/api/v1/';
 const WORKSPACEID = '1iksmphpafkxq';
@@ -15,12 +17,26 @@ const ENTITIES = 'entities';
 const ENTITYTYPES = 'entityTypes';
 const WORKSPACES = 'workspaces';
 const MXLQUERY = 'mxlQuery';
+const AKRESERVER = 'http://131.159.30.93:9000/';
+const QADATA = 'getQAData?projectId=';
+
+export const fetchQAData = (projectId) => {
+  return dispatch => {
+    dispatch(requestQAData());
+
+    return getFrom(`${AKRESERVER}${QADATA}${projectId}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      dispatch(receiveQAData(data));
+    });
+  }
+};
 
 export const fetchDesignDecisions = () => {
   return dispatch => {
     dispatch(requestDesignDecisions());
 
-    return postToSC(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': 'getDesignDecisions()'}).then(response => {
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': 'getDesignDecisions()'}).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveDesignDecisions(data.value));
@@ -32,7 +48,7 @@ export const fetchProjects = () => {
   return dispatch => {
     dispatch(requestProjects());
 
-    return getFromSC(`${API_ROOT}${ENTITYTYPES}/${SCPROJECTID}/${ENTITIES}`).then(response => {
+    return getFrom(`${API_ROOT}${ENTITYTYPES}/${SCPROJECTID}/${ENTITIES}`).then(response => {
       return response.json();
     }).then((data) => {
       let p = [];
@@ -42,7 +58,7 @@ export const fetchProjects = () => {
       });
       filteredData = filteredData.concat(data.slice(0, 10));
       filteredData.map(e => {
-        p.push(getFromSC(e.href).then(r => {
+        p.push(getFrom(e.href).then(r => {
           return r.json();
         }).then((entity) => {
           if (isNotRetiredProject(entity)) {
@@ -60,7 +76,7 @@ export const fetchProjects = () => {
 
 export const fetchSelctedProject = (projectId) => {
   return dispatch => {
-    return getFromSC(`${API_ROOT}${ENTITIES}/${projectId}`).then(response => {
+    return getFrom(`${API_ROOT}${ENTITIES}/${projectId}`).then(response => {
       return response.json();
     }).then((project) => {
       dispatch(selectProject(getProjectDetails(project)));
@@ -106,17 +122,17 @@ function getDerivedAttribute(project, attributeName) {
   return '';
 }
 
-function getFromSC(url) {
+function getFrom(url) {
   return fetch(url, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     }
   });
 }
 
-function postToSC(url, data) {
+function postTo(url, data) {
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -158,6 +174,20 @@ export const receiveDesignDecisions = (json) => {
   return {
     type: RECEIVE_DESIGN_DECISIONS,
     designDecisions: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestQAData = () => {
+  return {
+    type: REQUEST_QA
+  };
+};
+
+export const receiveQAData = (json) => {
+  return {
+    type: RECEIVE_QA,
+    qaData: json,
     receivedAt: Date.now()
   }
 };

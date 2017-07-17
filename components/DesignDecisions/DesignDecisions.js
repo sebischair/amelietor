@@ -20,7 +20,6 @@ class DesignDecisions extends React.Component {
   render() {
     let designDecisions = this.props.designDecisions;
     let searchDecisions = this.state.searchDecisions.trim().toLowerCase();
-    console.log(searchDecisions)
     if (searchDecisions.length > 0) {
       designDecisions = designDecisions.filter(dd => {
         return ((dd.summary !== null && dd.summary.toLowerCase().indexOf(searchDecisions) !== -1) ||

@@ -21,7 +21,6 @@ class Project extends React.Component {
   }
 
   render() {
-    console.log(this.props.selectedProject);
     let actionsView = null;
     if(this.props.selectedProject.issuesCount > 0) {
       actionsView =

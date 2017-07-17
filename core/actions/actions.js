@@ -233,7 +233,6 @@ export const uploadFile = (file) => {
       .then(response => {
         dispatch(receiveFileContent(response.fileName, response.paragraphs));
       }).catch(error => {
-        console.log(error);
         dispatch(receiveFileContentFailed(error.fileName, error.error));
       });
   }
