@@ -64,10 +64,10 @@ class DesignDecision extends React.Component {
             { this.props.selectedProject.name }
           </CardTitle>
           <CardText>
-            <div style={{width: '100%', margin: 'auto'}}>
+            <div style={{margin: 'auto'}}>
               <Grid>
                 <Cell col={10}>{ this.props.selectedProject.description }</Cell>
-                <Cell col={2}>
+                <Cell col={2} style={{textAlign: 'right'}}>
                   <FABButton colored ripple onClick={this.onBackArrow}>
                     <Icon name="reply" />
                   </FABButton>
