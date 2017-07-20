@@ -4,6 +4,7 @@ import HelperFunctions from '../../components/HelperFunctions';
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
 export const SELECTED_PROJECT = 'SELECTED_PROJECT';
+export const SELECTED_DD = 'SELECTED_DD';
 export const RECEIVE_DESIGN_DECISIONS = 'RECEIVE_DESIGN_DECISIONS';
 export const REQUEST_DESIGN_DECISIONS = 'REQUEST_DESIGN_DECISIONS';
 export const RECEIVE_QA = 'RECEIVE_QA';
@@ -23,7 +24,7 @@ const ENTITIES = 'entities';
 const ENTITYTYPES = 'entityTypes';
 const WORKSPACES = 'workspaces';
 const MXLQUERY = 'mxlQuery';
-const AKRESERVER = 'http://131.159.30.93:9000/';
+const AKRESERVER = 'https://spotlight.in.tum.de/';
 const QADATA = 'getQAData?projectId=';
 const AEDATA = 'getAE?projectId=';
 const EMDATA = 'getAssignee?projectId=';
@@ -147,18 +148,22 @@ function getProjectDetails(entity) {
 }
 
 function getAttribute(project, attributeName) {
-  for (let i = 0; i < project.attributes.length; i++) {
-    if (project.attributes[i].name === attributeName && project.attributes[i].values.length > 0) {
-      return project.attributes[i].values[0];
+  if(project && project.attributes) {
+    for (let i = 0; i < project.attributes.length; i++) {
+      if (project.attributes[i].name === attributeName && project.attributes[i].values.length > 0) {
+        return project.attributes[i].values[0];
+      }
     }
   }
   return '';
 }
 
 function getDerivedAttribute(project, attributeName) {
-  for (let i = 0; i < project.derivedAttributes.length; i++) {
-    if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values.length > 0) {
-      return project.derivedAttributes[i].values[0];
+  if(project && project.derivedAttributes) {
+    for (let i = 0; i < project.derivedAttributes.length; i++) {
+      if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values.length > 0) {
+        return project.derivedAttributes[i].values[0];
+      }
     }
   }
   return '';
@@ -275,3 +280,48 @@ export const receiveERData = (json) => {
     receivedAt: Date.now()
   }
 };
+
+export const selectDD = (dd) => {
+  return {
+    type: SELECTED_DD,
+    selectedDD: dd
+  }
+};
+
+export const fetchSelctedDD = (ddId) => {
+  return dispatch => {
+    return getFrom(`${API_ROOT}${ENTITIES}/${ddId}`).then(response => {
+      return response.json();
+    }).then((dd) => {
+      dispatch(selectDD(getDDDetails(dd)));
+    });
+  }
+};
+
+function getDDDetails(entity) {
+  let newEntity = {};
+  newEntity.projectId = entity.id;
+  newEntity.href = entity.href;
+  newEntity.name = entity.name;
+  newEntity.summary = getAttribute(entity, 'Summary');
+  newEntity.description = getAttribute(entity, 'Description');
+  newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
+  newEntity.status = getAttribute(entity, 'status');
+  newEntity.status = getAttributes(entity, 'concepts');
+  newEntity.qualityAttributes = getAttributes(entity, 'qualityAttributes');
+  return newEntity;
+}
+
+function getAttributes(entity, attributeName) {
+  let values = [];
+  if(entity && entity.attributes) {
+    for (let i = 0; i < entity.attributes.length; i++) {
+      if (entity.attributes[i].name === attributeName && entity.attributes[i].values.length > 0) {
+        entity.attributes[i].forEach(a => {
+          values.add(a.values.name);
+        });
+      }
+    }
+  }
+  return values;
+}

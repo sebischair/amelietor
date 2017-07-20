@@ -27,5 +27,10 @@
     "path": "/projects",
     "page": "./projects",
     "chunk": "main"
+  },
+  {
+    "path": "/designDecision",
+    "page": "./designDecision",
+    "chunk": "main"
   }
 ]
