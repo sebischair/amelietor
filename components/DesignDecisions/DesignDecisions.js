@@ -3,26 +3,43 @@ import {connect} from 'react-redux';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {Table, TableHeader, Textfield} from 'react-mdl';
-import {fetchSelctedProject, fetchDesignDecisions} from '../../core/actions/scactions';
+import {fetchSelctedProject, fetchDesignDecisions, selectDD} from '../../core/actions/scactions';
 import s from './DesignDecisions.css';
 import {Spinner} from 'react-mdl';
 
 class DesignDecisions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchDecisions: ""};
-    let projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
+    this.state = {searchDecisions: "", projectId: ""};
+    this.state.projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(projectId));
+      this.props.dispatch(fetchSelctedProject(this.state.projectId));
     }
 
     if (this.props.designDecisions.length == 0) {
-      this.props.dispatch(fetchDesignDecisions(projectId));
+      this.props.dispatch(fetchDesignDecisions(this.state.projectId));
     }
   }
 
   handleChange = (event) => {
     this.setState({searchDecisions: event.target.value});
+  };
+
+  onRowSelection = (event) => {
+    if (event.length === 1) {
+      let dd = this.findSelectedDD(event[0]);
+      this.props.dispatch(selectDD(dd));
+      history.push({
+        pathname: '/designDecision',
+        search: '?projectId='+ this.state.projectId +'&id=' + dd.id
+      });
+    }
+  };
+
+  findSelectedDD(id) {
+    return this.props.designDecisions.find(dd => {
+      return dd.id === id;
+    });
   };
 
   render() {
@@ -42,7 +59,7 @@ class DesignDecisions extends React.Component {
 
         <div style={{'textAlign': 'center'}}> {this.props.designDecisions.length === 0 && <Spinner /> } </div>
 
-        <Table sortable rowKeyColumn="id" shadow={0} rows={designDecisions} className={`${s.customWidth}`}
+        <Table sortable selectable rowKeyColumn="id" shadow={0} rows={designDecisions} className={`${s.customWidth}`}
                onSelectionChanged={this.onRowSelection}>
           <TableHeader name="summary" tooltip="Design decision"
                        sortFn={(a, b, isAsc) => (isAsc ? a : b).localeCompare((isAsc ? b : a))}>Design Decision</TableHeader>

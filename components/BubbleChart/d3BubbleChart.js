@@ -11,7 +11,7 @@ function getNode(data) {
   let svg = d3.select(viz).append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("class", "bubble");
+    .attr("className", "bubble");
 
   let format = d3.format(",d");
 
@@ -35,18 +35,18 @@ function getNode(data) {
     .data(root.children)
     .enter().append("g")
     .attr("class", "node")
-    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
 
   node.append("title")
-    .text(function(d) { return d.id + ": " + format(d.value); });
+    .text(d => d.id + ": " + format(d.value));
 
   node.append("circle")
-    .attr("id", function(d) { return d.id; })
-    .attr("r", function(d) { return d.r; })
-    .style("fill", function(d) { return color(d.package); });
+    .attr("id", d => d.id)
+    .attr("r", d => d.r)
+    .style("fill", d => color(d.package));
 
   node.append("text")
-    .text(function(d) { return (d.data.id + " (" + format(d.data.value) + ")").substring(0, d.r / 3); })
+    .text(d => (d.data.id + " (" + format(d.data.value) + ")").substring(0, d.r / 3))
     .attr("dy", ".3em")
     .style("text-anchor", "middle")
     .style("font-size", function(d) {
@@ -59,9 +59,9 @@ function getNode(data) {
 
   //as per the documentation: https://github.com/react-d3-library/react-d3-library/wiki/Functionality
   //but is not invoked
-  svg.on("mount", function(){
-    applyTransition()
-  });
+  //svg.on("mount", function(){
+  // applyTransition()
+  //});
 
   return viz;
 }

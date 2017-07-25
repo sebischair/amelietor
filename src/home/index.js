@@ -34,7 +34,7 @@ class HomePage extends React.Component {
         <p>
 
         </p>
-        <Link to="/recommender">Demo</Link>
+        <Link to="/projects">Demo</Link>
       </Layout>
     );
   }
