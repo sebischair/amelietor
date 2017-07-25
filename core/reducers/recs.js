@@ -11,19 +11,19 @@ import {SELECT_REC,
 } from '../actions/actions';
 
 const recs = (state = {
-  href: null,
+  token: null,
   info:{},
   alternatives: {}
 }, action) => {
   switch (action.type) {
     case SELECT_REC:
       return Object.assign({}, state, {
-        href: action.tokenData.token,
+        token: action.tokenData.token,
         tokenData: action.tokenData
       });
     case REMOVE_REC:
       return Object.assign({}, state, {
-        href: action.tokenData.token,
+        token: action.tokenData.token,
         tokenData: action.tokenData
       });
     case REQUEST_SOFTWARE_SOLUTION_DELETION:

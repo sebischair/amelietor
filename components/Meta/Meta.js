@@ -11,7 +11,7 @@ class Meta extends Component {
     const {info} = this.props  ;
     return (
         <section>
-          <div className="content">{info.data || "Click on annotation"}</div>
+          <div className="content">{info.data || "No meta"}</div>
         </section>
     )
   };

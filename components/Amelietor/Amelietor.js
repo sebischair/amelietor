@@ -138,9 +138,9 @@ class Amelietor extends React.Component {
             Entity.create('TOKEN', 'MUTABLE', item);
             let targetRange = new SelectionState({
               anchorKey: key,
-              anchorOffset: item.offsets.begin,
+              anchorOffset: item.begin,
               focusKey: key,
-              focusOffset: item.offsets.end
+              focusOffset: item.end
             });
             let contentWithEntity = Modifier.applyEntity(
               editorState.getCurrentContent(),
@@ -167,9 +167,9 @@ class Amelietor extends React.Component {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
           let targetRange = new SelectionState({
             anchorKey: key,
-            anchorOffset: item.offsets.begin,
+            anchorOffset: item.begin,
             focusKey: key,
-            focusOffset: item.offsets.end
+            focusOffset: item.end
           });
           let contentWithEntity = Modifier.applyEntity(
             editorState.getCurrentContent(),
@@ -258,7 +258,7 @@ Amelietor.propTypes = {
 
 function mapStateToProps(state) {
   const annotations = state.annotationsByKey;
-  const selectedAnnotation = state.recs.href;
+  const selectedAnnotation = state.recs.token;
   const content = state.content;
   return {annotations, selectedAnnotation, content};
 

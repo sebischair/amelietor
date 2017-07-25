@@ -21,7 +21,6 @@ export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
 //const API_ROOT = "https://spotlight.in.tum.de/";
 const API_ROOT = "http://localhost:9000/";
-const SPACY_ROOT = "http://131.159.30.9:5001/";
 const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "annotate";
 const GET_META_INFORMATION = "getMetaInformation";
@@ -348,6 +347,7 @@ export const fetchAnnotationsPerBlock = (block) => {
           },
           body: JSON.stringify({
             content: block.text,
+            annotationType: ["uncertainty", "architectureRecommendations"],
             tags: [
               "MD",  // MD: verb, modal auxillaryverb, modal auxillary,
               "JJS", // JJS: adjective, superlative,
@@ -359,13 +359,6 @@ export const fetchAnnotationsPerBlock = (block) => {
               "PDT",  // PDT: predeterminer
               "RB"    // RB:adverb
             ],
-
-
-
-
-
-
-
             parNum: block.paragraphNumber,
             parMax: block.paragraphsCount,
             docHash: block.documentHash,
@@ -399,7 +392,7 @@ function receiveAnnotations(key, json) {
   return {
     type: RECEIVE_ANNOTATIONS,
     key,
-    annotations: json.data.map(child => child),
+    annotations: json.data,
     receivedAt: Date.now()
   }
 }
