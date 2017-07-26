@@ -4,7 +4,7 @@ import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject, fetchQAData} from '../../core/actions/scactions';
 import BubbleChart from '../BubbleChart/BubbleChart';
-import {Spinner} from 'react-mdl';
+import {Spinner, List, ListItem, Grid, Cell} from 'react-mdl';
 
 class QualityAttributes extends React.Component {
   constructor(props) {
@@ -14,19 +14,42 @@ class QualityAttributes extends React.Component {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
 
-    if(this.props.qaData.length === 0) {
+    if (this.props.qaData.length === 0) {
       this.props.dispatch(fetchQAData(projectId));
     }
   }
 
   render() {
-    return (
-      <div>
-        <div style={{'textAlign': 'center'}}>
-          {this.props.qaData.length === 0 && <Spinner /> }
-        </div>
-        {this.props.qaData.length > 0 && <BubbleChart data={this.props.qaData}/>}
+    let emptyDDList = "";
+    if(this.props.qaData.length > 0) {
+      emptyDDList = <div>
+          <b>Missing Quality Attributes</b>
+          <List>
+          {
+            this.props.qaData.map(dd => {
+              if (dd.value == 0) {
+                return <ListItem key={dd.id}> {dd.id} </ListItem>
+              }
+            })
+          }
+        </List>
       </div>
+    }
+
+    return (
+      <Grid>
+        <Cell col={10}>
+          <div>
+            <div style={{'textAlign': 'center'}}>
+              {this.props.qaData.length === 0 && <Spinner /> }
+            </div>
+            {this.props.qaData.length > 0 && <BubbleChart data={this.props.qaData}/>}
+          </div>
+        </Cell>
+        <Cell col={2}>
+          {emptyDDList}
+        </Cell>
+      </Grid>
     );
   }
 }

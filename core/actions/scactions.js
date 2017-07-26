@@ -55,10 +55,11 @@ export const fetchEMData = (projectId) => {
 export const fetchAEData = (projectId) => {
   return dispatch => {
     dispatch(requestAEData());
-    return getFrom(`${AKRESERVER}${AEDATA}${projectId}`).then(response => {
+
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "AEDDCountEvolution(\""+projectId+"\")"}).then(response => {
       return response.json();
     }).then((data) => {
-      dispatch(receiveAEData(data));
+      dispatch(receiveAEData(data.value));
     });
   }
 };
@@ -67,10 +68,10 @@ export const fetchQAData = (projectId) => {
   return dispatch => {
     dispatch(requestQAData());
 
-    return getFrom(`${AKRESERVER}${QADATA}${projectId}`).then(response => {
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "QADDCountEvolution(\""+projectId+"\")"}).then(response => {
       return response.json();
     }).then((data) => {
-      dispatch(receiveQAData(data));
+      dispatch(receiveQAData(data.value));
     });
   }
 };
