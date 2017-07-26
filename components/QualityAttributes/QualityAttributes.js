@@ -4,7 +4,7 @@ import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject, fetchQAData} from '../../core/actions/scactions';
 import BubbleChart from '../BubbleChart/BubbleChart';
-import {Spinner, List, ListItem, Grid, Cell} from 'react-mdl';
+import {Spinner, Grid, Cell} from 'react-mdl';
 
 class QualityAttributes extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class QualityAttributes extends React.Component {
           {
             this.props.qaData.map(dd => {
               if (dd.value == 0) {
-                return <div id={dd.id}> {dd.id} </div>
+                return <div key={dd.id}> {dd.id} </div>
               }
             })
           }

@@ -16,7 +16,6 @@ class BubbleChart extends React.Component {
   }
 
   redraw = (event) => {
-
     this.setState({d3: d3BubbleChart.redraw(this.props.data, event.target.value), year: event.target.value});
   };
 

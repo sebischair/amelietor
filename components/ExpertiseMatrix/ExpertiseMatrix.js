@@ -4,7 +4,7 @@ import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import HeatMap from '../HeatMap/HeatMap';
 import {fetchSelctedProject, fetchEMData} from '../../core/actions/scactions';
-import {Spinner, Textfield} from 'react-mdl';
+import {Spinner} from 'react-mdl';
 
 class ExpertiseMatrix extends React.Component {
   constructor(props) {
@@ -20,28 +20,12 @@ class ExpertiseMatrix extends React.Component {
     this.state = {searchString: ""};
   }
 
-  componentDidMount() {
-    //TODO: This is not invoked. Check the cause and resolve it.
-    //d3HeatMap.doubleScroll(document.getElementById('hmap'));
-  }
-
-  handleChange = (event) => {
-    this.setState({searchString: event.target.value});
-  };
-
   render() {
     let emData = this.props.emData;
-    let searchString = this.state.searchString.trim().toLowerCase();
-    if (searchString.length > 0) {
-      emData = emData.filter(data => (data.conceptName.toLowerCase().indexOf(searchString) !== -1)
-      || (data.personName.toLowerCase().indexOf(searchString) !== -1));
-    }
 
     //TODO: Unable to reload the component
     return (
       <div>
-        <Textfield id='searchEMData' value={this.state.searchString} onChange={this.handleChange} label="Search..."
-                   style={{width: '400px'}}/>
         <div style={{'textAlign': 'center'}}>
           {emData.length === 0 && <Spinner /> }
         </div>

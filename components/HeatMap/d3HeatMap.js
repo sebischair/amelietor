@@ -2,27 +2,18 @@ import * as d3 from 'd3';
 import colorbrewer from 'colorbrewer';
 
 function getNode(data) {
-  data = data.map(function (item) {
-    let newItem = {};
-    newItem.personName = item.personName;
-    newItem.conceptName = item.conceptName;
-    newItem.value = item.value;
-    return newItem;
-  });
+  let svg = d3.select("svg");
+  svg.selectAll("*").remove();
 
-  let x_elements = d3.set(data.map(function (item) {
-      return item.personName;
-    })).values(),
-    y_elements = d3.set(data.map(function (item) {
-      return item.conceptName;
-    })).values();
+  let x_elements = d3.set(data.map(item => item.personName)).values();
+  let y_elements = d3.set(data.map(item => item.conceptName)).values();
 
   let itemSize = 22,
     cellSize = itemSize - 1,
     margin = {top: 100, right: 10, bottom: 10, left: 100};
 
-  let width = x_elements.length * 25 - margin.right - margin.left,
-    height = y_elements.length * 25 - margin.top - margin.bottom;
+  let width = x_elements.length * 25 - margin.right - margin.left + 100,
+    height = y_elements.length * 25 - margin.top - margin.bottom + 100;
 
   let values = d3.set(data.map(function (item) {
     return item.value;
@@ -49,13 +40,13 @@ function getNode(data) {
     .domain(values)
     .range(colors);
 
-  let svg = d3.select("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
+  svg.attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+  let g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  let cells = svg.selectAll('rect')
+  let cells = g.selectAll('rect')
     .data(data)
     .enter().append('g').append('rect')
     .attr('class', 'cell')
@@ -75,13 +66,13 @@ function getNode(data) {
     return d.value;
   });
 
-  svg.append("g")
+  g.append("g")
     .attr("class", "y axis")
     .call(yAxis)
     .selectAll('text')
     .attr('font-weight', 'normal');
 
-  svg.append("g")
+  g.append("g")
     .attr("class", "x axis")
     .call(xAxis)
     .selectAll('text')
@@ -117,8 +108,7 @@ function doubleScroll(element) {
 
 
 let d3BubbleChart = {
-  getNode: getNode,
-  doubleScroll: doubleScroll
+  getNode: getNode
 };
 
 export default d3BubbleChart;
