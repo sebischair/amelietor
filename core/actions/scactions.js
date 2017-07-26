@@ -144,6 +144,7 @@ function getProjectDetails(entity) {
   newEntity.projectCategory = (getAttribute(entity, 'projectCategory') !== "" ? getAttribute(entity, 'projectCategory').name : "");
   if(entity.derivedAttributes.length > 0) {
     newEntity.issuesCount = getDerivedAttribute(entity, 'issuesCount');
+    newEntity.designDecisionCount = getDerivedAttribute(entity, 'designDecisionCount');
   }
   return newEntity;
 }

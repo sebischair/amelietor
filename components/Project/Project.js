@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button} from 'react-mdl';
+import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell} from 'react-mdl';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject} from '../../core/actions/scactions';
@@ -59,9 +59,19 @@ class Project extends React.Component {
       <div>
         <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto'}}>
           <CardTitle expand style={{color: 'black'}}>{ this.props.selectedProject.name }</CardTitle>
-          <CardText>
-            { this.props.selectedProject.description }
-          </CardText>
+          <Grid>
+            <Cell col={10}>
+              <CardText>
+                { this.props.selectedProject.description }
+              </CardText>
+            </Cell>
+            <Cell col={2}>
+              <div className="mdl-card__supporting-text">
+                Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
+                Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
+              </div>
+            </Cell>
+          </Grid>
           {actionsView}
         </Card>
       </div>

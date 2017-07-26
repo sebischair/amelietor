@@ -22,17 +22,15 @@ class QualityAttributes extends React.Component {
   render() {
     let emptyDDList = "";
     if(this.props.qaData.length > 0) {
-      emptyDDList = <div>
+      emptyDDList = <div className="mdl-card__supporting-text">
           <b>Missing Quality Attributes</b>
-          <List>
           {
             this.props.qaData.map(dd => {
               if (dd.value == 0) {
-                return <ListItem key={dd.id}> {dd.id} </ListItem>
+                return <div id={dd.id}> {dd.id} </div>
               }
             })
           }
-        </List>
       </div>
     }
 
