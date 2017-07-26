@@ -18,7 +18,8 @@ class HeatMap extends React.Component {
     const RD3Component = rd3.Component;
     return (
       <div className={`${s.heatMap}`}>
-        <RD3Component data={this.state.d3}/>
+        <svg id="heatMap"></svg>
+        {this.state.d3 && <RD3Component data={this.state.d3}/>}
       </div>
     );
   }

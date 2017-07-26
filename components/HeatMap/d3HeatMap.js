@@ -2,11 +2,6 @@ import * as d3 from 'd3';
 import colorbrewer from 'colorbrewer';
 
 function getNode(data) {
-  let viz = document.createElement('div');
-  viz.setAttribute('id', 'doublescroll');
-  //viz.setAttribute('style', 'overflow: auto; overflow-y: hidden;');
-
-
   data = data.map(function (item) {
     let newItem = {};
     newItem.personName = item.personName;
@@ -54,7 +49,7 @@ function getNode(data) {
     .domain(values)
     .range(colors);
 
-  let svg = d3.select(viz).append("svg")
+  let svg = d3.select("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -98,7 +93,7 @@ function getNode(data) {
       return "rotate(-65)";
     });
 
-  return viz;
+  return svg;
 }
 
 function doubleScroll(element) {

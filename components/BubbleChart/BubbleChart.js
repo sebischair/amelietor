@@ -17,8 +17,9 @@ class BubbleChart extends React.Component {
   render() {
     const RD3Component = rd3.Component;
     return (
-      <div className={`${s.bubbleChart}`}>
-        <RD3Component data={this.state.d3}/>
+      <div className={`${s.bubbleChart}`} ref="bubble">
+        <svg height="640" width="960" className="bubble" id="svg" ></svg>
+        {this.state.d3 && <RD3Component data={this.state.d3}/>}
       </div>
     );
   }

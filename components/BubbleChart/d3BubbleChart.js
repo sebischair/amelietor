@@ -1,17 +1,12 @@
 import * as d3 from 'd3';
 
 function getNode(data) {
-  let viz = document.createElement('div');
+  let svg = d3.select("svg");
   let width = 960, height = 640, color = d3.scaleOrdinal(d3.schemeCategory20c);
 
   let bubble  = d3.pack()
     .size([width, height])
     .padding(1);
-
-  let svg = d3.select(viz).append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("className", "bubble");
 
   let format = d3.format(",d");
 
@@ -57,13 +52,11 @@ function getNode(data) {
       return Math.min(20, Math.round(size))+'px';
     });
 
-  //as per the documentation: https://github.com/react-d3-library/react-d3-library/wiki/Functionality
-  //but is not invoked
-  //svg.on("mount", function(){
-  // applyTransition()
-  //});
+  svg.on("mount", function () {
+    applyTransition()
+  });
 
-  return viz;
+  return svg;
 }
 
 function applyTransition() {

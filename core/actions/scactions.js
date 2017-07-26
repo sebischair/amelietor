@@ -307,7 +307,7 @@ function getDDDetails(entity) {
   newEntity.description = getAttribute(entity, 'Description');
   newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
   newEntity.status = getAttribute(entity, 'status');
-  newEntity.status = getAttributes(entity, 'concepts');
+  newEntity.concepts = getAttributes(entity, 'concepts');
   newEntity.qualityAttributes = getAttributes(entity, 'qualityAttributes');
   return newEntity;
 }
