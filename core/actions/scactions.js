@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import HelperFunctions from '../../components/HelperFunctions';
+const config = require('../../tools/config');
 
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
@@ -16,15 +17,16 @@ export const REQUEST_EM = 'REQUEST_EM';
 export const RECEIVE_ER = 'RECEIVE_ER';
 export const REQUEST_ER = 'REQUEST_ER';
 
-const API_ROOT = 'https://server.sociocortex.com/api/v1/';
-const WORKSPACEID = '1iksmphpafkxq';
-const SCPROJECTID = 'fo7es9m27wpv';
-const SCTASKSID = '1vk4hqzziw3jp';
+const AKRESERVER = config.spotlightHost;
+const API_ROOT = config.scHost;
+const WORKSPACEID = config.scWorkspaceId;
+const SCPROJECTID = config.scProjectId;
+const SCTASKSID = config.scTaskId;
 const ENTITIES = 'entities';
 const ENTITYTYPES = 'entityTypes';
 const WORKSPACES = 'workspaces';
 const MXLQUERY = 'mxlQuery';
-const AKRESERVER = 'https://spotlight.in.tum.de/';
+
 const QADATA = 'getQAData?projectId=';
 const AEDATA = 'getAE?projectId=';
 const EMDATA = 'getAssignee?projectId=';

@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { sessionService } from 'redux-react-session';
+const config = require('../../tools/config');
 
 export const REQUEST_ANNOTATIONS = 'REQUEST_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
@@ -19,9 +20,8 @@ export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
 export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
 export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
-//const API_ROOT = "https://spotlight.in.tum.de/";
-const API_ROOT = "http://localhost:9000/";
-const SPACY_ROOT = "http://131.159.30.9:5001/";
+const API_ROOT = config.spotlightHost;
+
 const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "annotate";
 const GET_META_INFORMATION = "getMetaInformation";
@@ -348,23 +348,18 @@ export const fetchAnnotationsPerBlock = (block) => {
           },
           body: JSON.stringify({
             content: block.text,
+            annotationType: ["uncertainty", "architectureRecommendations"],
             tags: [
               "MD",  // MD: verb, modal auxillaryverb, modal auxillary,
               "JJS", // JJS: adjective, superlative,
               "JJR", // JJR: adjective, comparative
               "RBS", // RBS: adverb, superlative
               "RBR", // RBR: adverb, comparative
-              //"JJ",  // JJ: adjective
-              "PRP$",// PRP$: pronoun, possessive
-              "PDT"  // PDT: predeterminer
+              //"JJ", // JJ: adjective
+              "PRP$", // PRP$: pronoun, possessive
+              "PDT",  // PDT: predeterminer
+              "RB"    // RB:adverb
             ],
-
-
-
-
-
-
-
             parNum: block.paragraphNumber,
             parMax: block.paragraphsCount,
             docHash: block.documentHash,
@@ -398,7 +393,7 @@ function receiveAnnotations(key, json) {
   return {
     type: RECEIVE_ANNOTATIONS,
     key,
-    annotations: json.data.map(child => child),
+    annotations: json.data,
     receivedAt: Date.now()
   }
 }

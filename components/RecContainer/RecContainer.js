@@ -13,29 +13,29 @@ class RecContainer extends Component {
     this.state = { activeTab: 0 };
 
     this.isVisible = (id) => {
-      return this.state.activeTab == id;
+      return this.state.activeTab === id;
     };
 
   }
 
   componentDidMount() {
-    const { dispatch, href } = this.props;
-    dispatch(fetchRecMeta(href));
-    dispatch(fetchRecAlternatives(href));
-    dispatch(fetchRecSoftware(href));
+    const { dispatch, tokenData } = this.props;
+    dispatch(fetchRecMeta(tokenData.URI));
+    dispatch(fetchRecAlternatives(tokenData.URI));
+    dispatch(fetchRecSoftware(tokenData.URI));
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.href !== this.props.href) {
-      const { dispatch, href } = nextProps;
-      dispatch(fetchRecMeta(href));
-      dispatch(fetchRecAlternatives(href));
-      dispatch(fetchRecSoftware(href));
+    if (nextProps.tokenData !== this.props.tokenData) {
+      const { dispatch, tokenData } = nextProps;
+      dispatch(fetchRecMeta(tokenData.URI));
+      dispatch(fetchRecAlternatives(tokenData.URI));
+      dispatch(fetchRecSoftware(tokenData.URI));
     }
   }
 
   render() {
-    const { href, info, alternatives, software } = this.props;
+    const { tokenData, info, alternatives, software } = this.props;
     return (
       <Card shadow={0} className={`${s.card}`} >
         <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>
@@ -45,8 +45,8 @@ class RecContainer extends Component {
         </Tabs>
         <CardText className={`${s.cardText}`}>
           {this.isVisible(0) && !info.isFetching && <Meta info={info} /> }
-          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alternative" alternatives={alternatives} href={href}/> }
-          {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} href={href}/> }
+          {this.isVisible(1) && !alternatives.isFetching && <Alternatives type="alternative" alternatives={alternatives} href={tokenData.URI}/> }
+          {this.isVisible(2) && !software.isFetching && <Alternatives type="software" alternatives={software} href={tokenData.URI}/> }
         </CardText>
       </Card>
     )
@@ -56,17 +56,21 @@ class RecContainer extends Component {
 const mapStateToProps = (state) => {
 
   const {
-    href,
+    token,
     info,
     alternatives,
-    software
+    software,
+    tokenData
   } = state.recs ;
 
+
+
   return {
-    href,
+    token,
     info,
     alternatives,
-    software
+    software,
+    tokenData
   }
 };
 

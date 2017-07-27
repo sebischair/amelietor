@@ -73,6 +73,7 @@ class Amelietor extends React.Component {
 
     const mapDispatchToProps = (dispatch, props) => {
       return {
+        data: Entity.get(props.entityKey).getData(),
         onClick: () => {
           sendRecUrl(Entity.get(props.entityKey).getData());
         }
@@ -134,12 +135,12 @@ class Amelietor extends React.Component {
 
         if (!obj.isFetching && !obj.isError){
           obj.items.map(item => {
-            let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
+            Entity.create('TOKEN', 'MUTABLE', item);
             let targetRange = new SelectionState({
               anchorKey: key,
-              anchorOffset: item.offsets.begin,
+              anchorOffset: item.begin,
               focusKey: key,
-              focusOffset: item.offsets.end
+              focusOffset: item.end
             });
             let contentWithEntity = Modifier.applyEntity(
               editorState.getCurrentContent(),
@@ -166,9 +167,9 @@ class Amelietor extends React.Component {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
           let targetRange = new SelectionState({
             anchorKey: key,
-            anchorOffset: item.offsets.begin,
+            anchorOffset: item.begin,
             focusKey: key,
-            focusOffset: item.offsets.end
+            focusOffset: item.end
           });
           let contentWithEntity = Modifier.applyEntity(
             editorState.getCurrentContent(),
@@ -257,7 +258,7 @@ Amelietor.propTypes = {
 
 function mapStateToProps(state) {
   const annotations = state.annotationsByKey;
-  const selectedAnnotation = state.recs.href;
+  const selectedAnnotation = state.recs.token;
   const content = state.content;
   return {annotations, selectedAnnotation, content};
 
