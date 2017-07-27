@@ -25,7 +25,7 @@ class ArchitecturalElements extends React.Component {
       <div style={{'textAlign': 'center'}}>
         {this.props.aeData.length === 0 && <Spinner /> }
       </div>
-      {this.props.aeData.length > 0 && <BubbleChart data={this.props.aeData}/>}
+      {this.props.aeData.length > 0 && <BubbleChart data={this.props.aeData} changeTabHandler={this.props.changeTabHandler} viz="ae" />}
     </div>
     );
   }

@@ -3,6 +3,7 @@ import rd3 from 'react-d3-library';
 import d3BubbleChart from './d3BubbleChart';
 import s from './BubbleChart.css';
 import {Slider, Grid, Cell} from 'react-mdl';
+import * as d3 from 'd3';
 
 class BubbleChart extends React.Component {
 
@@ -12,7 +13,12 @@ class BubbleChart extends React.Component {
   }
 
   componentDidMount() {
+    let changeTabHandler = this.props.changeTabHandler;
+    let viz = this.props.viz;
     this.setState({d3: d3BubbleChart.getNode(this.props.data)});
+    d3.selectAll('circle').on("click", (d) => {
+      changeTabHandler(4, d.id, viz);
+    });
   }
 
   redraw = (event) => {

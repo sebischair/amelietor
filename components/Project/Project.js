@@ -17,15 +17,20 @@ class Project extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
-    this.state = {activeTab: 0};
+    this.state = {activeTab: 0, viz: "default", attrName: "default"};
+    this.changeTabHandler = this.changeTabHandler.bind(this);
   }
+
+  changeTabHandler = (tabNo, d, viz) => {
+      this.setState({activeTab: tabNo, viz: viz, attrName: d});
+  };
 
   render() {
     let actionsView = null;
     if(this.props.selectedProject.issuesCount > 0) {
       actionsView =
         <CardActions border>
-        <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({activeTab: tabId})} ripple>
+        <Tabs activeTab={this.state.activeTab}  onChange={(tabId) => this.changeTabHandler(tabId, "default", "default")} ripple>
           <Tab>Quality Attributes</Tab>
           <Tab>Architectural Elements</Tab>
           <Tab>Expertise Matrix</Tab>
@@ -35,11 +40,11 @@ class Project extends React.Component {
         <section>
           <br />
           <div className="content">
-            {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId}/> }
-            {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId} changeTabHandler={this.changeTabHandler}/> }
+            {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId} changeTabHandler={this.changeTabHandler}/> }
             {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
             {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
-            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId}/> }
+            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId} viz={this.state.viz} attrName={this.state.attrName} /> }
           </div>
         </section>
       </CardActions>
@@ -65,7 +70,7 @@ class Project extends React.Component {
                   { this.props.selectedProject.description }
               </Cell>
               <Cell col={2}>
-                <div className="mdl-card__supporting-text">
+                <div>
                   Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
                   Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
                 </div>

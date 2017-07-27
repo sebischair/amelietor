@@ -94,7 +94,6 @@ function applyTransition() {
       .duration(500)
       .style("opacity", 0);
   });
-
 }
 
 let d3BubbleChart = {

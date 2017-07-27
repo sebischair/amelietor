@@ -41,7 +41,7 @@ class QualityAttributes extends React.Component {
             <div style={{'textAlign': 'center'}}>
               {this.props.qaData.length === 0 && <Spinner /> }
             </div>
-            {this.props.qaData.length > 0 && <BubbleChart data={this.props.qaData}/>}
+            {this.props.qaData.length > 0 && <BubbleChart data={this.props.qaData} changeTabHandler={this.props.changeTabHandler} viz="qa"/>}
           </div>
         </Cell>
         <Cell col={2}>

@@ -15,9 +15,7 @@ class DesignDecisions extends React.Component {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
     }
 
-    if (this.props.designDecisions.length == 0) {
-      this.props.dispatch(fetchDesignDecisions(this.state.projectId));
-    }
+    this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.attrName, this.props.viz));
   }
 
   handleChange = (event) => {
@@ -69,49 +67,6 @@ class DesignDecisions extends React.Component {
       });
     }
 
-    let QAList = "";
-    let AEList = "";
-
-    let aes = (designDecisions.map(dd => dd.concepts)).reduce((a, b) => {
-      return a.concat(b);
-    }, []).filter((x, i, a) => a.indexOf(x) == i);
-    this.setState({selectedAEs: aes});
-
-    let qas = (designDecisions.map(dd => dd.qualityAttributes)).reduce((a, b) => {
-      return a.concat(b);
-    }, []).filter((x, i, a) => a.indexOf(x) == i);
-    this.setState({selectedQAs: qas});
-
-    if(this.state.filterQA && this.props.designDecisions.length > 0) {
-      QAList = <List style={{width: '300px', float: 'right'}}>
-        {
-          qas.map(qa =>
-            <ListItem key={qa}>
-              <ListItemContent avatar="person">{qa}</ListItemContent>
-              <ListItemAction>
-                <Checkbox defaultChecked/>
-              </ListItemAction>
-            </ListItem>
-          )
-        }
-      </List>
-    }
-
-    if(this.state.filterAE && this.props.designDecisions.length > 0) {
-      AEList = <List style={{width: '300px', float: 'right'}}>
-        {
-          aes.map(ae =>
-            <ListItem key={ae}>
-              <ListItemContent avatar="person">{ae}</ListItemContent>
-              <ListItemAction>
-                <Checkbox defaultChecked/>
-              </ListItemAction>
-            </ListItem>
-          )
-        }
-      </List>
-    }
-
     return (
       <div>
 
@@ -126,8 +81,7 @@ class DesignDecisions extends React.Component {
           </Cell>
           <Cell col={8}></Cell>
           <Cell col={4} style={{textAlign: 'right'}}>
-            {this.state.filterQA && QAList}
-            {this.state.filterAE && AEList}
+
           </Cell>
         </Grid>
 
@@ -138,7 +92,8 @@ class DesignDecisions extends React.Component {
           <TableHeader name="summary" tooltip="Design decision"
                        sortFn={(a, b, isAsc) => (isAsc ? a : b).localeCompare((isAsc ? b : a))}>Design Decision</TableHeader>
           <TableHeader name="description" tooltip="Description">Description</TableHeader>
-          <TableHeader name="qualityAttributes" tooltip="Quality Attributes">Quality Attributes</TableHeader>
+          <TableHeader name="qualityAttributes" tooltip="Quality Attributes"
+                       cellFormatter={(qualityAttribute) => `${qualityAttribute}\n`}>Quality Attributes</TableHeader>
           <TableHeader name="concepts" tooltip="Architectural Elements"
                        cellFormatter={(concept) => `${concept}\n`}>Architectural Elements</TableHeader>
           <TableHeader name="status" tooltip="Status">Status</TableHeader>

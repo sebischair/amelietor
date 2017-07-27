@@ -36,14 +36,12 @@ class Projects extends React.Component {
   };
 
   issueCountCol = (count) => {
-    console.log(count);
     if(count > 0) {
-
       return count;
     } else {
       return <Button raised colored>Import</Button>;
     }
-  }
+  };
 
   render() {
     let projects = this.props.projects;
