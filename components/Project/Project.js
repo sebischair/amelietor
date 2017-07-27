@@ -59,19 +59,19 @@ class Project extends React.Component {
       <div>
         <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto'}}>
           <CardTitle expand style={{color: 'black'}}>{ this.props.selectedProject.name }</CardTitle>
-          <Grid>
-            <Cell col={10}>
-              <CardText>
-                { this.props.selectedProject.description }
-              </CardText>
-            </Cell>
-            <Cell col={2}>
-              <div className="mdl-card__supporting-text">
-                Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
-                Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
-              </div>
-            </Cell>
-          </Grid>
+          <CardText>
+            <Grid>
+              <Cell col={10}>
+                  { this.props.selectedProject.description }
+              </Cell>
+              <Cell col={2}>
+                <div className="mdl-card__supporting-text">
+                  Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
+                  Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
+                </div>
+              </Cell>
+            </Grid>
+          </CardText>
           {actionsView}
         </Card>
       </div>

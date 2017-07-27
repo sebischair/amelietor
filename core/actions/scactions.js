@@ -107,13 +107,14 @@ export const fetchProjects = () => {
         p.push(getFrom(e.href).then(r => {
           return r.json();
         }).then((entity) => {
-          if (isNotRetiredProject(entity)) {
             projects.push(getProjectDetails(entity));
-          }
         }));
       });
 
       Promise.all(p).then(() => {
+        projects.sort(function (a, b) {
+          return b.issuesCount - a.issuesCount;
+        });
         dispatch(receiveProjects(projects));
       });
     });
