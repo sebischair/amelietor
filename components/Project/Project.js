@@ -17,12 +17,12 @@ class Project extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
-    this.state = {activeTab: 0, viz: "default", attrName: "default"};
+    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default"};
     this.changeTabHandler = this.changeTabHandler.bind(this);
   }
 
-  changeTabHandler = (tabNo, d, viz) => {
-      this.setState({activeTab: tabNo, viz: viz, attrName: d});
+  changeTabHandler = (tabNo, viz, d, segName) => {
+      this.setState({activeTab: tabNo, viz: viz, attrName: d, segmentName: segName});
   };
 
   render() {
@@ -30,7 +30,7 @@ class Project extends React.Component {
     if(this.props.selectedProject.issuesCount > 0) {
       actionsView =
         <CardActions border>
-        <Tabs activeTab={this.state.activeTab}  onChange={(tabId) => this.changeTabHandler(tabId, "default", "default")} ripple>
+        <Tabs activeTab={this.state.activeTab}  onChange={(tabId) => this.changeTabHandler(tabId, "default", "default", "default")} ripple>
           <Tab>Quality Attributes</Tab>
           <Tab>Architectural Elements</Tab>
           <Tab>Expertise Matrix</Tab>
@@ -44,7 +44,7 @@ class Project extends React.Component {
             {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId} changeTabHandler={this.changeTabHandler}/> }
             {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
             {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
-            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId} viz={this.state.viz} attrName={this.state.attrName} /> }
+            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId} viz={this.state.viz} attrName={this.state.attrName} segmentName={this.state.segmentName}/> }
           </div>
         </section>
       </CardActions>

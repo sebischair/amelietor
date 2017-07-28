@@ -15,7 +15,7 @@ class DesignDecisions extends React.Component {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
     }
 
-    this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.attrName, this.props.viz));
+    this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.viz, this.props.attrName, this.props.segmentName));
   }
 
   handleChange = (event) => {
@@ -96,6 +96,7 @@ class DesignDecisions extends React.Component {
                        cellFormatter={(qualityAttribute) => `${qualityAttribute}\n`}>Quality Attributes</TableHeader>
           <TableHeader name="concepts" tooltip="Architectural Elements"
                        cellFormatter={(concept) => `${concept}\n`}>Architectural Elements</TableHeader>
+          <TableHeader name="decisionCategory" tooltip="Decision Category">Decision Category</TableHeader>
           <TableHeader name="status" tooltip="Status">Status</TableHeader>
         </Table>
       </div>
