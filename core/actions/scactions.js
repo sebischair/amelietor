@@ -70,7 +70,7 @@ export const fetchQAData = (projectId) => {
   return dispatch => {
     dispatch(requestQAData());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "QADDCountEvolution(\""+projectId+"\")"}).then(response => {
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "QADDCatCountEvolution(\""+projectId+"\")"}).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveQAData(data.value));
@@ -78,11 +78,11 @@ export const fetchQAData = (projectId) => {
   }
 };
 
-export const fetchDesignDecisions = (projectId, attrName, viz) => {
+export const fetchDesignDecisions = (projectId, viz, attrName, segmentName) => {
   return dispatch => {
     dispatch(requestDesignDecisions());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "getDesignDecisions(\""+projectId+"\", \""+attrName+"\", \""+viz+ "\")"}).then(response => {
+    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "getDesignDecisions(\""+projectId + "\", \""+ viz +"\", \""+attrName + "\", \""+ segmentName + "\")"}).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveDesignDecisions(data.value));

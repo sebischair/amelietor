@@ -17,7 +17,7 @@ class BubbleChart extends React.Component {
     let viz = this.props.viz;
     this.setState({d3: d3BubbleChart.getNode(this.props.data)});
     d3.selectAll('circle').on("click", (d) => {
-      changeTabHandler(4, d.id, viz);
+      changeTabHandler(4, viz, d.id, "default");
     });
   }
 

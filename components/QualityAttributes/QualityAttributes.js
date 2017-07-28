@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject, fetchQAData} from '../../core/actions/scactions';
-import BubbleChart from '../BubbleChart/BubbleChart';
+import StackedBarChart from '../StackedBarChart/StackedBarChart';
 import {Spinner, Grid, Cell} from 'react-mdl';
 
 class QualityAttributes extends React.Component {
@@ -25,9 +25,9 @@ class QualityAttributes extends React.Component {
       emptyDDList = <div className="mdl-card__supporting-text">
           <b>Missing Quality Attributes</b>
           {
-            this.props.qaData.map(dd => {
-              if (dd.value == 0) {
-                return <div key={dd.id}> {dd.id} </div>
+            this.props.qaData.map(qa => {
+              if (qa.value.reduce((a, b) => a + b, 0) == 0) {
+                return <div key={qa.id}> {qa.id} </div>
               }
             })
           }
@@ -41,7 +41,7 @@ class QualityAttributes extends React.Component {
             <div style={{'textAlign': 'center'}}>
               {this.props.qaData.length === 0 && <Spinner /> }
             </div>
-            {this.props.qaData.length > 0 && <BubbleChart data={this.props.qaData} changeTabHandler={this.props.changeTabHandler} viz="qa"/>}
+            {this.props.qaData.length > 0 && <StackedBarChart data={this.props.qaData} changeTabHandler={this.props.changeTabHandler} viz="qa"/>}
           </div>
         </Cell>
         <Cell col={2}>
