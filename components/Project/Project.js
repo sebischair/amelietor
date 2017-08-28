@@ -1,14 +1,15 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell} from 'react-mdl';
+import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell, Spinner, Icon} from 'react-mdl';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import {fetchSelctedProject} from '../../core/actions/scactions';
+import {fetchSelctedProject, postTo} from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
 import Experts from '../Experts';
 import DesignDecisions from '../DesignDecisions';
+const config = require('../../tools/config');
 
 class Project extends React.Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class Project extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
-    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default"};
+    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false};
     this.changeTabHandler = this.changeTabHandler.bind(this);
   }
 
@@ -25,9 +26,43 @@ class Project extends React.Component {
       this.setState({activeTab: tabNo, viz: viz, attrName: d, segmentName: segName});
   };
 
+  importProject = () => {
+    this.setState({wait: true});
+    let syncPipesConfig = {
+      "config": {
+        "url": config.jiraHost,
+        "project": this.props.selectedProject.key
+      },
+      "name": "Extract issues from jira - " + this.props.selectedProject.name
+    };
+
+    let syncPipesPipeline = {
+      "name": "Issues into to SC - " + this.props.selectedProject.name,
+      "loaderConfig": "5968d71444fb3c1fa464b76b",
+      "mapping": "576937cbaa9cb6f8325b9b2b"
+    };
+
+    postTo(config.syncPipesServer + "services/jiraIssueExtractor/configs", syncPipesConfig).then(response => {
+      return response.json();
+    }).then((configData) => {
+      syncPipesPipeline.extractorConfig = configData._id;
+      postTo(config.syncPipesServer + "pipelines", syncPipesPipeline).then(response => {
+        return response.json();
+      }).then((pipelineData) => {
+        this.state.pipelineId = pipelineData._id;
+        postTo(config.syncPipesServer + "pipelines/"+ pipelineData._id +"/actions/execute", {}).then(response => {
+          return response.json();
+        }).then((statusData) => {
+          this.setState({pipelineStatus: statusData.status, pipelineExeId: statusData._id, wait: false});
+        });
+      });
+    });
+
+  };
+
   render() {
     let actionsView = null;
-    if(this.props.selectedProject.issuesCount > 0) {
+    if(this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount > 0) {
       actionsView =
         <CardActions border>
         <Tabs activeTab={this.state.activeTab}  onChange={(tabId) => this.changeTabHandler(tabId, "default", "default", "default")} ripple>
@@ -54,7 +89,11 @@ class Project extends React.Component {
           <section>
             <br />
             <div className="content">
-              Import this project using <Button raised accent ripple>Syncpipes</Button>
+              {this.props.selectedProject.issuesCount === 0 && <div><b>Step 1.</b> Import this project using <Button raised accent ripple onClick={this.importProject}> SyncPipes </Button></div> }
+              {this.props.selectedProject.issuesCount === 0 && this.state.pipelineStatus === "Queued" && <div><b>Step 1.1.</b> View import status <a target="_blank" href = {config.syncPipesClient+ "pipeline-executions/" + this.state.pipelineExeId} >here</a></div>}
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && <div>
+                <div><b>Step 1.</b> Import this project using SyncPipes <Icon name="check" /></div>
+                <div><b>Step 2.</b> Prepare data for analysis <Button raised accent ripple>Extract meta-information</Button></div></div>}
             </div>
           </section>
         </CardActions>
@@ -77,6 +116,9 @@ class Project extends React.Component {
               </Cell>
             </Grid>
           </CardText>
+          <div style={{'textAlign': 'center'}}>
+            {this.state.wait && <Spinner /> }
+          </div>
           {actionsView}
         </Card>
       </div>

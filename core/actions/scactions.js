@@ -99,15 +99,17 @@ export const fetchProjects = () => {
     }).then((data) => {
       let p = [];
       let projects = [];
-      let filteredData = data.filter(d => {
-        return (d.name === "Hadoop Common" || d.name === "Spark")
-      });
-      filteredData = filteredData.concat(data.slice(0, 10));
-      filteredData.map(e => {
+      // let filteredData = data.filter(d => {
+      //   return (d.name === "Hadoop Common" || d.name === "Spark" || d.name === "Commons CSV")
+      // });
+      // filteredData = filteredData.concat(data.slice(0, 10));
+      data.map(e => {
         p.push(getFrom(e.href).then(r => {
           return r.json();
         }).then((entity) => {
-            projects.push(getProjectDetails(entity));
+          let p = getProjectDetails(entity);
+          if(isNotRetiredProject(p))
+            projects.push(p);
         }));
       });
 
@@ -132,9 +134,10 @@ export const fetchSelctedProject = (projectId) => {
 };
 
 function isNotRetiredProject(entity) {
-  return entity.attributes.map(a => {
-    return (a.name === 'projectCategory' && a.values.length > 0 && a.values[0].name !== 'Retired')
-  });
+  if(entity.projectCategory !== 'Retired')
+    return true;
+  else
+    return false;
 }
 
 function getProjectDetails(entity) {
@@ -142,6 +145,7 @@ function getProjectDetails(entity) {
   newEntity.projectId = entity.id;
   newEntity.href = entity.href;
   newEntity.name = entity.name;
+  newEntity.key = getAttribute(entity, 'key');
   newEntity.description = getAttribute(entity, 'description');
   newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
   newEntity.projectCategory = (getAttribute(entity, 'projectCategory') !== "" ? getAttribute(entity, 'projectCategory').name : "");
@@ -166,7 +170,7 @@ function getAttribute(project, attributeName) {
 function getDerivedAttribute(project, attributeName) {
   if(project && project.derivedAttributes) {
     for (let i = 0; i < project.derivedAttributes.length; i++) {
-      if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values.length > 0) {
+      if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values && project.derivedAttributes[i].values.length > 0) {
         return project.derivedAttributes[i].values[0];
       }
     }
@@ -184,7 +188,7 @@ function getFrom(url) {
   });
 }
 
-function postTo(url, data) {
+export const postTo = (url, data) => {
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -193,7 +197,7 @@ function postTo(url, data) {
     },
     body: JSON.stringify(data)
   });
-}
+};
 
 export const receiveProjects = (json) => {
   return {

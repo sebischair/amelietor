@@ -39,7 +39,7 @@ class Projects extends React.Component {
     if(count > 0) {
       return count;
     } else {
-      return <Button raised colored>Import</Button>;
+      return "Import";
     }
   };
 
