@@ -3,7 +3,8 @@ import {REQUEST_FILE_CONTENT, RECEIVE_FILE_CONTENT,RECEIVE_FILE_CONTENT_FAILED} 
 const content = (state = {
   fileName:null,
   isFinished: true,
-  isError: false
+  isError: false,
+  readOnly: false
 }, action) => {
   switch (action.type) {
     case REQUEST_FILE_CONTENT:

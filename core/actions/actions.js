@@ -231,7 +231,7 @@ export const uploadFile = (file) => {
         return response.json();
       })
       .then(response => {
-        dispatch(receiveFileContent(response.fileName, response.paragraphs));
+        dispatch(receiveFileContent(response.fileName, response.paragraphs, false));
       }).catch(error => {
         dispatch(receiveFileContentFailed(error.fileName, error.error));
       });
@@ -246,10 +246,11 @@ function uploadStarted(fileName) {
   }
 }
 
-function receiveFileContent(fileName, fileContent) {
+function receiveFileContent(fileName, fileContent, readOnly) {
   return {
     type: RECEIVE_FILE_CONTENT,
     fileName: fileName,
+    readOnly: readOnly,
     fileContent: {'entityMap': {
     },'blocks':
       fileContent.map(child =>{

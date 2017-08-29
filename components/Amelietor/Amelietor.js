@@ -192,7 +192,7 @@ class Amelietor extends React.Component {
     const checkNoErrors = (element, index, array) => {
       return element.isError === false;
     };
-    const {selectedAnnotation, annotations} = this.props;
+    const {selectedAnnotation, annotations, content} = this.props;
     let annotations_list = [];
     Object.keys(annotations).forEach(function (key) {
       annotations_list.push(annotations[key]);
@@ -212,6 +212,7 @@ class Amelietor extends React.Component {
                 editorState={this.state.editorState}
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
+                readOnly={content.readOnly}
                 ref="editor"
                 spellCheck={true}
               />

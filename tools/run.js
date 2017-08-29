@@ -31,7 +31,7 @@ module.exports = task('run', () => new Promise((resolve) => {
     publicPath: webpackConfig.output.publicPath,
     stats: webpackConfig.stats,
   });
-
+  console.log(config);
   compiler.plugin('done', (stats) => {
     // Generate index.html page
     const bundle = stats.compilation.chunks.find(x => x.name === 'main').files[0];
