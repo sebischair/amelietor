@@ -34,7 +34,7 @@ function getNode(data) {
       .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
 
     node.append("title")
-      .text(d => d.id + ": " + format(d.value));
+      .text(d => d.class + "\n Design decisions: " + format(d.data.value));
 
     node.append("circle")
       .attr("id", d => d.id)
@@ -52,10 +52,6 @@ function getNode(data) {
         size += 1;
         return Math.min(20, Math.round(size)) + 'px';
       });
-
-    svg.on("mount", function () {
-      applyTransition()
-    });
   } else {
     svg.append('text').text('No Data!').attr("x", "300").attr("y", "300").style("font-size", "20px");
   }
@@ -69,32 +65,6 @@ function redraw(data, year) {
     return d;
   });
   return getNode(newData);
-}
-
-function applyTransition() {
-  let div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-  d3.selectAll('circle')
-    .transition()
-    .delay(function(d,i){ return i * (circleAnimation / 4); })
-    .style('opacity', 1);
-
-  d3.selectAll('circle').on('mouseover', function(d, i){
-    div.transition()
-      .duration(200)
-      .style("opacity", .9);
-    div.html( d.data.id + "<br/> Design decisions: " + format(d.data.value))
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-  })
-  .on('mouseout', function(d, i){
-    div.transition()
-      .duration(500)
-      .style("opacity", 0);
-  });
-
 }
 
 let d3BubbleChart = {
