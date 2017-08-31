@@ -58,7 +58,7 @@ class Amelietor extends React.Component {
 
   constructor(props) {
     super(props);
-    const { dispatch } = this.props;
+    const { dispatch, content } = this.props;
     this.onChange = (editorState) => {
       this.setState({editorState});
     };
@@ -80,9 +80,7 @@ class Amelietor extends React.Component {
       }
     };
 
-    const ConfiguredToken = connect(
-      mapDispatchToProps
-    )(Token);
+    const ConfiguredToken = connect(mapDispatchToProps)(Token);
 
     const decorator = new CompositeDecorator([
       {
@@ -107,7 +105,7 @@ class Amelietor extends React.Component {
       blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
     };
 
-    const blocks = convertFromRaw(rawContent);
+    const blocks = content.fileContent? content.fileContent.length === 0? convertFromRaw(rawContent): convertFromRaw(content.fileContent):convertFromRaw(rawContent);
 
     this.state = {
       loadingStatus: false,
@@ -212,8 +210,8 @@ class Amelietor extends React.Component {
                 editorState={this.state.editorState}
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
-                readOnly={content.readOnly}
                 ref="editor"
+                readOnly={this.props.content.readOnly}
                 spellCheck={true}
               />
             </div>

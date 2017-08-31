@@ -246,7 +246,7 @@ function uploadStarted(fileName) {
   }
 }
 
-function receiveFileContent(fileName, fileContent, readOnly) {
+export const receiveFileContent = (fileName, fileContent, readOnly) => {
   return {
     type: RECEIVE_FILE_CONTENT,
     fileName: fileName,

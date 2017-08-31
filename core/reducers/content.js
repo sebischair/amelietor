@@ -19,6 +19,7 @@ const content = (state = {
         isFinished: true,
         isError: false,
         errorMessage:"",
+        readOnly: action.readOnly,
         fileContent: action.fileContent,
         lastUpdated: action.receivedAt
       });
