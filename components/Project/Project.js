@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell, Spinner, Icon} from 'react-mdl';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import {fetchSelctedProject, postTo} from '../../core/actions/scactions';
+import {fetchSelctedProject, postTo, getFrom, putTo} from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
@@ -18,7 +18,7 @@ class Project extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
-    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false};
+    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false, isExtractionComplete: false};
     this.changeTabHandler = this.changeTabHandler.bind(this);
   }
 
@@ -31,7 +31,9 @@ class Project extends React.Component {
     let syncPipesConfig = {
       "config": {
         "url": config.jiraHost,
-        "project": this.props.selectedProject.key
+        "project": this.props.selectedProject.key,
+        "username": config.jiraUserName,
+        "password": config.jiraPassword
       },
       "name": "Extract issues from jira - " + this.props.selectedProject.name
     };
@@ -42,22 +44,31 @@ class Project extends React.Component {
       "mapping": "576937cbaa9cb6f8325b9b2b"
     };
 
-    postTo(config.syncPipesServer + "services/jiraIssueExtractor/configs", syncPipesConfig).then(response => {
-      return response.json();
-    }).then((configData) => {
+    postTo(config.syncPipesServer + "services/jiraIssueExtractor/configs", syncPipesConfig).then(response => response.json()).then((configData) => {
       syncPipesPipeline.extractorConfig = configData._id;
-      postTo(config.syncPipesServer + "pipelines", syncPipesPipeline).then(response => {
-        return response.json();
-      }).then((pipelineData) => {
+      postTo(config.syncPipesServer + "pipelines", syncPipesPipeline).then(response => response.json()).then((pipelineData) => {
         this.state.pipelineId = pipelineData._id;
-        postTo(config.syncPipesServer + "pipelines/"+ pipelineData._id +"/actions/execute", {}).then(response => {
-          return response.json();
-        }).then((statusData) => {
+        postTo(config.syncPipesServer + "pipelines/"+ pipelineData._id +"/actions/execute", {}).then(response => response.json()).then((statusData) => {
           this.setState({pipelineStatus: statusData.status, pipelineExeId: statusData._id, wait: false});
         });
       });
     });
+  };
 
+  extractMetaInformation = () => {
+    this.setState({wait: true});
+
+    let scProjectEntity = {"attributes": [ {"values": [ true ], "name": "isPreProcessed"}]};
+
+    getFrom(config.akreServer + "labelDesignDecisions?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(labelStatus => {
+      getFrom(config.akreServer + "updateTaskWithQA?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(qaStatus => {
+        getFrom(config.akreServer + "updateTaskWithAE?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(aeStatus => {
+          putTo(config.scHost + "entities/" + this.props.selectedProject.projectId, scProjectEntity).then(response => response.json()).then(finalStatus => {
+            this.setState({wait: false, isExtractionComplete: true});
+          });
+        });
+      })
+    })
   };
 
   render() {
@@ -91,9 +102,16 @@ class Project extends React.Component {
             <div className="content">
               {this.props.selectedProject.issuesCount === 0 && <div><b>Step 1.</b> Import this project using <Button raised accent ripple onClick={this.importProject}> SyncPipes </Button></div> }
               {this.props.selectedProject.issuesCount === 0 && this.state.pipelineStatus === "Queued" && <div><b>Step 1.1.</b> View import status <a target="_blank" href = {config.syncPipesClient+ "pipeline-executions/" + this.state.pipelineExeId} >here</a></div>}
-              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && <div>
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && !this.props.selectedProject.isPreProcessed && <div>
                 <div><b>Step 1.</b> Import this project using SyncPipes <Icon name="check" /></div>
-                <div><b>Step 2.</b> Prepare data for analysis <Button raised accent ripple>Extract meta-information</Button></div></div>}
+                <div>
+                  { !this.state.isExtractionComplete && <div><b>Step 2.</b> Prepare data for analysis <Button raised accent ripple onClick={this.extractMetaInformation}>Extract meta-information</Button></div> }
+                  {this.state.isExtractionComplete && <div><b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br /> <b>Please reload the page!</b></div>}
+                </div>
+              </div>}
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && this.props.selectedProject.isPreProcessed &&
+              <div><h3>This project does not contain any design decisions! </h3></div>}
+
             </div>
           </section>
         </CardActions>
