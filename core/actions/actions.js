@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { sessionService } from 'redux-react-session';
+import {decorationFailed, decorationSucceed} from "./amelietorActions";
 const config = require('../../tools/config');
 
 export const REQUEST_ANNOTATIONS = 'REQUEST_ANNOTATIONS';
@@ -372,11 +373,15 @@ export const fetchAnnotationsPerBlock = (block) => {
           })
           .then(json => {
             if (!json.status === "OK") {
-              return Promise.reject(json).then(receiveAnnotationsFailed(block.key, json))
+              return Promise.reject(json).then(()=>{
+                dispatch(receiveAnnotationsFailed(block.key, json));
+              });
             }
             dispatch(receiveAnnotations(block.key, json));
+
           }).catch(error => {
             dispatch(receiveAnnotationsFailed(block.key, error));
+
           });
       });
   };
@@ -390,7 +395,6 @@ function requestAnnotations(key) {
 }
 
 function receiveAnnotations(key, json) {
-
   return {
     type: RECEIVE_ANNOTATIONS,
     key,

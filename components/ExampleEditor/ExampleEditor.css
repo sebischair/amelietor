@@ -1,0 +1,9 @@
+.textfield{
+  width:600px;
+}
+
+.recommendations{
+  position: fixed;
+  left: 63%;
+  bottom: inherit;
+}

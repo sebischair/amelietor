@@ -22,7 +22,7 @@ Meta.propTypes = {
     data: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
     didInvalidate: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.number.isRequired
+    lastUpdated: PropTypes.number
   }).isRequired
 
 };

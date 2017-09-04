@@ -12,8 +12,10 @@ import {SELECT_REC,
 
 const recs = (state = {
   token: null,
-  info:{},
-  alternatives: {}
+  info:{isFetching: false, didInvalidate: false, lastUpdated:null},
+  alternatives: {isFetching: false, didInvalidate: false, lastUpdated:null},
+  software: {isFetching: false, didInvalidate: false, lastUpdated:null},
+  tokenData: {}
 }, action) => {
   switch (action.type) {
     case SELECT_REC:

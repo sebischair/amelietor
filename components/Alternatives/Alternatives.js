@@ -52,10 +52,10 @@ Alternatives.propTypes = {
   href: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alternatives: PropTypes.shape({
-    data: PropTypes.array.isRequired,
+    data: PropTypes.array,
     isFetching: PropTypes.bool.isRequired,
     didInvalidate: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.number.isRequired
+    lastUpdated: PropTypes.number
   }).isRequired
 
 };

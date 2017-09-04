@@ -1,7 +1,9 @@
 import React, { PropTypes, Component} from 'react'
 import { connect } from 'react-redux'
 import { Button, Icon } from 'react-mdl';
-import { removeRec, fetchAnnotationsPerBlock } from '../../core/actions/actions';
+import { removeRec } from '../../core/actions/actions';
+import {decorate} from "../../core/actions/amelietorActions";
+
 
 class TokenManager extends Component {
   constructor(props) {
@@ -9,12 +11,15 @@ class TokenManager extends Component {
     const {dispatch, blocks} = this.props;
     this.deleteItem = (token) => {
       dispatch(removeRec(token));
-      blocks.map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      dispatch(decorate());
       return true;
     }
   }
 
   render() {
+    if (!this.props.tokenData.token) {
+      return <div />
+    }
     return (
       <div>
         <h4 style={{marginTop: '0', color: '#000'}}>
@@ -28,7 +33,7 @@ class TokenManager extends Component {
 
 
 TokenManager.propTypes = {
-  blocks: PropTypes.array.isRequired,
+  tokenData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {

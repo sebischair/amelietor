@@ -1,0 +1,6 @@
+{
+  "name": "ExampleEditor",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Amelietor.js"
+}

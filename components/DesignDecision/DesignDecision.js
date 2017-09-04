@@ -33,7 +33,7 @@ class DesignDecision extends React.Component {
 
   render() {
     return (
-      <Amelietor />
+      <Amelietor triggerOnLoad={true} />
     );
   }
 }

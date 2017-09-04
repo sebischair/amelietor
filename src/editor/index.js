@@ -10,11 +10,11 @@
 
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
-import Amelietor from '../../components/Amelietor';
 
 
 import s from './styles.css';
 import { title, html } from './index.md';
+import ExampleEditor from "../../components/ExampleEditor/ExampleEditor";
 
 class EditorPage extends React.Component {
 
@@ -28,7 +28,7 @@ class EditorPage extends React.Component {
         <div
           dangerouslySetInnerHTML={{ __html: html }}
         />
-        <Amelietor />
+        <ExampleEditor />
       </Layout>
     );
   }

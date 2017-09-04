@@ -20,9 +20,11 @@ class RecContainer extends Component {
 
   componentDidMount() {
     const { dispatch, tokenData } = this.props;
-    dispatch(fetchRecMeta(tokenData.URI));
-    dispatch(fetchRecAlternatives(tokenData.URI));
-    dispatch(fetchRecSoftware(tokenData.URI));
+    if (tokenData.URI) {
+      dispatch(fetchRecMeta(tokenData.URI));
+      dispatch(fetchRecAlternatives(tokenData.URI));
+      dispatch(fetchRecSoftware(tokenData.URI));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,6 +38,9 @@ class RecContainer extends Component {
 
   render() {
     const { tokenData, info, alternatives, software } = this.props;
+    if (!tokenData.URI) {
+      return <div />
+    }
     return (
       <Card shadow={0} className={`${s.card}`} >
         <Tabs activeTab={this.state.activeTab} onChange={(tabId) => this.setState({ activeTab: tabId })}>

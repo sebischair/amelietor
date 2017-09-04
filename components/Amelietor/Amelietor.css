@@ -2,6 +2,7 @@
   font-size: 16px;
   border-style: hidden;
   margin-bottom: 110px;
+  min-height: 600px;
 }
 
 .button {

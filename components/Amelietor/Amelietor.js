@@ -1,15 +1,11 @@
 import React, {PropTypes} from 'react';
 let jsSHA = require("jssha");
 import {selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession} from '../../core/actions/actions';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
-import { Button, Icon, Textfield, ProgressBar} from 'react-mdl';
+import {Textfield} from 'react-mdl';
 
 import Token from '../Token';
-import TokenManager from '../TokenManager/TokenManager'
-import RecContainer from '../RecContainer/RecContainer';
-
-import UploadZone from '../UploadZone';
 
 import s from './Amelietor.css';
 
@@ -23,6 +19,7 @@ import {
   Entity,
   Modifier
   } from 'draft-js';
+import {decorate, decorationFailed, decorationSucceed} from "../../core/actions/amelietorActions";
 
 const rawContent = {
   blocks: [
@@ -63,7 +60,7 @@ class Amelietor extends React.Component {
       this.setState({editorState});
     };
 
-    fetchSession();
+    // fetchSession();
 
     const sendRecUrl = (tokenData) =>{
       dispatch(selectRec(tokenData));
@@ -108,10 +105,16 @@ class Amelietor extends React.Component {
     const blocks = content.fileContent? content.fileContent.length === 0? convertFromRaw(rawContent): convertFromRaw(content.fileContent):convertFromRaw(rawContent);
 
     this.state = {
+      triggerOnLoad: this.props.triggerOnLoad | false,
       loadingStatus: false,
       errorMessage: "",
       editorState: EditorState.createWithContent(blocks, decorator),
     };
+  }
+  componentDidMount(){
+    if (this.state.triggerOnLoad){
+      this.props.dispatch(decorate());
+    }
   }
 
   componentWillReceiveProps(nextProps){
@@ -120,11 +123,15 @@ class Amelietor extends React.Component {
     let onChange = (newState) => {
       this.onChange(newState)
     };
-    if (nextProps.content.isFinished && !nextProps.content.isError && this.props.content.lastUpdated != nextProps.content.lastUpdated) {
-      const newContent = convertFromRaw(nextProps.content.fileContent);
-      let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
-      onChange(newEditorState);
-      editorState = newEditorState;
+    if (nextProps.amelietorReducer.decorate && !this.props.amelietorReducer.decorate){
+      this.getNewDecorators();
+    }
+    if (nextProps.content.isFinished && !nextProps.content.isError &&
+      this.props.content.lastUpdated !== nextProps.content.lastUpdated) {
+        const newContent = convertFromRaw(nextProps.content.fileContent);
+        let newEditorState = EditorState.push(editorState, newContent, 'change-block-data');
+        onChange(newEditorState);
+        editorState = newEditorState;
     }
 
     let findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
@@ -156,10 +163,11 @@ class Amelietor extends React.Component {
     let oldAnnotations = this.props.annotations;
 
     findAndDeleteObsoleteAnnotations(oldAnnotations);
+    let annotations_list = [];
 
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
-
+      // annotations_list.push(nextProps.annotations[key]);
       if (!obj.isFetching && !obj.isError){
         obj.items.map(item => {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
@@ -180,32 +188,34 @@ class Amelietor extends React.Component {
         });
       }
     });
-
+    // console.log(annotations_list);
+    // const checkAllFetched = (element, index, array) => {
+    //   return element.isFetching === false;
+    // };
+    // const checkNoErrors = (element, index, array) => {
+    //   return element.isError === false;
+    // };
+    // if (annotations_list.every(checkAllFetched) && annotations_list.every(checkNoErrors)){
+    //   this.props.dispatch(decorationSucceed());
+    // }
   }
 
   render() {
-    const checkAllFetched = (element, index, array) => {
-      return element.isFetching === false;
-    };
-    const checkNoErrors = (element, index, array) => {
-      return element.isError === false;
-    };
-    const {selectedAnnotation, annotations, content} = this.props;
-    let annotations_list = [];
-    Object.keys(annotations).forEach(function (key) {
-      annotations_list.push(annotations[key]);
-    });
-    const allFetched = annotations_list.every(checkAllFetched);
-    const noErrors = annotations_list.every(checkNoErrors);
+    // const checkAllFetched = (element, index, array) => {
+    //   return element.isFetching === false;
+    // };
+    // const checkNoErrors = (element, index, array) => {
+    //   return element.isError === false;
+    // };
+    // const {selectedAnnotation, annotations, content} = this.props;
+    // let annotations_list = [];
+    // Object.keys(annotations).forEach(function (key) {
+    //   annotations_list.push(annotations[key]);
+    // });
+    // const allFetched = annotations_list.every(checkAllFetched);
+    // const noErrors = annotations_list.every(checkNoErrors);
     return (
-        <div className="mdl-grid">
-          <div className="mdl-cell mdl-cell--8-col">
-            <Textfield
-              onChange={() => {}}
-              label="Document name"
-              style={{width: '600px'}}
-            />
-            <div className={`${s.editor}`} onClick={this.focus} style={{heightMin:'600px'}}>
+            <div className={`${s.editor}`} onClick={this.focus}>
               <Editor
                 editorState={this.state.editorState}
                 handleKeyCommand={this.handleKeyCommand}
@@ -215,20 +225,6 @@ class Amelietor extends React.Component {
                 spellCheck={true}
               />
             </div>
-            <div className={`${s.controls}`}>
-                  {allFetched && <Button ripple onClick={this.getNewDecorators}><Icon name="refresh" /> Annotate </Button> }
-                  {!allFetched && <ProgressBar indeterminate />}
-                  {!allFetched && <i>Processing... </i> }
-                  {!noErrors && <Button raised accent ripple> <Icon name="report" /> Errors occurred. Show logs</Button>}
-            <UploadZone />
-            </div>
-          </div>
-          <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
-            {selectedAnnotation && <TokenManager blocks={convertToRaw(this.state.editorState.getCurrentContent())['blocks']}/>}
-            <br/>
-            {selectedAnnotation && <RecContainer />}
-          </div>
-        </div>
     );
   }
 }
@@ -248,10 +244,11 @@ function getEntityStrategy(mutability) {
   };
 }
 
-
 Amelietor.propTypes = {
   selectedAnnotation: PropTypes.string,
   annotations: PropTypes.object.isRequired,
+  amelietorReducer: PropTypes.object.isRequired,
+  triggerOnLoad: PropTypes.bool,
   dispatch: PropTypes.func.isRequired
 };
 
@@ -259,8 +256,8 @@ function mapStateToProps(state) {
   const annotations = state.annotationsByKey;
   const selectedAnnotation = state.recs.token;
   const content = state.content;
-  return {annotations, selectedAnnotation, content};
-
+  const amelietorReducer = state.amelietorReducer;
+  return {annotations, selectedAnnotation, content, amelietorReducer};
 }
 
 export default connect(mapStateToProps)(Amelietor);
