@@ -7,7 +7,8 @@ const amelietorReducer = (state = {
   switch (action.type) {
     case REQUEST_DECORATORS:
       return Object.assign({}, state, {
-        decorate: true
+        decorate: true,
+        isError: false
       });
     case DECORATED:
       return Object.assign({}, state, {

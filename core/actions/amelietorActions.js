@@ -9,7 +9,6 @@ export const decorate = () => {
 };
 
 export const decorationSucceed = () => {
-  console.log("invoked here");
   return {
     type: DECORATED
   }

@@ -163,11 +163,9 @@ class Amelietor extends React.Component {
     let oldAnnotations = this.props.annotations;
 
     findAndDeleteObsoleteAnnotations(oldAnnotations);
-    let annotations_list = [];
 
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
-      // annotations_list.push(nextProps.annotations[key]);
       if (!obj.isFetching && !obj.isError){
         obj.items.map(item => {
           let entityKey = Entity.create('TOKEN', 'MUTABLE', item);
@@ -188,32 +186,9 @@ class Amelietor extends React.Component {
         });
       }
     });
-    // console.log(annotations_list);
-    // const checkAllFetched = (element, index, array) => {
-    //   return element.isFetching === false;
-    // };
-    // const checkNoErrors = (element, index, array) => {
-    //   return element.isError === false;
-    // };
-    // if (annotations_list.every(checkAllFetched) && annotations_list.every(checkNoErrors)){
-    //   this.props.dispatch(decorationSucceed());
-    // }
   }
 
   render() {
-    // const checkAllFetched = (element, index, array) => {
-    //   return element.isFetching === false;
-    // };
-    // const checkNoErrors = (element, index, array) => {
-    //   return element.isError === false;
-    // };
-    // const {selectedAnnotation, annotations, content} = this.props;
-    // let annotations_list = [];
-    // Object.keys(annotations).forEach(function (key) {
-    //   annotations_list.push(annotations[key]);
-    // });
-    // const allFetched = annotations_list.every(checkAllFetched);
-    // const noErrors = annotations_list.every(checkNoErrors);
     return (
             <div className={`${s.editor}`} onClick={this.focus}>
               <Editor

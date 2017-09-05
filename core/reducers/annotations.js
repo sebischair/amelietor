@@ -51,7 +51,4 @@ function annotationsByKey(state = { }, action) {
   }
 }
 
-
-
-
 export default annotationsByKey

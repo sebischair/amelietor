@@ -372,16 +372,16 @@ export const fetchAnnotationsPerBlock = (block) => {
             return response.json();
           })
           .then(json => {
-            if (!json.status === "OK") {
-              return Promise.reject(json).then(()=>{
-                dispatch(receiveAnnotationsFailed(block.key, json));
-              });
-            }
+            // if (!json.status === "OK") {
+            //   return Promise.reject(json).then(()=>{
+            //     dispatch(receiveAnnotationsFailed(block.key, json));
+            //   });
+            // }
             dispatch(receiveAnnotations(block.key, json));
-
+            dispatch(decorationSucceed())
           }).catch(error => {
             dispatch(receiveAnnotationsFailed(block.key, error));
-
+            dispatch(decorationFailed("While processing text errors occured"))
           });
       });
   };
