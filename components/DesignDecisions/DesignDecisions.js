@@ -15,7 +15,9 @@ class DesignDecisions extends React.Component {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
     }
 
-    this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.viz, this.props.attrName, this.props.segmentName));
+    if(this.props.designDecisions.length === 0) {
+      this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.viz, this.props.attrName, this.props.segmentName));
+    }
   }
 
   handleChange = (event) => {
