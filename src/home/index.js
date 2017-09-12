@@ -13,6 +13,7 @@ import Layout from '../../components/Layout';
 import s from './styles.css';
 import { title } from './home.md';
 import Link from '../../components/Link';
+import {Card, CardTitle, CardText, CardActions, Button, Grid, Cell} from 'react-mdl';
 
 class HomePage extends React.Component {
 
@@ -23,18 +24,98 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <h4> An ontology-based approach for software architecture recommendations </h4>
-        <p>
-          This is a prototypical implementation of web editor that provides authors of software architecture documentation with
-          context related recommendations. Two types of recommendations are provided using existing broad cross-domain
-          DBpedia ontology to support architects during the decision-making process (more details could be found <a target="_blank" href="https://wwwmatthes.in.tum.de/pages/9cr85n66nn6c">here</a>.
-        </p>
-        <Link to="/editor">Demo</Link>
-        <h4>Expertise browser for design desicion making </h4>
-        <p>
+        <Grid className="grid">
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="syncpipes.png" style={{width: '300px', height: '200px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 1.</b> Import issues from JIRA using Syncpipes.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/projects">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="dd.png" style={{width: '250px', height: '100px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 2.</b> Extract design decisions from issues.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/projects">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="ae.png" style={{width: '250px', height: '200px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 3.</b> Annotate architectural elements in design decisions.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/projects">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+        </Grid>
 
-        </p>
-        <Link to="/projects">Demo</Link>
+
+        <Grid className="grid">
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="qa.png" style={{width: '300px', height: '200px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 4.</b> Annotate design decisions with quality attributes.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/projects">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="em.png" style={{width: '300px', height: '200px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 5.</b> Get recommendations about experts.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/projects">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+          <Cell col={4}>
+            <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
+              <CardTitle expand style={{color: '#fff'}}>
+                <img src="aae.png" style={{width: '300px', height: '200px'}} />
+              </CardTitle>
+              <CardText>
+                <b>Step 6.</b> Get recommendations for alternative architectural choice.
+              </CardText>
+              <CardActions border>
+                <Button colored><Link to="/editor">Demo</Link></Button>
+              </CardActions>
+            </Card>
+          </Cell>
+        </Grid>
+
+
+        <h4> A framework to support architecture decision making</h4>
+        <Grid>
+          <Cell col={12}>
+            <img src="framework.png" style={{width: '80%', height: '80%'}} />
+          </Cell>
+        </Grid>
       </Layout>
     );
   }
