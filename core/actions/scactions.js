@@ -312,7 +312,7 @@ function getDDDetails(entity) {
   newEntity.projectId = entity.id;
   newEntity.href = entity.href;
   newEntity.name = entity.name;
-  newEntity.summary = getAttribute(entity, 'Summary');
+  newEntity.summary = getAttribute(entity, 'summary');
   newEntity.description = getAttribute(entity, 'Description');
   newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
   newEntity.status = getAttribute(entity, 'status');
@@ -326,8 +326,8 @@ function getAttributes(entity, attributeName) {
   if(entity && entity.attributes) {
     for (let i = 0; i < entity.attributes.length; i++) {
       if (entity.attributes[i].name === attributeName && entity.attributes[i].values.length > 0) {
-        entity.attributes[i].forEach(a => {
-          values.add(a.values.name);
+        entity.attributes[i].values.forEach(a => {
+          values.push(a.name);
         });
       }
     }

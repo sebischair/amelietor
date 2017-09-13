@@ -13,7 +13,7 @@ import RecContainer from "../RecContainer";
 class DesignDecision extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {projectId: "", ddId: "", activeTab: 0};
+    this.state = {projectId: "", ddId: ""};
 
     this.state.projectId = HelperFunctions.getParameterByName("projectId", history.location.search);
     this.state.ddId = HelperFunctions.getParameterByName("id", history.location.search);
@@ -25,14 +25,20 @@ class DesignDecision extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
     }
-    this.props.dispatch(receiveFileContent(null, [this.props.selectedDD.description], true))
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedDD.hasOwnProperty("description") && nextProps.selectedProject.hasOwnProperty("projectId")) {
+      this.props.dispatch(receiveFileContent(null, [nextProps.selectedDD.description], true));
+    }
+  }
+
+
   onBackArrow = () => {
-      history.push({
-        pathname: '/recommender',
-        search: '?id=' + this.state.projectId
-      });
+    history.push({
+      pathname: '/recommender',
+      search: '?id=' + this.state.projectId
+    });
   };
 
   render() {

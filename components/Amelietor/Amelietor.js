@@ -100,6 +100,7 @@ class Amelietor extends React.Component {
           //block.documentHash = hash;
       });
       blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      this.setState({decorated:true});
       dispatch(decorationSucceed());
     };
 
@@ -107,15 +108,18 @@ class Amelietor extends React.Component {
 
     this.state = {
       triggerOnLoad: this.props.triggerOnLoad | false,
-      loadingStatus: false,
-      errorMessage: "",
       editorState: EditorState.createWithContent(blocks, decorator),
+      decorated:false,
     };
   }
   componentDidMount(){
     if (this.state.triggerOnLoad){
       this.props.dispatch(decorate());
     }
+  }
+
+  componentWillUnmount(){
+    this.setState({decorated:false});
   }
 
   componentWillReceiveProps(nextProps){
@@ -135,7 +139,7 @@ class Amelietor extends React.Component {
         editorState = newEditorState;
     }
 
-    let findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
+    this.findAndDeleteObsoleteAnnotations = (oldAnnotations)=>{
       Object.keys(oldAnnotations).forEach(function (key) {
         let obj = oldAnnotations[key];
 
@@ -162,8 +166,9 @@ class Amelietor extends React.Component {
     };
 
     let oldAnnotations = this.props.annotations;
-
-    findAndDeleteObsoleteAnnotations(oldAnnotations);
+    if (this.state.decorated){
+      this.findAndDeleteObsoleteAnnotations(oldAnnotations);
+    }
 
     Object.keys(nextProps.annotations).forEach(function (key) {
       let obj = nextProps.annotations[key];
