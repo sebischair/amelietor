@@ -100,6 +100,7 @@ class Amelietor extends React.Component {
           //block.documentHash = hash;
       });
       blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      dispatch(decorationSucceed());
     };
 
     const blocks = content.fileContent? content.fileContent.length === 0? convertFromRaw(rawContent): convertFromRaw(content.fileContent):convertFromRaw(rawContent);

@@ -378,10 +378,10 @@ export const fetchAnnotationsPerBlock = (block) => {
             //   });
             // }
             dispatch(receiveAnnotations(block.key, json));
-            dispatch(decorationSucceed())
+            dispatch(decorationSucceed());
           }).catch(error => {
             dispatch(receiveAnnotationsFailed(block.key, error));
-            dispatch(decorationFailed("While processing text errors occured"))
+            dispatch(decorationFailed("While processing text errors occured"));
           });
       });
   };
