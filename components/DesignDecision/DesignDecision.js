@@ -9,6 +9,7 @@ import {receiveFileContent} from '../../core/actions/actions';
 import s from './DesignDecision.css';
 import TokenManager from "../TokenManager";
 import RecContainer from "../RecContainer";
+import EditorControls from "../EditorControls";
 
 class DesignDecision extends React.Component {
   constructor(props) {
@@ -53,6 +54,7 @@ class DesignDecision extends React.Component {
               <br/>
               <RecContainer />
             </div>
+            <EditorControls />
           </div>
     );
   }

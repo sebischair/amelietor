@@ -3,10 +3,11 @@ import { sessionService } from 'redux-react-session';
 import {decorationFailed, decorationSucceed} from "./amelietorActions";
 const config = require('../../tools/config');
 
+
 export const REQUEST_ANNOTATIONS = 'REQUEST_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS_FAILED = 'RECEIVE_ANNOTATIONS_FAILED';
-export const INVALIDATE_KEY = 'INVALIDATE_KEY';
+export const INVALIDATE_ANNOTATION = 'INVALIDATE_ANNOTATION';
 export const SELECT_REC = 'SELECT_REC';
 export const REMOVE_REC = 'REMOVE_REC';
 export const REQUEST_REC_META = 'REQUEST_REC_META';
@@ -409,6 +410,14 @@ function receiveAnnotationsFailed(key, error) {
     key,
     annotations: [],
     errorMessage:error,
+    receivedAt: Date.now()
+  }
+}
+
+export const invalidateAnnotation = (key) => {
+  return {
+    type: INVALIDATE_ANNOTATION,
+    key,
     receivedAt: Date.now()
   }
 }
