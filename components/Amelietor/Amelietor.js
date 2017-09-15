@@ -33,7 +33,7 @@ class Amelietor extends React.Component {
       this.setState({editorState});
     };
 
-    // fetchSession();
+    dispatch(fetchSession());
 
     const sendRecUrl = (tokenData) =>{
       dispatch(selectRec(tokenData));

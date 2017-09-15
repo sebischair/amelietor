@@ -84,6 +84,7 @@ export const deleteSoftwareSolution = (href, token) =>{
 };
 
 export const fetchSession = () =>{
+  return dispatch => {
   return fetch(`${API_ROOT}${CREATE_SESSION}`, {
       method: 'post'
     }).then(response => {
@@ -99,6 +100,7 @@ export const fetchSession = () =>{
         });
       });
     })
+  };
 };
 
 export const addSoftware = (href, token) =>{
@@ -270,7 +272,7 @@ export const receiveFileContent = (fileName, fileContent, readOnly) => {
      },
     receivedAt: Date.now()
   }
-}
+};
 
 function receiveFileContentFailed(fileName, error) {
   return {
@@ -420,4 +422,4 @@ export const invalidateAnnotation = (key) => {
     key,
     receivedAt: Date.now()
   }
-}
+};
