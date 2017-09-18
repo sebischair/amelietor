@@ -2,14 +2,14 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import {Spinner, Table, TableHeader, Textfield, Grid, Cell, Chip, List, ListItem, ListItemContent, ListItemAction, Checkbox} from 'react-mdl';
+import {Spinner, Table, TableHeader, Textfield, Grid, Cell, RadioGroup, Radio, List, ListItem, ListItemContent, ListItemAction, Checkbox} from 'react-mdl';
 import {fetchSelctedProject, fetchDesignDecisions, selectDD} from '../../core/actions/scactions';
 import s from './DesignDecisions.css';
 
 class DesignDecisions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchDecisions: "", projectId: "", filterQA: false, filterAE: false, selectedAEs: [], selectedQAs: []};
+    this.state = {searchDecisions: "", projectId: "", filter: "null"};
     this.state.projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
@@ -41,22 +41,8 @@ class DesignDecisions extends React.Component {
     });
   };
 
-  filterQA = () => {
-    if(this.state.filterQA) {
-      this.setState({filterQA: false});
-    } else {
-      if(this.state.filterAE) this.setState({filterAE: false});
-      this.setState({filterQA: true});
-    }
-  };
-
-  filterAE = () => {
-    if(this.state.filterAE) {
-      this.setState({filterAE: false});
-    } else {
-      if(this.state.filterQA) this.setState({filterQA: false});
-      this.setState({filterAE: true});
-    }
+  filter = (event) => {
+    this.setState({filter: event.target.value});
   };
 
   render() {
@@ -68,6 +54,17 @@ class DesignDecisions extends React.Component {
         (dd.description !== null && dd.description.toLowerCase().indexOf(searchDecisions) !== -1));
       });
     }
+    switch (this.state.filter) {
+      case "qa": designDecisions = designDecisions.filter(dd => {
+        return dd.qualityAttributes.length > 0;
+      });
+      break;
+      case "ae":
+        designDecisions = designDecisions.filter(dd => {
+          return dd.concepts.length > 0;
+        });
+        break;
+    }
 
     return (
       <div>
@@ -77,9 +74,12 @@ class DesignDecisions extends React.Component {
             <Textfield id='searchDecisions' value={this.state.searchDecisions} onChange={this.handleChange} label="Search..."
                        style={{width: '400px'}}/>
           </Cell>
-          <Cell col={4} style={{textAlign: 'right'}}>
-            <Chip onClick={this.filterQA}>Filter quality attributes</Chip>
-            <Chip onClick={this.filterAE}>Filter architectural elements</Chip>
+          <Cell col={4}>
+            <RadioGroup container="ul" childContainer="li" value={this.state.filter} onChange={this.filter}>
+              <Radio value="null">No filter</Radio>
+              <Radio value="qa">Filter quality attributes</Radio>
+              <Radio value="ae">Filter architectural elements</Radio>
+            </RadioGroup>
           </Cell>
           <Cell col={8}></Cell>
           <Cell col={4} style={{textAlign: 'right'}}>
