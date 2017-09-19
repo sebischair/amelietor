@@ -23,7 +23,7 @@ class DesignDecisionPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <DesignDecision />
+        <DesignDecision id={this.props.route.params.id} projectId={this.props.route.params.projectId} />
       </Layout>
     );
   }

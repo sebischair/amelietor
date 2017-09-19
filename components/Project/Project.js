@@ -14,11 +14,20 @@ const config = require('../../tools/config');
 class Project extends React.Component {
   constructor(props) {
     super(props);
-    let projectId = HelperFunctions.getParameterByName("id", history.location.search);
+    let tabNum = 0;
+    switch (this.props.tab) {
+      case "qa": tabNum = 0; break;
+      case "ae": tabNum = 1; break;
+      case "em": tabNum = 2; break;
+      case "er": tabNum = 3; break;
+      case "dd": tabNum = 4; break;
+      default: tabNum = 0;
+    }
+    let projectId = this.props.id;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(projectId));
     }
-    this.state = {activeTab: 0, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false};
+    this.state = {activeTab: tabNum, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false};
     this.changeTabHandler = this.changeTabHandler.bind(this);
   }
 

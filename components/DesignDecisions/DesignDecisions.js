@@ -29,8 +29,7 @@ class DesignDecisions extends React.Component {
       let dd = this.findSelectedDD(event[0]);
       this.props.dispatch(selectDD(dd));
       history.push({
-        pathname: '/designDecision',
-        search: '?projectId='+ this.state.projectId +'&id=' + dd.id
+        pathname: '/designDecision/'+ dd.id + '/project/' + this.state.projectId
       });
     }
   };
@@ -75,7 +74,7 @@ class DesignDecisions extends React.Component {
                        style={{width: '400px'}}/>
           </Cell>
           <Cell col={4}>
-            <RadioGroup container="ul" childContainer="li" value={this.state.filter} onChange={this.filter}>
+            <RadioGroup container="ul" childContainer="li" name="filters" value={this.state.filter} onChange={this.filter}>
               <Radio value="null">No filter</Radio>
               <Radio value="qa">Filter quality attributes</Radio>
               <Radio value="ae">Filter architectural elements</Radio>

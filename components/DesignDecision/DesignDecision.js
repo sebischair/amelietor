@@ -16,8 +16,8 @@ class DesignDecision extends React.Component {
     super(props);
     this.state = {projectId: "", ddId: ""};
 
-    this.state.projectId = HelperFunctions.getParameterByName("projectId", history.location.search);
-    this.state.ddId = HelperFunctions.getParameterByName("id", history.location.search);
+    this.state.projectId = this.props.projectId;
+    this.state.ddId = this.props.id;
 
     if (Object.keys(this.props.selectedDD).length === 0 && this.props.selectedDD.constructor === Object) {
       this.props.dispatch(fetchSelctedDD(this.state.ddId));
@@ -25,6 +25,10 @@ class DesignDecision extends React.Component {
 
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectId));
+    }
+
+    if (this.props.selectedDD.hasOwnProperty("description") && this.props.selectedProject.hasOwnProperty("projectId")) {
+      this.props.dispatch(receiveFileContent(null, [this.props.selectedDD.description], true));
     }
   }
 
@@ -37,8 +41,7 @@ class DesignDecision extends React.Component {
 
   onBackArrow = () => {
     history.push({
-      pathname: '/recommender',
-      search: '?id=' + this.state.projectId
+      pathname: '/recommender/'+ this.state.projectId + '/dd'
     });
   };
 

@@ -23,8 +23,7 @@ class Projects extends React.Component {
       let sp = this.findSelectedProject(event[0]);
       this.props.dispatch(selectProject(sp));
       history.push({
-        pathname: '/recommender',
-        search: '?id=' + sp.projectId
+        pathname: '/recommender/'+ sp.projectId
       });
     }
   };
