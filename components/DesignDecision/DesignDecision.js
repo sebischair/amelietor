@@ -51,7 +51,7 @@ class DesignDecision extends React.Component {
     }
   }
 
-
+  
   onBackArrow = () => {
     history.push({
       pathname: '/recommender/'+ this.state.projectId + '/dd'
@@ -63,7 +63,7 @@ class DesignDecision extends React.Component {
           <div className="mdl-grid">
             <div className="mdl-cell mdl-cell--8-col">
               <h3>{this.state.summary}</h3>
-              <Amelietor triggerOnLoad={true} initialContent={this.rawContent}/>
+              <Amelietor triggerOnLoad={true} initialContent={this.rawContent} readOnly={true}/>
             </div>
             <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
               <TokenManager/>

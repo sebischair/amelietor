@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 let jsSHA = require("jssha");
 import {
-  selectRec, fetchAnnotationsPerBlock, selectKey, fetchSession,
+  selectRec, clearRec, fetchAnnotationsPerBlock, selectKey, fetchSession,
   invalidateAnnotation
 } from '../../core/actions/actions';
 import {connect} from 'react-redux'
@@ -93,9 +93,9 @@ class Amelietor extends React.Component {
     };
 
     const editorState = this.props.initialContent? EditorState.createWithContent(convertFromRaw(this.props.initialContent), decorator): EditorState.createEmpty(decorator);
-
+    
     this.state = {
-      triggerOnLoad: this.props.triggerOnLoad | false,
+      triggerOnLoad: this.props.triggerOnLoad || false,
       editorState: editorState,
       decorated:false,
       invalidAnnotations:false,
@@ -110,6 +110,7 @@ class Amelietor extends React.Component {
   componentWillUnmount(){
     this.setState({decorated:false});
     this.invalidateAnnotations(this.state.editorState);
+    this.props.dispatch(clearRec(null));
   }
 
   componentWillReceiveProps(nextProps){
@@ -199,7 +200,7 @@ class Amelietor extends React.Component {
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
                 ref="editor"
-                readOnly={this.props.content.readOnly}
+                readOnly={this.props.readOnly || false}
                 spellCheck={true}
               />
             </div>
@@ -226,6 +227,7 @@ Amelietor.propTypes = {
   amelietorReducer: PropTypes.object.isRequired,
   triggerOnLoad: PropTypes.bool,
   initialContent: PropTypes.object,
+  readOnly: PropTypes.bool,
   dispatch: PropTypes.func.isRequired
 };
 

@@ -1,4 +1,5 @@
 import {SELECT_REC,
+  CLEAR_REC,
   RECEIVE_REC_META,
   REQUEST_REC_META,
   REQUEST_ALTERNATIVES,
@@ -22,6 +23,11 @@ const recs = (state = {
       return Object.assign({}, state, {
         token: action.tokenData.token,
         tokenData: action.tokenData
+      });
+    case CLEAR_REC:
+      return Object.assign({}, state, {
+        token: null,
+        tokenData: {}
       });
     case REMOVE_REC:
       return Object.assign({}, state, {
