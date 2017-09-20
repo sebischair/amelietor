@@ -46,7 +46,6 @@ class DesignDecision extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedDD.hasOwnProperty("description") && nextProps.selectedProject.hasOwnProperty("projectId")) {
       this.props.dispatch(receiveFileContent(null, [nextProps.selectedDD.description], true));
-      console.log(nextProps.selectedDD.summary);
       this.setState({summary:nextProps.selectedDD.summary})
     }
   }
