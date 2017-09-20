@@ -2,3 +2,7 @@
   width: 100%;
   white-space: normal !important;
 }
+
+.filters {
+  list-style-type: none;
+}

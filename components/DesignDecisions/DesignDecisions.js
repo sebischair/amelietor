@@ -74,7 +74,7 @@ class DesignDecisions extends React.Component {
                        style={{width: '400px'}}/>
           </Cell>
           <Cell col={4}>
-            <RadioGroup container="ul" childContainer="li" name="filters" value={this.state.filter} onChange={this.filter}>
+            <RadioGroup container="ul" childContainer="li" name="filters" value={this.state.filter} onChange={this.filter} className={`${s.filters}`}>
               <Radio value="null">No filter</Radio>
               <Radio value="qa">Filter quality attributes</Radio>
               <Radio value="ae">Filter architectural elements</Radio>
