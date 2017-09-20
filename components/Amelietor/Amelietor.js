@@ -66,7 +66,6 @@ class Amelietor extends React.Component {
     this.invalidateAnnotations = (editorState) => {
       const updated_content = this.state.editorState.getCurrentContent();
       let blocks = convertToRaw(updated_content)['blocks'];
-      console.log(blocks);
       blocks.map((block, key) => {
         block.paragraphNumber = key;
         block.paragraphsCount = blocks.length;
@@ -135,7 +134,6 @@ class Amelietor extends React.Component {
     }
     else {
       this.findAndDeleteObsoleteAnnotations = (oldAnnotations) => {
-        console.log(convertToRaw(editorState.getCurrentContent())['blocks']);
         Object.keys(oldAnnotations).forEach(function (key) {
           let obj = oldAnnotations[key];
           if (!obj.isFetching && !obj.isError && !obj.isInvalid) {

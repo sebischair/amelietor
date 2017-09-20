@@ -18,7 +18,18 @@ class DesignDecision extends React.Component {
 
     this.state.projectId = this.props.projectId;
     this.state.ddId = this.props.id;
-
+    this.state.summary = this.props.selectedDD.summary;
+    this.rawContent = {
+      blocks: [
+        {
+          text: (this.props.selectedDD.summary || ''),
+          type: 'unstyled',
+        }
+      ],
+      entityMap: {
+      }
+    };
+     
     if (Object.keys(this.props.selectedDD).length === 0 && this.props.selectedDD.constructor === Object) {
       this.props.dispatch(fetchSelctedDD(this.state.ddId));
     }
@@ -35,6 +46,8 @@ class DesignDecision extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedDD.hasOwnProperty("description") && nextProps.selectedProject.hasOwnProperty("projectId")) {
       this.props.dispatch(receiveFileContent(null, [nextProps.selectedDD.description], true));
+      console.log(nextProps.selectedDD.summary);
+      this.setState({summary:nextProps.selectedDD.summary})
     }
   }
 
@@ -49,8 +62,8 @@ class DesignDecision extends React.Component {
     return (
           <div className="mdl-grid">
             <div className="mdl-cell mdl-cell--8-col">
-              <h2>{ this.props.selectedDD.summary}</h2>
-              <Amelietor triggerOnLoad={true} />
+              <h3>{this.state.summary}</h3>
+              <Amelietor triggerOnLoad={true} initialContent={this.rawContent}/>
             </div>
             <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
               <TokenManager/>
