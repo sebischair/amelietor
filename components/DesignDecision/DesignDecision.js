@@ -22,7 +22,7 @@ class DesignDecision extends React.Component {
     this.rawContent = {
       blocks: [
         {
-          text: (this.props.selectedDD.summary || ''),
+          text: (this.props.selectedDD.description || ''),
           type: 'unstyled',
         }
       ],
@@ -51,7 +51,6 @@ class DesignDecision extends React.Component {
     }
   }
 
-  
   onBackArrow = () => {
     history.push({
       pathname: '/recommender/'+ this.state.projectId + '/dd'
