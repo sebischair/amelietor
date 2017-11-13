@@ -24,13 +24,15 @@ class QualityAttributes extends React.Component {
     if(this.props.qaData.length > 0) {
       emptyDDList = <div className="mdl-card__supporting-text">
           <b>Missing Quality Attributes</b>
+          <ul>
           {
             this.props.qaData.map(qa => {
               if (qa.value.reduce((a, b) => a + b, 0) == 0) {
-                return <div key={qa.id}> {qa.id} </div>
+                return <li key={qa.id}> {qa.id} </li>
               }
             })
           }
+          </ul>
       </div>
     }
 

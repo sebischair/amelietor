@@ -24,6 +24,7 @@ class HomePage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
+        <h4>Import, analyze and explore your software architectural decisions</h4>
         <Grid className="grid">
           <Cell col={4}>
             <Card shadow={0} style={{width: '320px', height: '320px', margin: 'auto'}}>
@@ -108,12 +109,10 @@ class HomePage extends React.Component {
             </Card>
           </Cell>
         </Grid>
-
-
         <h4> A framework to support architecture decision making</h4>
         <Grid>
           <Cell col={12}>
-            <img src="framework.png" style={{width: '80%', height: '80%'}} />
+            <img src="framework.png" style={{width: '80%'}} />
           </Cell>
         </Grid>
       </Layout>

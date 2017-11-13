@@ -9,7 +9,11 @@ import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
 import Experts from '../Experts';
 import DesignDecisions from '../DesignDecisions';
+import s from './Project.css';
+
 const config = require('../../tools/config');
+
+
 
 class Project extends React.Component {
   constructor(props) {
@@ -111,13 +115,13 @@ class Project extends React.Component {
     return (
       <div>
         <Card shadow={0} style={{width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto'}}>
-          <CardTitle expand style={{color: 'black'}}>{ this.props.selectedProject.name }</CardTitle>
-          <CardText>
+          <CardTitle expand>{ this.props.selectedProject.name }</CardTitle>
+          <CardText className={`${s.customCardText}`} >
             <Grid>
               <Cell col={10}>
                   { this.props.selectedProject.description }
               </Cell>
-              <Cell col={2}>
+              <Cell col={2} >
                 <div>
                   Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
                   Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
