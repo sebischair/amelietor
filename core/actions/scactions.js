@@ -22,6 +22,8 @@ const API_ROOT = config.scHost;
 const WORKSPACEID = config.scWorkspaceId;
 const SCPROJECTID = config.scProjectId;
 const SCTASKSID = config.scTaskId;
+const SCUSERNAME = config.scUserName;
+const SCPASSWORD = config.scPassword;
 const ENTITIES = 'entities';
 const ENTITYTYPES = 'entityTypes';
 const WORKSPACES = 'workspaces';
@@ -153,6 +155,9 @@ function getProjectDetails(entity) {
     newEntity.issuesCount = getDerivedAttribute(entity, 'issuesCount');
     newEntity.designDecisionCount = getDerivedAttribute(entity, 'designDecisionCount');
   }
+  let isProcessed = getAttribute(entity, 'isPreProcessed');
+  if(isProcessed === '' || isProcessed === 'No' || !isProcessed) isProcessed = false; else isProcessed = true;
+  newEntity.isPreProcessed = isProcessed;
   return newEntity;
 }
 
@@ -178,7 +183,7 @@ function getDerivedAttribute(project, attributeName) {
   return '';
 }
 
-function getFrom(url) {
+export const getFrom = (url) => {
   return fetch(url, {
     method: 'GET',
     headers: {
@@ -186,14 +191,26 @@ function getFrom(url) {
       'Content-Type': 'application/json'
     }
   });
-}
+};
 
 export const postTo = (url, data) => {
   return fetch(url, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+};
+
+export const putTo = (url, data) => {
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': 'Basic '+ window.btoa(`${SCUSERNAME}:${SCPASSWORD}`)
     },
     body: JSON.stringify(data)
   });

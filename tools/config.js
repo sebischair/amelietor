@@ -16,9 +16,14 @@ module.exports = {
   spotlightHost: 'https://spotlight.in.tum.de/',
   scHost: 'https://server.sociocortex.com/api/v1/',
   jiraHost: 'issues.apache.org/jira',
+  jiraUserName: '',
+  jiraPassword: '',
   syncPipesServer: 'http://131.159.30.128:3010/api/v1/',
   syncPipesClient: 'http://131.159.30.128:3000/#/',
   scWorkspaceId: '1iksmphpafkxq',
   scProjectId: 'fo7es9m27wpv',
-  scTaskId: '1vk4hqzziw3jp'
+  scTaskId: '1vk4hqzziw3jp',
+  akreServer: 'http://127.0.0.1:9999/',
+  scUserName: '',
+  scPassword: ''
 };
