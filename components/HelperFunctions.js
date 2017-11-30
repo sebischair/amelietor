@@ -11,16 +11,8 @@ function getParameterByName(name, string) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function truncate(string){
-  if (string.length > 50)
-    return string.substring(0, 50)+'...';
-  else
-    return string;
-}
-
 let HelperFunctions = {
-  getParameterByName: getParameterByName,
-  truncate: truncate
+  getParameterByName: getParameterByName
 };
 
 export default HelperFunctions;

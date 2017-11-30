@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell, Spinner, Icon} from 'react-mdl';
-import history from '../../src/history';
-import HelperFunctions from '../HelperFunctions';
 import {fetchSelctedProject, postTo, getFrom, putTo} from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
@@ -13,9 +11,8 @@ import s from './Project.css';
 
 const config = require('../../tools/config');
 
-
-
 class Project extends React.Component {
+
   constructor(props) {
     super(props);
     let tabNum = 0;
@@ -27,9 +24,9 @@ class Project extends React.Component {
       case "dd": tabNum = 4; break;
       default: tabNum = 0;
     }
-    let projectId = this.props.id;
+    let projectKey = this.props.projectKey;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(projectId));
+      this.props.dispatch(fetchSelctedProject(projectKey));
     }
     this.state = {activeTab: tabNum, viz: "default", attrName: "default", segmentName: "default", pipelineStatus: "", pipelineExeId: "", wait: false, isExtractionComplete: false};
     this.changeTabHandler = this.changeTabHandler.bind(this);
@@ -73,9 +70,9 @@ class Project extends React.Component {
 
     let scProjectEntity = {"attributes": [ {"values": [ true ], "name": "isPreProcessed"}]};
 
-    getFrom(config.akreServer + "labelDesignDecisions?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(labelStatus => {
-      getFrom(config.akreServer + "updateTaskWithQA?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(qaStatus => {
-        getFrom(config.akreServer + "updateTaskWithAE?projectId=" + this.props.selectedProject.projectId).then(response => response.json()).then(aeStatus => {
+    getFrom(config.akreServer + "labelDesignDecisions?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(labelStatus => {
+      getFrom(config.akreServer + "updateTaskWithQA?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(qaStatus => {
+        getFrom(config.akreServer + "updateTaskWithAE?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(aeStatus => {
           putTo(config.scHost + "entities/" + this.props.selectedProject.projectId, scProjectEntity).then(response => response.json()).then(finalStatus => {
             this.setState({wait: false, isExtractionComplete: true});
           });
@@ -86,7 +83,7 @@ class Project extends React.Component {
 
   render() {
     let actionsView = null;
-    if(this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount > 0) {
+    if(this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount > 0) {
       actionsView =
         <CardActions border>
         <Tabs activeTab={this.state.activeTab}  onChange={(tabId) => this.changeTabHandler(tabId, "default", "default", "default")} ripple>
@@ -99,11 +96,11 @@ class Project extends React.Component {
         <section>
           <br />
           <div className="content">
-            {this.state.activeTab === 0 && <QualityAttributes projectId={this.props.selectedProject.projectId} changeTabHandler={this.changeTabHandler}/> }
-            {this.state.activeTab === 1 && <ArchitecturalElements projectId={this.props.selectedProject.projectId} changeTabHandler={this.changeTabHandler}/> }
-            {this.state.activeTab === 2 && <ExpertiseMatrix projectId={this.props.selectedProject.projectId}/> }
-            {this.state.activeTab === 3 && <Experts projectId={this.props.selectedProject.projectId}/> }
-            {this.state.activeTab === 4 && <DesignDecisions projectId={this.props.selectedProject.projectId} viz={this.state.viz} attrName={this.state.attrName} segmentName={this.state.segmentName}/> }
+            {this.state.activeTab === 0 && <QualityAttributes projectKey={this.props.selectedProject.key} changeTabHandler={this.changeTabHandler}/> }
+            {this.state.activeTab === 1 && <ArchitecturalElements projectKey={this.props.selectedProject.key} changeTabHandler={this.changeTabHandler}/> }
+            {this.state.activeTab === 2 && <ExpertiseMatrix projectKey={this.props.selectedProject.key}/> }
+            {this.state.activeTab === 3 && <Experts projectKey={this.props.selectedProject.key}/> }
+            {this.state.activeTab === 4 && <DesignDecisions projectKey={this.props.selectedProject.key} viz={this.state.viz} attrName={this.state.attrName} segmentName={this.state.segmentName}/> }
           </div>
         </section>
       </CardActions>
@@ -115,14 +112,14 @@ class Project extends React.Component {
             <div className="content">
               {this.props.selectedProject.issuesCount === 0 && <div><b>Step 1.</b> Import this project using <Button raised accent ripple onClick={this.importProject}> SyncPipes </Button></div> }
               {this.props.selectedProject.issuesCount === 0 && this.state.pipelineStatus === "Queued" && <div><b>Step 1.1.</b> View import status <a target="_blank" href = {config.syncPipesClient+ "pipeline-executions/" + this.state.pipelineExeId} >here</a></div>}
-              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && !this.props.selectedProject.isPreProcessed && <div>
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount == 0 && !this.props.selectedProject.isPreProcessed && <div>
                 <div><b>Step 1.</b> Import this project using SyncPipes <Icon name="check" /></div>
                 <div>
                   { !this.state.isExtractionComplete && <div><b>Step 2.</b> Prepare data for analysis <Button raised accent ripple onClick={this.extractMetaInformation}>Extract meta-information</Button></div> }
                   {this.state.isExtractionComplete && <div><b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br /> <b>Please reload the page!</b></div>}
                 </div>
               </div>}
-              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.designDecisionCount == 0 && this.props.selectedProject.isPreProcessed &&
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount == 0 && this.props.selectedProject.preProcessed &&
               <div><h3>This project does not contain any design decisions! </h3></div>}
 
             </div>
@@ -142,7 +139,7 @@ class Project extends React.Component {
               <Cell col={2} >
                 <div>
                   Issues: <b>{ this.props.selectedProject.issuesCount }</b> <br />
-                  Design Decisions: <b>{ this.props.selectedProject.designDecisionCount }</b>
+                  Design Decisions: <b>{ this.props.selectedProject.decisionCount }</b>
                 </div>
               </Cell>
             </Grid>
@@ -157,18 +154,9 @@ class Project extends React.Component {
   }
 }
 
-function getParameterByName(name, string) {
-  name = name.replace(/[\[\]]/g, "\\$&");
-  let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(string);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
 const mapStateToProps = (state) => {
-  const {projects, selectedProject} = state.screcs;
-  return {projects, selectedProject};
+  const {selectedProject} = state.screcs;
+  return {selectedProject};
 };
 
 Project.propTypes = {

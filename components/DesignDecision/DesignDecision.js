@@ -14,10 +14,12 @@ import EditorControls from "../EditorControls";
 class DesignDecision extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { projectId: "", ddId: "" };
+    this.state = { projectKey: "", issueKey: "" };
 
-    this.state.projectId = this.props.projectId;
-    this.state.ddId = this.props.id;
+    this.state.projectKey = this.props.projectKey;
+    this.state.issueKey = this.props.issueKey;
+    console.log(this.state.projectKey);
+    console.log(this.state.issueKey);
     this.state.summary = this.props.selectedDD.summary;
     this.rawContent = {
       blocks: [
@@ -31,20 +33,20 @@ class DesignDecision extends React.Component {
     };
 
     if (Object.keys(this.props.selectedDD).length === 0 && this.props.selectedDD.constructor === Object) {
-      this.props.dispatch(fetchSelctedDD(this.state.ddId));
+      this.props.dispatch(fetchSelctedDD(this.state.issueKey));
     }
 
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(this.state.projectId));
+      this.props.dispatch(fetchSelctedProject(this.state.projectKey));
     }
 
-    if (this.props.selectedDD.hasOwnProperty("description") && this.props.selectedProject.hasOwnProperty("projectId")) {
+    if (this.props.selectedDD.hasOwnProperty("description") && this.props.selectedProject.hasOwnProperty("key")) {
       this.props.dispatch(receiveFileContent(null, [this.props.selectedDD.description], true));
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedDD.hasOwnProperty("description") && nextProps.selectedProject.hasOwnProperty("projectId")) {
+    if (nextProps.selectedDD.hasOwnProperty("description") && nextProps.selectedProject.hasOwnProperty("key")) {
       this.props.dispatch(receiveFileContent(null, [nextProps.selectedDD.description], true));
       this.setState({ summary: nextProps.selectedDD.summary })
     }
@@ -52,7 +54,7 @@ class DesignDecision extends React.Component {
 
   onBackArrow = () => {
     history.push({
-      pathname: '/recommender/' + this.state.projectId + '/dd'
+      pathname: '/recommender/' + this.state.projectKey + '/dd'
     });
   };
 

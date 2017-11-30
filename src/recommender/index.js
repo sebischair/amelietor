@@ -24,7 +24,7 @@ class RecommenderPage extends React.Component {
     return (
       <Layout className={s.content}>
         <div dangerouslySetInnerHTML={{ __html: html }} />
-        <Project id={this.props.route.params.id} tab={this.props.route.params.tab}/>
+        <Project projectKey={this.props.route.params.projectKey} tab={this.props.route.params.tab}/>
       </Layout>
     );
   }

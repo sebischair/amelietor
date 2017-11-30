@@ -107,8 +107,8 @@ function doubleScroll(element) {
 }
 
 
-let d3BubbleChart = {
+let d3HeatMap = {
   getNode: getNode
 };
 
-export default d3BubbleChart;
+export default d3HeatMap;

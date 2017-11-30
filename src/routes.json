@@ -15,12 +15,12 @@
     "chunk": "main"
   },
   {
-    "path": "/recommender/:id",
+    "path": "/recommender/:projectKey",
     "page": "./recommender",
     "chunk": "main"
   },
   {
-    "path": "/recommender/:id/:tab",
+    "path": "/recommender/:projectKey/:tab",
     "page": "./recommender",
     "chunk": "main"
   },
@@ -39,7 +39,7 @@
     "chunk": "main"
   },
   {
-    "path": "/designDecision/:id/project/:projectId",
+    "path": "/designDecision/:issueKey/project/:projectKey",
     "page": "./designDecision",
     "chunk": "main"
   }

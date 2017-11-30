@@ -9,13 +9,13 @@ import {Spinner, Grid, Cell} from 'react-mdl';
 class QualityAttributes extends React.Component {
   constructor(props) {
     super(props);
-    let projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
+    let projectKey = this.props.projectKey === undefined ? HelperFunctions.getParameterByName("projectKey", history.location.search) : this.props.projectKey;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(projectId));
+      this.props.dispatch(fetchSelctedProject(projectKey));
     }
 
     if (this.props.qaData.length === 0) {
-      this.props.dispatch(fetchQAData(projectId));
+      this.props.dispatch(fetchQAData(projectKey));
     }
   }
 

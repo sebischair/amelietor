@@ -2,21 +2,21 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import {Spinner, Table, TableHeader, Textfield, Grid, Cell, RadioGroup, Radio, List, ListItem, ListItemContent, ListItemAction, Checkbox} from 'react-mdl';
+import {Spinner, Table, TableHeader, Textfield, Grid, Cell, RadioGroup, Radio} from 'react-mdl';
 import {fetchSelctedProject, fetchDesignDecisions, selectDD} from '../../core/actions/scactions';
 import s from './DesignDecisions.css';
 
 class DesignDecisions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchDecisions: "", projectId: "", filter: "null"};
-    this.state.projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
+    this.state = {searchDecisions: "", projectKey: "", filter: "null"};
+    this.state.projectKey = this.props.projectKey === undefined ? HelperFunctions.getParameterByName("projectKey", history.location.search) : this.props.projectKey;
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(this.state.projectId));
+      this.props.dispatch(fetchSelctedProject(this.state.projectKey));
     }
 
     if(this.props.designDecisions.length === 0) {
-      this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.viz, this.props.attrName, this.props.segmentName));
+      this.props.dispatch(fetchDesignDecisions(this.state.projectKey, this.props.viz, this.props.attrName, this.props.segmentName));
     }
   }
 
@@ -29,14 +29,14 @@ class DesignDecisions extends React.Component {
       let dd = this.findSelectedDD(event[0]);
       this.props.dispatch(selectDD(dd));
       history.push({
-        pathname: '/designDecision/'+ dd.id + '/project/' + this.state.projectId
+        pathname: '/designDecision/'+ dd.name + '/project/' + this.state.projectKey
       });
     }
   };
 
-  findSelectedDD(id) {
+  findSelectedDD(name) {
     return this.props.designDecisions.find(dd => {
-      return dd.id === id;
+      return dd.name === name;
     });
   };
 
@@ -67,7 +67,6 @@ class DesignDecisions extends React.Component {
 
     return (
       <div>
-
         <Grid>
           <Cell col={8}>
             <Textfield id='searchDecisions' value={this.state.searchDecisions} onChange={this.handleChange} label="Search..."
@@ -88,11 +87,11 @@ class DesignDecisions extends React.Component {
 
         <div style={{'textAlign': 'center'}}> {this.props.designDecisions.length === 0 && <Spinner /> } </div>
 
-        <Table sortable selectable rowKeyColumn="id" shadow={0} rows={designDecisions} className={`${s.customWidth}`}
+        <Table sortable selectable rowKeyColumn="name" shadow={0} rows={designDecisions} className={`${s.customWidth}`}
                onSelectionChanged={this.onRowSelection}>
           <TableHeader name="summary" tooltip="Design decision"
                        sortFn={(a, b, isAsc) => (isAsc ? a : b).localeCompare((isAsc ? b : a))}>Design Decision</TableHeader>
-          <TableHeader name="description" tooltip="Description">Description</TableHeader>
+          <TableHeader name="shortDescription" tooltip="Description">Description</TableHeader>
           <TableHeader name="qualityAttributes" tooltip="Quality Attributes"
                        cellFormatter={(qualityAttribute) => `${qualityAttribute}\n`}>Quality Attributes</TableHeader>
           <TableHeader name="concepts" tooltip="Architectural Elements"

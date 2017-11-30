@@ -81,7 +81,6 @@ function getNode(data) {
   } else {
     svg.append('text').text('No Data!').attr("x", "300").attr("y", "300").style("font-size", "20px");
   }
-
   return svg;
 }
 

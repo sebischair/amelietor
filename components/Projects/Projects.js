@@ -23,14 +23,14 @@ class Projects extends React.Component {
       let sp = this.findSelectedProject(event[0]);
       this.props.dispatch(selectProject(sp));
       history.push({
-        pathname: '/recommender/'+ sp.projectId
+        pathname: '/recommender/'+ sp.key
       });
     }
   };
 
-  findSelectedProject(projectName) {
+  findSelectedProject(projectKey) {
     return this.props.projects.find(p => {
-      return p.name === projectName;
+      return p.key === projectKey;
     });
   };
 
@@ -58,7 +58,7 @@ class Projects extends React.Component {
         </div>
         <div>
           <div><h3>Projects</h3></div>
-          <Table sortable selectable rowKeyColumn="name" shadow={0} rows={projects}
+          <Table sortable selectable rowKeyColumn="key" shadow={0} rows={projects}
                  className={`${s.customWidth}`}
                  onSelectionChanged={this.onRowSelection}>
             <TableHeader name="name" tooltip="Project Name"
