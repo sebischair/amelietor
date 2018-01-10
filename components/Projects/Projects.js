@@ -50,7 +50,7 @@ class Projects extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{margin: "20px"}}>
         <Textfield id='searchProjects' value={this.state.searchString} onChange={this.handleChange} label="Search..."
                    style={{width: '400px'}}/>
         <div style={{'textAlign': 'center'}}>

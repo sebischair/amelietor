@@ -27,7 +27,8 @@ class Experts extends React.Component {
 
   render() {
     let adds = this.props.erData.filter(e => {
-      return e.predictions.length > 0;
+      if(e.predictions) return e.predictions.length > 0;
+      else return false;
     });
     let searchString = this.state.searchString.trim().toLowerCase();
     if (searchString.length > 0) {

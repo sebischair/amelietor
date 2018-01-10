@@ -14,16 +14,14 @@ module.exports = {
   project: 'amelietor-9f8c3',      // Firebase project. See README.md -> How to Deploy
   trackingID: 'UA-52068106-3', // Google Analytics Site's ID
   spotlightHost: 'https://spotlight.in.tum.de/',
-  scHost: 'https://server.sociocortex.com/api/v1/',
   jiraHost: 'issues.apache.org/jira',
-  jiraUserName: '',
-  jiraPassword: '',
-  syncPipesServer: 'http://131.159.30.128:3010/api/v1/',
-  syncPipesClient: 'http://131.159.30.128:3000/#/',
-  scWorkspaceId: '1iksmphpafkxq',
-  scProjectId: 'fo7es9m27wpv',
-  scTaskId: '1vk4hqzziw3jp',
-  akreServer: 'http://127.0.0.1:9999/',
-  scUserName: '',
-  scPassword: ''
+  jiraUserName: 'manoj5864@gmail.com',
+  jiraPassword: '@Jira5864',
+  syncPipesServer: 'http://localhost:3010/api/v1/',
+  syncPipesClient: 'http://localhost:3000/#/',
+  akreServer: 'http://127.0.0.1:9000/',
+  syncPipesJiraIssueImporterConfig: 'services/jiraIssueExtractor/configs',
+  syncPipesIssueLoaderConfig: '5a16d383d64ce21f30047c19',
+  syncPipesIssueExtractorConfig: '5968d6e444fb3c1fa464b76a',
+  syncPipesIssueMapping: '5a214e6903c07826f09d1025'
 };

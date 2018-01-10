@@ -18,16 +18,6 @@ export const RECEIVE_ER = 'RECEIVE_ER';
 export const REQUEST_ER = 'REQUEST_ER';
 
 const AKRESERVER = config.akreServer;
-const API_ROOT = config.scHost;
-const WORKSPACEID = config.scWorkspaceId;
-const SCPROJECTID = config.scProjectId;
-const SCTASKSID = config.scTaskId;
-const SCUSERNAME = config.scUserName;
-const SCPASSWORD = config.scPassword;
-const ENTITIES = 'entities';
-const ENTITYTYPES = 'entityTypes';
-const WORKSPACES = 'workspaces';
-const MXLQUERY = 'mxlQuery';
 const PROJECT = 'project';
 
 const QADATA = 'getDataForQAV?projectKey=';
@@ -35,11 +25,12 @@ const AEDATA = 'getDataForAEV?projectKey=';
 const EMDATA = 'getAssignee?projectKey=';
 const ERDATA = 'predictAssignee?projectKey=';
 const DDDATA = 'getDataForDDV';
+const DESIGNDECISION = 'designDecision';
 
 export const fetchERData = (projectKey) => {
   return dispatch => {
     dispatch(requestERData());
-    return getFrom(`${AKRESERVER}/${ERDATA}${projectKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${ERDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveERData(data));
@@ -50,7 +41,7 @@ export const fetchERData = (projectKey) => {
 export const fetchEMData = (projectKey) => {
   return dispatch => {
     dispatch(requestEMData());
-    return getFrom(`${AKRESERVER}/${EMDATA}${projectKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${EMDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveEMData(data));
@@ -62,7 +53,7 @@ export const fetchAEData = (projectKey) => {
   return dispatch => {
     dispatch(requestAEData());
 
-    return getFrom(`${AKRESERVER}/${AEDATA}${projectKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${AEDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveAEData(data));
@@ -74,7 +65,7 @@ export const fetchQAData = (projectKey) => {
   return dispatch => {
     dispatch(requestQAData());
 
-    return getFrom(`${AKRESERVER}/${QADATA}${projectKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${QADATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveQAData(data));
@@ -86,7 +77,7 @@ export const fetchDesignDecisions = (projectKey, viz, attrName, segmentName) => 
   return dispatch => {
     dispatch(requestDesignDecisions());
 
-    return postTo(`${AKRESERVER}/${DDDATA}`, {'projectKey': projectKey, 'viz': viz, 'attrName': attrName, 'segmentName': segmentName}).then(response => {
+    return postTo(`${AKRESERVER}${DDDATA}`, {'projectKey': projectKey, 'viz': viz, 'attrName': attrName, 'segmentName': segmentName}).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveDesignDecisions(data));
@@ -98,7 +89,7 @@ export const fetchProjects = () => {
   return dispatch => {
     dispatch(requestProjects());
 
-    return getFrom(`${AKRESERVER}/${PROJECT}`).then(response => {
+    return getFrom(`${AKRESERVER}${PROJECT}`).then(response => {
       return response.json();
     }).then((data) => {
       data.sort(function (a, b) {
@@ -111,7 +102,7 @@ export const fetchProjects = () => {
 
 export const fetchSelctedProject = (key) => {
   return dispatch => {
-    return getFrom(`${AKRESERVER}/${PROJECT}/${key}`).then(response => {
+    return getFrom(`${AKRESERVER}${PROJECT}/${key}`).then(response => {
       return response.json();
     }).then((project) => {
       dispatch(selectProject(project));
@@ -121,7 +112,7 @@ export const fetchSelctedProject = (key) => {
 
 export const fetchSelctedDD = (ddKey) => {
   return dispatch => {
-    return getFrom(`${AKRESERVER}/${designDecision}/${ddKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${DESIGNDECISION}/${ddKey}`).then(response => {
       return response.json();
     }).then((dd) => {
       dispatch(selectDD(dd));
@@ -150,7 +141,7 @@ export const postTo = (url, data) => {
   });
 };
 
-export const putTo = (url, data) => {
+/*export const putTo = (url, data) => {
   return fetch(url, {
     method: 'PUT',
     headers: {
@@ -160,7 +151,7 @@ export const putTo = (url, data) => {
     },
     body: JSON.stringify(data)
   });
-};
+};*/
 
 export const receiveProjects = (json) => {
   return {

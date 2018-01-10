@@ -50,11 +50,12 @@ class Project extends React.Component {
 
     let syncPipesPipeline = {
       "name": "Issues into to SC - " + this.props.selectedProject.name,
-      "loaderConfig": "5968d71444fb3c1fa464b76b",
-      "mapping": "576937cbaa9cb6f8325b9b2b"
+      "loaderConfig": config.syncPipesIssueLoaderConfig,
+      "extractorConfig": config.syncPipesIssueExtractorConfig,
+      "mapping": config.syncPipesIssueMapping
     };
 
-    postTo(config.syncPipesServer + "services/jiraIssueExtractor/configs", syncPipesConfig).then(response => response.json()).then((configData) => {
+    postTo(config.syncPipesServer + config.syncPipesJiraIssueImporterConfig, syncPipesConfig).then(response => response.json()).then((configData) => {
       syncPipesPipeline.extractorConfig = configData._id;
       postTo(config.syncPipesServer + "pipelines", syncPipesPipeline).then(response => response.json()).then((pipelineData) => {
         this.state.pipelineId = pipelineData._id;
@@ -65,20 +66,24 @@ class Project extends React.Component {
     });
   };
 
+  updateProjectIssueCount = () => {
+    getFrom(config.akreServer + "updateProjectIssueCount?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(status => {
+      this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
+      this.setState({wait: false});
+    });
+  }
+
   extractMetaInformation = () => {
     this.setState({wait: true});
-
-    let scProjectEntity = {"attributes": [ {"values": [ true ], "name": "isPreProcessed"}]};
-
     getFrom(config.akreServer + "labelDesignDecisions?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(labelStatus => {
       getFrom(config.akreServer + "updateTaskWithQA?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(qaStatus => {
         getFrom(config.akreServer + "updateTaskWithAE?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(aeStatus => {
-          putTo(config.scHost + "entities/" + this.props.selectedProject.projectId, scProjectEntity).then(response => response.json()).then(finalStatus => {
+          getFrom(config.akreServer + "updateProjectProcessState?projectKey=" + this.props.selectedProject.key).then(response => response.json()).then(finalStatus => {
             this.setState({wait: false, isExtractionComplete: true});
           });
         });
-      })
-    })
+      });
+    });
   };
 
   render() {
@@ -111,8 +116,9 @@ class Project extends React.Component {
             <br />
             <div className="content">
               {this.props.selectedProject.issuesCount === 0 && <div><b>Step 1.</b> Import this project using <Button raised accent ripple onClick={this.importProject}> SyncPipes </Button></div> }
-              {this.props.selectedProject.issuesCount === 0 && this.state.pipelineStatus === "Queued" && <div><b>Step 1.1.</b> View import status <a target="_blank" href = {config.syncPipesClient+ "pipeline-executions/" + this.state.pipelineExeId} >here</a></div>}
-              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount == 0 && !this.props.selectedProject.isPreProcessed && <div>
+              {this.props.selectedProject.issuesCount === 0 && this.state.pipelineStatus === "Queued" && <div><b>Step 1.1.</b> View import status <a target="_blank" href = {config.syncPipesClient+ "pipeline-executions/" + this.state.pipelineExeId} >here</a> async
+              && <Button raised accent ripple onClick={this.updateProjectIssueCount}>Update issues count in project</Button> </div>}
+              {this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount == 0 && !this.props.selectedProject.preProcessed && <div>
                 <div><b>Step 1.</b> Import this project using SyncPipes <Icon name="check" /></div>
                 <div>
                   { !this.state.isExtractionComplete && <div><b>Step 2.</b> Prepare data for analysis <Button raised accent ripple onClick={this.extractMetaInformation}>Extract meta-information</Button></div> }
