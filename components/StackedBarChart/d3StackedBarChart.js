@@ -7,76 +7,50 @@ function getNode(data) {
   let qaFilteredData = data.filter(d => d.value.find(v => v > 0) > 0);
   if(qaFilteredData.length > 0) {
     let margin = {top: 20, right: 50, bottom: 30, left: 20}, width = 960 - margin.left - margin.right, height = 500 - margin.top - margin.bottom;
-    let keys = ["Structural decision", "Behavioral decision", "Non-existence - ban decision"];
     let x = d3.scaleBand().rangeRound([0, width]).padding(0.3).align(0.3);
     let y = d3.scaleLinear().rangeRound([height, 0]);
-    let z = d3.scaleOrdinal(d3.schemeCategory20);
-    let format = d3.format(",d");
     let g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    let colors = d3.scaleOrdinal(d3.schemeCategory20c);
 
-    qaFilteredData.map(qa => {
-      keys.map((k, i) => { qa.value[i] = +qa.value[i]; qa[k] = qa.value[i]; });
-      qa.total = qa.value.reduce((a, b) => a + b, 0);
+    qaFilteredData.forEach(d => {
+      d.id = d.id;
+      d.value = +d.value[0];
     });
 
-    qaFilteredData.sort((a, b) => b.total - a.total);
+    qaFilteredData.sort((a, b) => b.value - a.value);
 
     x.domain(qaFilteredData.map(d => d.id));
-    y.domain([0, d3.max(qaFilteredData, d => d.total)]).nice();
-    z.domain(keys);
+    y.domain([0, d3.max(qaFilteredData, d => d.value)]);
 
     g.selectAll(".series")
-      .data(d3.stack().keys(keys)(qaFilteredData))
-      .enter().append("g")
-      .attr("class", "series")
-      .attr("fill", d => z(d.key))
-      .selectAll("rect")
-      .data(d => d)
+      .data(qaFilteredData)
       .enter().append("rect")
-      .attr("class", "segment")
-      .attr("x", d => x(d.data.id))
-      .attr("y", d => y(d[1]))
-      .attr("height", d => y(d[0]) - y(d[1]))
-      .attr("width", x.bandwidth());
-
+      .attr("class", "bar")
+      .attr("x", d => x(d.id))
+      .attr("y", d => y(d.value))
+      .attr("height", d => height - y(d.value))
+      .attr("width", x.bandwidth())
+      .attr("fill", (d, i) => colors(i));
 
     g.append("g")
-      .attr("class", "axis")
+      .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" )
+      .attr("font-weight", "bold");
 
     g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(null, "s"))
+      .call(d3.axisLeft(y).ticks(null, "s").tickSizeInner([-width]))
       .append("text")
-      .attr("x", 2)
-      .attr("y", y(y.ticks().pop()) + 0.5)
-      .attr("dy", "0.32em")
-      .attr("fill", "#000")
-      .attr("font-weight", "bold")
-      .attr("text-anchor", "start")
+      .attr("y", y(y.ticks().pop()))
+      .attr("dy", ".32em")
+      .style("text-anchor", "end")
       .text("Count");
-
-    let legend = g.append("g")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("text-anchor", "end")
-      .selectAll("g")
-      .data(keys.slice().reverse())
-      .enter().append("g")
-      .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
-
-    legend.append("rect")
-      .attr("x", width - 19)
-      .attr("width", 19)
-      .attr("height", 19)
-      .attr("fill", z);
-
-    legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9.5)
-      .attr("dy", "0.32em")
-      .text(d => d);
 
   } else {
     svg.append('text').text('No Data!').attr("x", "300").attr("y", "300").style("font-size", "20px");

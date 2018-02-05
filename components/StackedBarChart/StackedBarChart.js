@@ -22,14 +22,12 @@ class StackedBarChart extends React.Component {
     let format = d3.format(",d");
     let div = d3.select("#barChart").append("div").attr("class", s.tooltip).style("opacity", 0);
 
-    d3.selectAll('.segment').on("mouseover", function(d) {
-      let value = d[1]-d[0];
-      let segmentName = Object.keys(d.data).find(key => d.data[key] === value);
+    d3.selectAll('.bar').on("mouseover", function(d) {
       div.transition().duration(200).style("opacity", .9);
       div.style("left", d3.select(this).attr("x") +"px");
       div.style("top", d3.select(this).attr("y") +"px");
       div.style("display", "inline-block");
-      div.html(segmentName + ": " + format(value));
+      div.html(d.id + ": " + format(d.value));
     }).on('mouseout', () => {
       div.transition()
         .duration(500)

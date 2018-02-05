@@ -27,7 +27,7 @@ class QualityAttributes extends React.Component {
           <ul>
           {
             this.props.qaData.map(qa => {
-              if (qa.value.reduce((a, b) => a + b, 0) == 0) {
+              if(qa.value == 0) {
                 return <li key={qa.id}> {qa.id} </li>
               }
             })
