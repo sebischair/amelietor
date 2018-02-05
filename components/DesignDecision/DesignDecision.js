@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, FABButton, Icon, Grid, Cell } from 'react-mdl';
 import history from '../../src/history';
-import HelperFunctions from '../HelperFunctions';
 import { fetchSelctedProject, fetchSelctedDD } from '../../core/actions/scactions';
 import Amelietor from '../Amelietor'
 import { receiveFileContent } from '../../core/actions/actions';
@@ -10,16 +8,14 @@ import s from './DesignDecision.css';
 import TokenManager from "../TokenManager";
 import RecContainer from "../RecContainer";
 import EditorControls from "../EditorControls";
+import SimilarDocuments from "../SimilarDocuments"
 
 class DesignDecision extends React.Component {
   constructor(props) {
     super(props);
     this.state = { projectKey: "", issueKey: "" };
-
     this.state.projectKey = this.props.projectKey;
     this.state.issueKey = this.props.issueKey;
-    console.log(this.state.projectKey);
-    console.log(this.state.issueKey);
     this.state.summary = this.props.selectedDD.summary;
     this.rawContent = {
       blocks: [
@@ -31,6 +27,11 @@ class DesignDecision extends React.Component {
       entityMap: {
       }
     };
+
+    this.state.similarDocuments = [];
+    if(this.props.selectedDD.similarDocuments !== undefined && this.props.selectedDD.similarDocuments !== null) {
+      this.state.similarDocuments = this.props.selectedDD.similarDocuments;
+    }
 
     if (Object.keys(this.props.selectedDD).length === 0 && this.props.selectedDD.constructor === Object) {
       this.props.dispatch(fetchSelctedDD(this.state.issueKey));
@@ -61,14 +62,15 @@ class DesignDecision extends React.Component {
   render() {
     return (
       <div className="mdl-grid">
-        <div className="mdl-cell mdl-cell--8-col">
+        <div className="mdl-cell mdl-cell--7-col">
           <h3>{this.state.summary}</h3>
           <Amelietor triggerOnLoad={true} initialContent={this.rawContent} readOnly={true} />
         </div>
-        <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
+        <div className={`mdl-cell mdl-cell--5-col ${s.recommendations}`}>
           <TokenManager />
           <br />
           <RecContainer />
+          <SimilarDocuments similarDocuments={this.state.similarDocuments}/>
         </div>
         <EditorControls />
       </div>
