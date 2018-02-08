@@ -183,6 +183,21 @@ header video
   z-index: 1;
 }
 
+.amelie-pm .amelie-import-pm-image {
+  width:50%;
+  z-index: 1;
+}
+
+.amelie-pm .amelie-import-ea-image {
+  width: 50%;
+  z-index: 1;
+}
+
+.amelie-pm .amelie-import-ol-image {
+  width:50%;
+  z-index: 1;
+}
+
 .amelie-link {
   text-decoration: none;
   color: #8bc34a !important;

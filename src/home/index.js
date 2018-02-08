@@ -43,9 +43,14 @@ class HomePage extends React.Component {
             <Grid className="amelie-imports">
               <Cell col={12}>
               </Cell>
-              <Cell col={3}>
+              <Cell col={2}>
                 <div className="amelie-pm amelie-import">
-                  <img className="amelie-import-image" src="images/msproject.png"></img>
+                  <img className="amelie-import-pm-image" src="images/msproject.png"></img>
+                </div>
+              </Cell>
+              <Cell col={2}>
+                <div className="amelie-pm amelie-import">
+                  <img className="amelie-import-ea-image" src="images/ea.jpg"></img>
                 </div>
               </Cell>
               <Cell col={3}>
@@ -54,9 +59,9 @@ class HomePage extends React.Component {
                   <img className="amelie-import-image" src="images/github_logo.png"></img>
                 </div>
               </Cell>
-              <Cell col={3}>
+              <Cell col={2}>
                 <div className="amelie-pm amelie-import">
-                  <img className="amelie-import-image" src="images/outlook.png"></img>
+                  <img className="amelie-import-ol-image" src="images/outlook.png"></img>
                 </div>
               </Cell>
               <Cell col={3}>
@@ -68,9 +73,14 @@ class HomePage extends React.Component {
             </Grid>
 
             <Grid className="amelie-imports">
-              <Cell col={3}>
+              <Cell col={2}>
                 <div className="amelie-pm amelie-import">
                   <span className="amelie-link mdl-typography--font-regular mdl-typography--text-uppercase">Project Management</span>
+                </div>
+              </Cell>
+              <Cell col={2}>
+                <div className="amelie-pm amelie-import">
+                  <span className="amelie-link mdl-typography--font-regular mdl-typography--text-uppercase">Enterprise Architect</span>
                 </div>
               </Cell>
               <Cell col={3}>
@@ -78,7 +88,7 @@ class HomePage extends React.Component {
                   <span className="amelie-link mdl-typography--font-regular mdl-typography--text-uppercase">Task Management</span>
                 </div>
               </Cell>
-              <Cell col={3}>
+              <Cell col={2}>
                 <div className="amelie-pm amelie-import">
                   <span className="amelie-link mdl-typography--font-regular mdl-typography--text-uppercase">E-mail clients</span>
                 </div>
