@@ -12,7 +12,7 @@ class EditorControls extends React.Component {
     super(props);
     const {dispatch} = this.props;
     this.annotate = () => {
-      dispatch(decorate());
+      this.props.dispatch(decorate());
     };
     this.state = {
       allFetched: true,

@@ -70,7 +70,7 @@ class Amelietor extends React.Component {
         block.paragraphNumber = key;
         block.paragraphsCount = blocks.length;
       });
-      blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(invalidateAnnotation(block.key)));
+      blocks.filter(block => {if (block.text.length >0) return block} ).map(block => this.props.dispatch(invalidateAnnotation(block.key)));
     };
 
     this.getNewDecorators = (editorState) => {
@@ -87,9 +87,9 @@ class Amelietor extends React.Component {
           block.paragraphsCount = blocks.length;
           //block.documentHash = hash;
       });
-      blocks.filter(block => {if (block.text.length >0) return block} ).map(block => dispatch(fetchAnnotationsPerBlock(block)));
+      blocks.filter(block => {if (block.text.length >0) return block} ).map(block => this.props.dispatch(fetchAnnotationsPerBlock(block)));
       this.setState({decorated:true});
-      dispatch(decorationSucceed());
+      this.props.dispatch(decorationSucceed());
     };
 
     const editorState = this.props.initialContent? EditorState.createWithContent(convertFromRaw(this.props.initialContent), decorator): EditorState.createEmpty(decorator);
