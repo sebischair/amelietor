@@ -16,6 +16,7 @@
     "fastclick": "^1.0.6",
     "history": "^4.6.1",
     "jssha": "^2.2.0",
+    "material-ui": "next",
     "react": "^15.4.2",
     "react-d3-library": "^1.1.8",
     "react-dom": "^15.4.2",
