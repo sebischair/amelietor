@@ -2,15 +2,11 @@
   "rules": {
     "global-require": "off",
     "no-console": "off",
-    "max-len": ["error", { "code": 120 }],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+    "max-len": ["error", { "code": 120 }]
   },
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "modules": true
-    }
-  }
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ]
 }
