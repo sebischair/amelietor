@@ -13,3 +13,7 @@
 .circularProgress {
   text-align: center;
 }
+
+.issuesCount {
+  padding: 8px 8px 8px 0;
+}

@@ -10,6 +10,7 @@ import Table, {
   TablePagination,
   TableFooter,
 } from 'material-ui/Table';
+import Tooltip from 'material-ui/Tooltip';
 
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
 import history from '../../src/history';
@@ -77,11 +78,16 @@ class Projects extends React.Component {
   }
 
   issueCountCol = (count) => {
-    if (count > 0) {
-      return count;
-    }
-    return 'Import';
+    return count > 0 ? count : '—';
   };
+
+  displayIssuesTooltip = (count) => {
+    if (count > 0) {
+      return "";
+    } else {
+      return "This project is not imported yet."
+    }
+  }
 
   render() {
     let projects = this.props.projects;
@@ -133,7 +139,15 @@ class Projects extends React.Component {
                   <TableCell>{project.name}</TableCell>
                   <TableCell>{project.description}</TableCell>
                   <TableCell>{project.projectCategory}</TableCell>
-                  <TableCell numeric>{project.issuesCount}</TableCell>
+                  <TableCell numeric>
+                    <Tooltip
+                      title={this.displayIssuesTooltip(project.issuesCount)}
+                      placement={'bottom-end'}
+                      enterDelay={300}
+                    >
+                      <div className={s.issuesCount}>{this.issueCountCol(project.issuesCount)}</div>
+                    </Tooltip>
+                  </TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (
