@@ -92,10 +92,11 @@ export const fetchProjects = () => {
     return getFrom(`${AKRESERVER}${PROJECT}`).then(response => {
       return response.json();
     }).then((data) => {
-      data.sort(function (a, b) {
+      const projects = data.sort(function (a, b) {
         return b.issuesCount - a.issuesCount;
       });
-      dispatch(receiveProjects(data));
+      dispatch(receiveProjects(projects));
+      return projects;
     });
   }
 };

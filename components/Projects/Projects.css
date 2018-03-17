@@ -1,3 +1,7 @@
 .customWidth {
   width: 100%;
 }
+
+.table__clickable {
+  cursor: pointer;
+}
