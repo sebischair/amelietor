@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Textfield, Spinner } from 'react-mdl';
+import { Spinner } from 'react-mdl';
+import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Table, {
   TableBody,
@@ -102,13 +103,14 @@ class Projects extends React.Component {
         <div>
           <h3>Projects</h3>
         </div>
-        <Textfield
+        <TextField
           id="searchProjects"
           value={this.state.searchString}
           onChange={this.handleChangeSearch}
           label="Search projects..."
-          style={{ width: '400px' }}
+          className={s.searchField}
         />
+        <br/><br/>
         <div style={{ textAlign: 'center' }}>{this.props.projects.length === 0 && <Spinner />}</div>
 
         <Paper>
