@@ -31,7 +31,7 @@ class Projects extends React.Component {
     if (this.props.projects.length === 0) {
       const projectsPromise = this.props.dispatch(fetchProjects());
       projectsPromise.then((projects) => {
-        this.state.data = projects;
+        this.setState({ data: projects });
       });
     }
   }
