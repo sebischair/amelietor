@@ -1,9 +1,11 @@
-.customWidth {
-  width: 100%;
+.searchField {
+  width: 400px;
 }
 
-.customWidthTR {
-  text-align:left;
-  width: 60%;
-  white-space: normal !important;
+.circularProgress {
+  text-align: center;
+}
+
+.expertsColumn {
+  width: 150px;
 }
