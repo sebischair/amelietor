@@ -66,7 +66,6 @@ class Experts extends React.Component {
       });
     }
 
-    //TODO: Unable to set the width of columns
     return (
       <div>
         <TextField
