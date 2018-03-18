@@ -14,7 +14,7 @@ import Tooltip from 'material-ui/Tooltip';
 
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
 import history from '../../src/history';
-import EnhancedTableHead from './EnhancedTableHead';
+import EnhancedTableHead from '../EnhancedTableHead';
 import s from './Projects.css';
 
 class Projects extends React.Component {
@@ -83,9 +83,9 @@ class Projects extends React.Component {
 
   displayIssuesTooltip = (count) => {
     if (count > 0) {
-      return "";
+      return '';
     } else {
-      return "This project is not imported yet."
+      return 'This project is not imported yet.'
     }
   }
 
@@ -94,6 +94,12 @@ class Projects extends React.Component {
     const searchString = this.state.searchString.trim().toLowerCase();
     const { order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - (page * rowsPerPage));
+    const columnData = [
+      { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+      { id: 'description', numeric: false, disablePadding: false, label: 'Description' },
+      { id: 'projectCategory', numeric: false, disablePadding: false, label: 'Category' },
+      { id: 'issuesCount', numeric: true, disablePadding: false, label: 'Issue Count' },
+    ];
 
     if (searchString.length > 0) {
       projects = projects.filter(
@@ -127,6 +133,7 @@ class Projects extends React.Component {
               order={order}
               orderBy={orderBy}
               onRequestSort={this.handleRequestSort}
+              columnData={columnData}
             />
             <TableBody>
               {projects.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(project => (
