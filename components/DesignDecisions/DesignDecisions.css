@@ -1,8 +1,15 @@
-.customWidth {
-  width: 100%;
-  white-space: normal !important;
-}
-
 .filters {
   list-style-type: none;
+}
+
+.table__clickable {
+  cursor: pointer;
+}
+
+.searchField {
+  width: 400px;
+}
+
+.circularProgress {
+  text-align: center;
 }

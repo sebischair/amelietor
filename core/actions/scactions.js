@@ -81,6 +81,7 @@ export const fetchDesignDecisions = (projectKey, viz, attrName, segmentName) => 
       return response.json();
     }).then((data) => {
       dispatch(receiveDesignDecisions(data));
+      return data;
     });
   }
 };
