@@ -4,13 +4,30 @@ import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
-import { Grid, Cell, RadioGroup, Radio } from 'react-mdl';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl } from 'material-ui/Form';
+import { ListItemText } from 'material-ui/List';
+import Select from 'material-ui/Select';
+import Checkbox from 'material-ui/Checkbox';
+import { RadioGroup, Radio } from 'react-mdl';
 
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import { fetchSelctedProject, fetchDesignDecisions, selectDD } from '../../core/actions/scactions';
+import { fetchSelctedProject, fetchDesignDecisions, selectDD, fetchAllQA } from '../../core/actions/scactions';
 import EnhancedTableHead from '../EnhancedTableHead';
 import s from './DesignDecisions.css';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 class DesignDecisions extends React.Component {
   constructor(props) {
@@ -23,7 +40,8 @@ class DesignDecisions extends React.Component {
       orderBy: 'issuesCount',
       data: this.props.designDecisions,
       page: 0,
-      rowsPerPage: 25
+      rowsPerPage: 25,
+      qaFilters: [],
     };
 
     if (this.props.projectKey === undefined) {
@@ -32,7 +50,6 @@ class DesignDecisions extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectKey));
     }
-
     if (this.props.designDecisions.length === 0) {
       const decisionsPromise = this.props.dispatch(
         fetchDesignDecisions(this.state.projectKey, this.props.viz, this.props.attrName, this.props.segmentName)
@@ -40,6 +57,9 @@ class DesignDecisions extends React.Component {
       decisionsPromise.then(decisions => {
         this.setState({ data: decisions });
       });
+    }
+    if (this.props.allQA.length === 0) {
+      this.props.dispatch(fetchAllQA());
     }
   }
 
@@ -90,8 +110,12 @@ class DesignDecisions extends React.Component {
     this.setState({ filter: event.target.value });
   };
 
-  joinConcepts = (concepts) => {
-    return Array.isArray(concepts) ? concepts.join(', ') : concepts;
+  joinArray = (data) => {
+    return Array.isArray(data) ? data.join(', ') : data;
+  };
+
+  handleChange = event => {
+    this.setState({ qaFilters: event.target.value });
   };
 
   render() {
@@ -117,47 +141,63 @@ class DesignDecisions extends React.Component {
       });
     }
     switch (this.state.filter) {
-      case 'qa':
-        designDecisions = designDecisions.filter(dd => {
-          return dd.qualityAttributes.length > 0;
-        });
-        break;
       case 'ae':
         designDecisions = designDecisions.filter(dd => {
           return dd.concepts.length > 0;
         });
         break;
     }
+    // Filter selected quality attributes
+    designDecisions = designDecisions.filter(dd => {
+      let result = true;
+      this.state.qaFilters.forEach((qaFilter) => {
+        if (dd.qualityAttributes.indexOf(qaFilter) === -1) {
+          result = false;
+        }
+      })
+      return result;
+    });
+
 
     return (
       <div>
-        <Grid>
-          <Cell col={8}>
-            <TextField
-              id="searchString"
-              value={this.state.searchString}
-              onChange={this.handleChangeSearch}
-              label="Search design decisions..."
-              className={s.searchField}
-            />
-          </Cell>
-          <Cell col={4}>
-            <RadioGroup
-              container="ul"
-              childContainer="li"
-              name="filters"
-              value={this.state.filter}
-              onChange={this.filter}
-              className={`${s.filters}`}
+          <TextField
+            id="searchString"
+            value={this.state.searchString}
+            onChange={this.handleChangeSearch}
+            label="Search design decisions..."
+            className={s.searchField}
+          />
+          &nbsp; &nbsp;
+          <FormControl className={s.filters}>
+            <InputLabel htmlFor="select-multiple-checkbox">Select quality attributes</InputLabel>
+            <Select
+              multiple
+              value={this.state.qaFilters}
+              onChange={this.handleChange}
+              input={<Input id="select-multiple-checkbox" />}
+              renderValue={selected => selected.join(', ')}
+              MenuProps={MenuProps}
             >
-              <Radio value="null">No filter</Radio>
-              <Radio value="qa">Filter quality attributes</Radio>
-              <Radio value="ae">Filter architectural elements</Radio>
-            </RadioGroup>
-          </Cell>
-          <Cell col={8} />
-          <Cell col={4} style={{ textAlign: 'right' }} />
-        </Grid>
+              {this.props.allQA.map(qa => (
+                <MenuItem key={qa} value={qa}>
+                  <Checkbox checked={this.state.qaFilters.indexOf(qa) > -1} />
+                  <ListItemText primary={qa} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <RadioGroup
+            container="ul"
+            childContainer="li"
+            name="filters"
+            value={this.state.filter}
+            onChange={this.filter}
+            className={`${s.filters}`}
+          >
+            <Radio value="null">No filter</Radio>
+            <Radio value="ae">Filter architectural elements</Radio>
+          </RadioGroup>
         <br />
         <br />
         <div className={s.circularProgress}>{this.props.designDecisions.length === 0 && <CircularProgress />}</div>
@@ -180,9 +220,11 @@ class DesignDecisions extends React.Component {
                 >
                   <TableCell>{decision.summary}</TableCell>
                   <TableCell>{decision.shortDescription}</TableCell>
-                  <TableCell>{decision.qualityAttributes}</TableCell>
                   <TableCell>
-                    {this.joinConcepts(decision.concepts)}
+                    {this.joinArray(decision.qualityAttributes)}
+                  </TableCell>
+                  <TableCell>
+                    {this.joinArray(decision.concepts)}
                   </TableCell>
                   <TableCell>{decision.decisionCategory}</TableCell>
                   <TableCell>{decision.status}</TableCell>
@@ -220,12 +262,13 @@ class DesignDecisions extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { selectedProject, designDecisions } = state.screcs;
-  return { selectedProject, designDecisions };
+  const { selectedProject, designDecisions, allQA } = state.screcs;
+  return { selectedProject, designDecisions, allQA };
 };
 
 DesignDecisions.propTypes = {
   designDecisions: PropTypes.array.isRequired,
+  allQA: PropTypes.array.isRequired,
   projectKey: PropTypes.string,
   selectedProject: PropTypes.object,
   viz: PropTypes.string,
