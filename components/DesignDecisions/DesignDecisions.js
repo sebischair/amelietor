@@ -6,11 +6,10 @@ import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
-import { FormControl } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import { ListItemText } from 'material-ui/List';
 import Select from 'material-ui/Select';
 import Checkbox from 'material-ui/Checkbox';
-import { RadioGroup, Radio } from 'react-mdl';
 
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
@@ -42,6 +41,7 @@ class DesignDecisions extends React.Component {
       page: 0,
       rowsPerPage: 25,
       qaFilters: [],
+      aeFilter: false,
     };
 
     if (this.props.projectKey === undefined) {
@@ -114,8 +114,13 @@ class DesignDecisions extends React.Component {
     return Array.isArray(data) ? data.join(', ') : data;
   };
 
-  handleChange = event => {
+  handleQAChange = event => {
     this.setState({ qaFilters: event.target.value });
+  };
+
+  handleAEChange = () => {
+    this.setState({ aeFilter: !this.state.aeFilter });
+
   };
 
   render() {
@@ -140,13 +145,6 @@ class DesignDecisions extends React.Component {
         );
       });
     }
-    switch (this.state.filter) {
-      case 'ae':
-        designDecisions = designDecisions.filter(dd => {
-          return dd.concepts.length > 0;
-        });
-        break;
-    }
     // Filter selected quality attributes
     designDecisions = designDecisions.filter(dd => {
       let result = true;
@@ -157,7 +155,12 @@ class DesignDecisions extends React.Component {
       })
       return result;
     });
-
+    // Filter with/without architectural elements
+    if (this.state.aeFilter === true) {
+      designDecisions = designDecisions.filter(dd => {
+        return dd.concepts.length > 0;
+      });
+    }
 
     return (
       <div>
@@ -174,7 +177,7 @@ class DesignDecisions extends React.Component {
             <Select
               multiple
               value={this.state.qaFilters}
-              onChange={this.handleChange}
+              onChange={this.handleQAChange}
               input={<Input id="select-multiple-checkbox" />}
               renderValue={selected => selected.join(', ')}
               MenuProps={MenuProps}
@@ -187,17 +190,18 @@ class DesignDecisions extends React.Component {
               ))}
             </Select>
           </FormControl>
-          <RadioGroup
-            container="ul"
-            childContainer="li"
-            name="filters"
-            value={this.state.filter}
-            onChange={this.filter}
-            className={`${s.filters}`}
-          >
-            <Radio value="null">No filter</Radio>
-            <Radio value="ae">Filter architectural elements</Radio>
-          </RadioGroup>
+          &nbsp; &nbsp;
+          <FormControlLabel
+            control = {
+              <Checkbox
+                checked={this.state.aeFilter}
+                onClick={this.handleAEChange}
+                value="Filter architectural elements"
+              />
+            }
+            label="Filter architectural elements"
+          />
+
         <br />
         <br />
         <div className={s.circularProgress}>{this.props.designDecisions.length === 0 && <CircularProgress />}</div>
