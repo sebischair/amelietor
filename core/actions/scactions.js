@@ -10,6 +10,8 @@ export const RECEIVE_DESIGN_DECISIONS = 'RECEIVE_DESIGN_DECISIONS';
 export const REQUEST_DESIGN_DECISIONS = 'REQUEST_DESIGN_DECISIONS';
 export const RECEIVE_QA = 'RECEIVE_QA';
 export const REQUEST_QA = 'REQUEST_QA';
+export const REQUEST_ALL_QA = 'REQUEST_ALL_QA';
+export const RECEIVE_ALL_QA = 'RECEIVE_ALL_QA';
 export const RECEIVE_AE = 'RECEIVE_AE';
 export const REQUEST_AE = 'REQUEST_AE';
 export const RECEIVE_EM = 'RECEIVE_EM';
@@ -21,6 +23,7 @@ const AKRESERVER = config.akreServer;
 const PROJECT = 'project';
 
 const QADATA = 'getDataForQAV?projectKey=';
+const ALLQA = 'getAllQAV';
 const AEDATA = 'getDataForAEV?projectKey=';
 const EMDATA = 'getAssignee?projectKey=';
 const ERDATA = 'predictAssignee?projectKey=';
@@ -69,6 +72,19 @@ export const fetchQAData = (projectKey) => {
       return response.json();
     }).then((data) => {
       dispatch(receiveQAData(data));
+    });
+  }
+};
+
+export const fetchAllQA = () => {
+  return dispatch => {
+    dispatch(requestAllQA());
+
+    return getFrom(`${AKRESERVER}${ALLQA}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      data.sort((a, b) => (a < b ? -1 : 1));
+      dispatch(receiveAllQA(data));
     });
   }
 };
@@ -200,6 +216,20 @@ export const receiveQAData = (json) => {
   return {
     type: RECEIVE_QA,
     qaData: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestAllQA = () => {
+  return {
+    type: REQUEST_ALL_QA
+  };
+};
+
+export const receiveAllQA = (json) => {
+  return {
+    type: RECEIVE_ALL_QA,
+    allQA: json,
     receivedAt: Date.now()
   }
 };

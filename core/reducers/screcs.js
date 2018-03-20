@@ -1,10 +1,11 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT, SELECTED_DD, REQUEST_DESIGN_DECISIONS, RECEIVE_DESIGN_DECISIONS, REQUEST_QA, RECEIVE_QA, REQUEST_AE, RECEIVE_AE, REQUEST_EM, RECEIVE_EM, REQUEST_ER, RECEIVE_ER} from '../actions/scactions';
+import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT, SELECTED_DD, REQUEST_DESIGN_DECISIONS, RECEIVE_DESIGN_DECISIONS, REQUEST_QA, RECEIVE_QA, REQUEST_ALL_QA, RECEIVE_ALL_QA, REQUEST_AE, RECEIVE_AE, REQUEST_EM, RECEIVE_EM, REQUEST_ER, RECEIVE_ER} from '../actions/scactions';
 const screcs = (state = {
   projects: [],
   selectedProject: {},
   selectedDD: {},
   designDecisions: [],
   qaData: [],
+  allQA: [],
   aeData: [],
   emData: [],
   erData: []
@@ -49,6 +50,16 @@ const screcs = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         qaData: action.qaData
+      });
+    case REQUEST_ALL_QA:
+      return Object.assign({}, state, {
+        isFetching:true,
+        allQA: []
+      });
+    case RECEIVE_ALL_QA:
+      return Object.assign({}, state, {
+        isFetching: false,
+        allQA: action.allQA
       });
     case REQUEST_AE:
       return Object.assign({}, state, {
