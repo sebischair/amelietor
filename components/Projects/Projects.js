@@ -123,9 +123,12 @@ class Projects extends React.Component {
           className={s.searchField}
         />
         <br/><br/>
-        <div className={s.circularProgress}>
-          {this.props.projects.length === 0 && <CircularProgress />}
-        </div>
+        {this.props.projects.length === 0 &&
+          <div className={s.circularProgress}>
+            <CircularProgress />
+            <br/><br/>
+          </div>
+        }
 
         <Paper>
           <Table>

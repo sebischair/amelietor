@@ -14,7 +14,8 @@ import s from './Experts.css';
 
 const styles = {
   listItem: {
-    paddingLeft: 0
+    paddingLeft: 0,
+    paddingBottom: 0
   }
 };
 
@@ -76,7 +77,13 @@ class Experts extends React.Component {
         />
         <br />
         <br />
-        <div className={s.circularProgress}>{issues.length === 0 && <CircularProgress />}</div>
+        {issues.length === 0 && (
+          <div className={s.circularProgress}>
+            <CircularProgress />
+            <br />
+            <br />
+          </div>
+        )}
 
         <Paper>
           <Table>

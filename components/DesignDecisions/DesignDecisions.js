@@ -24,9 +24,9 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
+      width: 250
+    }
+  }
 };
 
 class DesignDecisions extends React.Component {
@@ -41,11 +41,11 @@ class DesignDecisions extends React.Component {
       page: 0,
       rowsPerPage: 25,
       qaFilters: [],
-      searchStringAE: '',
+      searchStringAE: ''
     };
 
     if (this.props.projectKey === undefined) {
-      this.setState({ projectKey: HelperFunctions.getParameterByName('projectKey', history.location.search) })
+      this.setState({ projectKey: HelperFunctions.getParameterByName('projectKey', history.location.search) });
     }
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectKey));
@@ -110,7 +110,7 @@ class DesignDecisions extends React.Component {
     });
   }
 
-  joinArray = (data) => {
+  joinArray = data => {
     return Array.isArray(data) ? data.join(', ') : data;
   };
 
@@ -123,11 +123,13 @@ class DesignDecisions extends React.Component {
       searchString: '',
       qaFilters: [],
       searchStringAE: ''
-    })
+    });
   };
 
   hasFilter = () => {
-    return (this.state.searchString.length > 0) || (this.state.qaFilters.length > 0) || (this.state.searchStringAE.length > 0);
+    return (
+      this.state.searchString.length > 0 || this.state.qaFilters.length > 0 || this.state.searchStringAE.length > 0
+    );
   };
 
   render() {
@@ -157,17 +159,22 @@ class DesignDecisions extends React.Component {
     // Filter selected quality attributes
     designDecisions = designDecisions.filter(dd => {
       let result = true;
-      this.state.qaFilters.forEach((qaFilter) => {
+      this.state.qaFilters.forEach(qaFilter => {
         if (dd.qualityAttributes.indexOf(qaFilter) === -1) {
           result = false;
         }
-      })
+      });
       return result;
     });
     // Search field for architectural elements
     if (searchStringAE.length > 0) {
       designDecisions = designDecisions.filter(dd => {
-        return dd.concepts && this.joinArray(dd.concepts).toLowerCase().indexOf(searchStringAE) > -1;
+        return (
+          dd.concepts &&
+          this.joinArray(dd.concepts)
+            .toLowerCase()
+            .indexOf(searchStringAE) > -1
+        );
       });
     }
 
@@ -209,17 +216,21 @@ class DesignDecisions extends React.Component {
         />
         <br />
         <br />
-        {hasFilter &&
+        {hasFilter && (
           <Typography gutterBottom>
             Showing {designDecisions.length} matching results.
-            <a href='#' onClick={this.handleClearFilters}>
+            <a href="#" onClick={this.handleClearFilters}>
               Click here to clear all filters.
             </a>
           </Typography>
-        }
-
-        <div className={s.circularProgress}>{this.props.designDecisions.length === 0 && <CircularProgress />}</div>
-
+        )}
+        {this.props.designDecisions.length === 0 && (
+          <div className={s.circularProgress}>
+            <CircularProgress />
+            <br />
+            <br />
+          </div>
+        )}
         <Paper>
           <Table>
             <EnhancedTableHead
@@ -238,12 +249,8 @@ class DesignDecisions extends React.Component {
                 >
                   <TableCell>{decision.summary}</TableCell>
                   <TableCell>{decision.shortDescription}</TableCell>
-                  <TableCell>
-                    {this.joinArray(decision.qualityAttributes)}
-                  </TableCell>
-                  <TableCell>
-                    {this.joinArray(decision.concepts)}
-                  </TableCell>
+                  <TableCell>{this.joinArray(decision.qualityAttributes)}</TableCell>
+                  <TableCell>{this.joinArray(decision.concepts)}</TableCell>
                   <TableCell>{decision.decisionCategory}</TableCell>
                   <TableCell>{decision.status}</TableCell>
                 </TableRow>
@@ -292,7 +299,7 @@ DesignDecisions.propTypes = {
   viz: PropTypes.string,
   attrName: PropTypes.string,
   segmentName: PropTypes.string,
-  dispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps)(DesignDecisions);
