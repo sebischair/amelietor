@@ -218,10 +218,12 @@ class DesignDecisions extends React.Component {
         <br />
         {hasFilter && (
           <Typography gutterBottom>
-            Showing {designDecisions.length} matching results.
+            Showing {designDecisions.length} matching results. &nbsp;
             <a href="#" onClick={this.handleClearFilters}>
               Click here to clear all filters.
             </a>
+            <br />
+            <br />
           </Typography>
         )}
         {this.props.designDecisions.length === 0 && (
