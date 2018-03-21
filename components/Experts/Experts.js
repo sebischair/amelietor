@@ -6,6 +6,7 @@ import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter, TablePagination } from 'material-ui/Table';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+import Tooltip from 'material-ui/Tooltip';
 
 import HelperFunctions from '../HelperFunctions';
 import { fetchSelctedProject, fetchERData } from '../../core/actions/scactions';
@@ -15,6 +16,7 @@ import s from './Experts.css';
 const styles = {
   listItem: {
     paddingLeft: 0,
+    paddingRight: 0,
     paddingBottom: 0
   }
 };
@@ -90,7 +92,15 @@ class Experts extends React.Component {
             <TableHead>
               <TableRow>
                 <TableCell>Open Design Decisions</TableCell>
-                <TableCell className={s.expertsColumn}>Experts Recommendation</TableCell>
+                <TableCell className={s.expertsColumn}>
+                  <Tooltip
+                      title='The score indicates how experienced the expert is on this issue.'
+                      placement={'bottom-start'}
+                      enterDelay={300}
+                    >
+                    <span>Experts Recommendation</span>
+                  </Tooltip>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
