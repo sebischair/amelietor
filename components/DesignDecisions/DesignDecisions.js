@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
@@ -34,9 +35,8 @@ class DesignDecisions extends React.Component {
     this.state = {
       searchString: '',
       projectKey: this.props.projectKey,
-      filter: 'null',
       order: 'desc',
-      orderBy: 'issuesCount',
+      orderBy: '',
       data: this.props.designDecisions,
       page: 0,
       rowsPerPage: 25,
@@ -110,10 +110,6 @@ class DesignDecisions extends React.Component {
     });
   }
 
-  filter = event => {
-    this.setState({ filter: event.target.value });
-  };
-
   joinArray = (data) => {
     return Array.isArray(data) ? data.join(', ') : data;
   };
@@ -122,10 +118,25 @@ class DesignDecisions extends React.Component {
     this.setState({ qaFilters: event.target.value });
   };
 
+  handleClearFilters = () => {
+    this.setState({
+      searchString: '',
+      qaFilters: [],
+      searchStringAE: ''
+    })
+  };
+
+  hasFilter = () => {
+    let result =(this.state.searchString.length > 0) || (this.state.qaFilters.length > 0) || (this.state.searchStringAE.length > 0);
+    console.log(result);
+    return result;
+  };
+
   render() {
     let designDecisions = this.props.designDecisions;
     let searchString = this.state.searchString.trim().toLowerCase();
     let searchStringAE = this.state.searchStringAE.trim().toLowerCase();
+    const hasFilter = this.hasFilter();
     const { order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, designDecisions.length - page * rowsPerPage);
     const columnData = [
@@ -164,43 +175,51 @@ class DesignDecisions extends React.Component {
 
     return (
       <div>
-          <TextField
-            id="searchString"
-            value={this.state.searchString}
-            onChange={this.handleChangeSearch}
-            label="Search design decisions..."
-            className={s.searchField}
-          />
-          &nbsp; &nbsp;
-          <FormControl className={s.filters}>
-            <InputLabel htmlFor="select-multiple-checkbox">Select quality attributes</InputLabel>
-            <Select
-              multiple
-              value={this.state.qaFilters}
-              onChange={this.handleQAChange}
-              input={<Input id="select-multiple-checkbox" />}
-              renderValue={selected => selected.join(', ')}
-              MenuProps={MenuProps}
-            >
-              {this.props.allQA.map(qa => (
-                <MenuItem key={qa} value={qa}>
-                  <Checkbox checked={this.state.qaFilters.indexOf(qa) > -1} />
-                  <ListItemText primary={qa} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          &nbsp; &nbsp;
-          <TextField
-            id="searchStringAE"
-            value={this.state.searchStringAE}
-            onChange={this.handleChangeSearchAE}
-            label="Search architectural elements..."
-            className={s.searchField}
-          />
+        <TextField
+          id="searchString"
+          value={this.state.searchString}
+          onChange={this.handleChangeSearch}
+          label="Search design decisions..."
+          className={s.searchField}
+        />
+        &nbsp; &nbsp;
+        <FormControl className={s.filters}>
+          <InputLabel htmlFor="select-multiple-checkbox">Select quality attributes</InputLabel>
+          <Select
+            multiple
+            value={this.state.qaFilters}
+            onChange={this.handleQAChange}
+            input={<Input id="select-multiple-checkbox" />}
+            renderValue={selected => selected.join(', ')}
+            MenuProps={MenuProps}
+          >
+            {this.props.allQA.map(qa => (
+              <MenuItem key={qa} value={qa}>
+                <Checkbox checked={this.state.qaFilters.indexOf(qa) > -1} />
+                <ListItemText primary={qa} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        &nbsp; &nbsp;
+        <TextField
+          id="searchStringAE"
+          value={this.state.searchStringAE}
+          onChange={this.handleChangeSearchAE}
+          label="Search architectural elements..."
+          className={s.searchField}
+        />
+        <br />
+        <br />
+        {hasFilter &&
+          <Typography gutterBottom>
+            Showing {designDecisions.length} matching results.
+            <a href='#' onClick={this.handleClearFilters}>
+              Click here to clear all filters.
+            </a>
+          </Typography>
+        }
 
-        <br />
-        <br />
         <div className={s.circularProgress}>{this.props.designDecisions.length === 0 && <CircularProgress />}</div>
 
         <Paper>
