@@ -1,3 +1,7 @@
+.table__clickable {
+  cursor: pointer;
+}
+
 .searchField {
   width: 400px;
 }

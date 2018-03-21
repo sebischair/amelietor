@@ -1,25 +1,16 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter, TablePagination } from 'material-ui/Table';
-import List, { ListItem, ListItemText } from 'material-ui/List';
 import Tooltip from 'material-ui/Tooltip';
 
 import HelperFunctions from '../HelperFunctions';
 import { fetchSelctedProject, fetchERData } from '../../core/actions/scactions';
 import history from '../../src/history';
+import CollapseRow from './CollapseRow';
 import s from './Experts.css';
-
-const styles = {
-  listItem: {
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 0
-  }
-};
 
 class Experts extends React.Component {
   constructor(props) {
@@ -62,6 +53,7 @@ class Experts extends React.Component {
     let searchString = this.state.searchString.trim().toLowerCase();
     const { rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, issues.length - page * rowsPerPage);
+    const numOfDisplayedExperts = 2;
 
     if (searchString.length > 0) {
       issues = issues.filter(add => {
@@ -94,10 +86,10 @@ class Experts extends React.Component {
                 <TableCell>Open Design Decisions</TableCell>
                 <TableCell className={s.expertsColumn}>
                   <Tooltip
-                      title='The score indicates how experienced the expert is on this issue.'
-                      placement={'bottom-start'}
-                      enterDelay={300}
-                    >
+                    title="The score indicates how experienced the expert is on this issue."
+                    placement={'bottom-start'}
+                    enterDelay={300}
+                  >
                     <span>Experts Recommendation</span>
                   </Tooltip>
                 </TableCell>
@@ -109,15 +101,7 @@ class Experts extends React.Component {
                   <TableRow hover key={indexOfIssue}>
                     <TableCell>{issue.text}</TableCell>
                     <TableCell>
-                      <List dense={true}>
-                        {issue.predictions.map((pre, indexOfPre) => {
-                          return (
-                            <ListItem key={indexOfPre} className={this.props.classes.listItem}>
-                              <ListItemText primary={pre.personName + ' — ' + pre.score} />
-                            </ListItem>
-                          );
-                        })}
-                      </List>
+                      <CollapseRow issue={issue} numOfDisplayedExperts={numOfDisplayedExperts} />
                     </TableCell>
                   </TableRow>
                 );
@@ -165,4 +149,4 @@ Experts.propTypes = {
   dispatch: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(Experts));
+export default connect(mapStateToProps)(Experts);
