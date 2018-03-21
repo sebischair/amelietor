@@ -6,7 +6,7 @@ import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormControlLabel } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 import { ListItemText } from 'material-ui/List';
 import Select from 'material-ui/Select';
 import Checkbox from 'material-ui/Checkbox';
@@ -41,7 +41,7 @@ class DesignDecisions extends React.Component {
       page: 0,
       rowsPerPage: 25,
       qaFilters: [],
-      aeFilter: false,
+      searchStringAE: '',
     };
 
     if (this.props.projectKey === undefined) {
@@ -92,6 +92,10 @@ class DesignDecisions extends React.Component {
     this.setState({ searchString: event.target.value });
   };
 
+  handleChangeSearchAE = event => {
+    this.setState({ searchStringAE: event.target.value });
+  };
+
   openDecisionEditor = (event, name) => {
     let dd = this.findSelectedDD(name);
     this.props.dispatch(selectDD(dd));
@@ -118,14 +122,10 @@ class DesignDecisions extends React.Component {
     this.setState({ qaFilters: event.target.value });
   };
 
-  handleAEChange = () => {
-    this.setState({ aeFilter: !this.state.aeFilter });
-
-  };
-
   render() {
     let designDecisions = this.props.designDecisions;
     let searchString = this.state.searchString.trim().toLowerCase();
+    let searchStringAE = this.state.searchStringAE.trim().toLowerCase();
     const { order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, designDecisions.length - page * rowsPerPage);
     const columnData = [
@@ -155,10 +155,10 @@ class DesignDecisions extends React.Component {
       })
       return result;
     });
-    // Filter with/without architectural elements
-    if (this.state.aeFilter === true) {
+    // Search field for architectural elements
+    if (searchStringAE.length > 0) {
       designDecisions = designDecisions.filter(dd => {
-        return dd.concepts.length > 0;
+        return dd.concepts && this.joinArray(dd.concepts).toLowerCase().indexOf(searchStringAE) > -1;
       });
     }
 
@@ -191,15 +191,12 @@ class DesignDecisions extends React.Component {
             </Select>
           </FormControl>
           &nbsp; &nbsp;
-          <FormControlLabel
-            control = {
-              <Checkbox
-                checked={this.state.aeFilter}
-                onClick={this.handleAEChange}
-                value="Filter architectural elements"
-              />
-            }
-            label="Filter architectural elements"
+          <TextField
+            id="searchStringAE"
+            value={this.state.searchStringAE}
+            onChange={this.handleChangeSearchAE}
+            label="Search architectural elements..."
+            className={s.searchField}
           />
 
         <br />
