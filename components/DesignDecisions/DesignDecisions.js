@@ -127,9 +127,7 @@ class DesignDecisions extends React.Component {
   };
 
   hasFilter = () => {
-    let result =(this.state.searchString.length > 0) || (this.state.qaFilters.length > 0) || (this.state.searchStringAE.length > 0);
-    console.log(result);
-    return result;
+    return (this.state.searchString.length > 0) || (this.state.qaFilters.length > 0) || (this.state.searchStringAE.length > 0);
   };
 
   render() {
