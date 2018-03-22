@@ -71,67 +71,68 @@ class Experts extends React.Component {
         />
         <br />
         <br />
-        {issues.length === 0 && (
+        {this.props.erData.length === 0 && (
           <div className={s.circularProgress}>
             <CircularProgress />
             <br />
             <br />
           </div>
         )}
-
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Open Design Decisions</TableCell>
-                <TableCell className={s.expertsColumn}>
-                  <Tooltip
-                    title="The score indicates how experienced the expert is on this issue."
-                    placement={'bottom-start'}
-                    enterDelay={300}
-                  >
-                    <span>Experts Recommendation</span>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {issues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((issue, indexOfIssue) => {
-                return (
-                  <TableRow hover key={indexOfIssue}>
-                    <TableCell>{issue.text}</TableCell>
-                    <TableCell>
-                      <CollapseRow issue={issue} numOfDisplayedExperts={numOfDisplayedExperts} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
+        {this.props.erData.length > 0 && (
+          <Paper>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Open Design Decisions</TableCell>
+                  <TableCell className={s.expertsColumn}>
+                    <Tooltip
+                      title="The score indicates how experienced the expert is on this issue."
+                      placement={'bottom-start'}
+                      enterDelay={300}
+                    >
+                      <span>Experts Recommendation</span>
+                    </Tooltip>
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={6}
-                  count={issues.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page'
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page'
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </Paper>
+              </TableHead>
+              <TableBody>
+                {issues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((issue, indexOfIssue) => {
+                  return (
+                    <TableRow hover key={indexOfIssue}>
+                      <TableCell>{issue.text}</TableCell>
+                      <TableCell>
+                        <CollapseRow issue={issue} numOfDisplayedExperts={numOfDisplayedExperts} />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    colSpan={6}
+                    count={issues.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    backIconButtonProps={{
+                      'aria-label': 'Previous Page'
+                    }}
+                    nextIconButtonProps={{
+                      'aria-label': 'Next Page'
+                    }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </Paper>
+        )}
       </div>
     );
   }

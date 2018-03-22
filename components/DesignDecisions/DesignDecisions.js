@@ -233,56 +233,58 @@ class DesignDecisions extends React.Component {
             <br />
           </div>
         )}
-        <Paper>
-          <Table>
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={this.handleRequestSort}
-              columnData={columnData}
-            />
-            <TableBody>
-              {designDecisions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((decision, index) => (
-                <TableRow
-                  hover
-                  key={index}
-                  className={s.table__clickable}
-                  onClick={e => this.openDecisionEditor(e, decision.name)}
-                >
-                  <TableCell>{decision.summary}</TableCell>
-                  <TableCell>{decision.shortDescription}</TableCell>
-                  <TableCell>{this.joinArray(decision.qualityAttributes)}</TableCell>
-                  <TableCell>{this.joinArray(decision.concepts)}</TableCell>
-                  <TableCell>{decision.decisionCategory}</TableCell>
-                  <TableCell>{decision.status}</TableCell>
+        {this.props.designDecisions.length > 0 && (
+          <Paper>
+            <Table>
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={this.handleRequestSort}
+                columnData={columnData}
+              />
+              <TableBody>
+                {designDecisions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((decision, index) => (
+                  <TableRow
+                    hover
+                    key={index}
+                    className={s.table__clickable}
+                    onClick={e => this.openDecisionEditor(e, decision.name)}
+                  >
+                    <TableCell>{decision.summary}</TableCell>
+                    <TableCell>{decision.shortDescription}</TableCell>
+                    <TableCell>{this.joinArray(decision.qualityAttributes)}</TableCell>
+                    <TableCell>{this.joinArray(decision.concepts)}</TableCell>
+                    <TableCell>{decision.decisionCategory}</TableCell>
+                    <TableCell>{decision.status}</TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    colSpan={6}
+                    count={designDecisions.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    backIconButtonProps={{
+                      'aria-label': 'Previous Page'
+                    }}
+                    nextIconButtonProps={{
+                      'aria-label': 'Next Page'
+                    }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
                 </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={6}
-                  count={designDecisions.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page'
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page'
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </Paper>
+              </TableFooter>
+            </Table>
+          </Paper>
+        )}
       </div>
     );
   }

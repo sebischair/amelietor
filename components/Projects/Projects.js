@@ -122,83 +122,86 @@ class Projects extends React.Component {
           label="Search projects..."
           className={s.searchField}
         />
-        <br/><br/>
-        {this.props.projects.length === 0 &&
+        <br />
+        <br />
+        {this.props.projects.length === 0 && (
           <div className={s.circularProgress}>
             <CircularProgress />
-            <br/><br/>
+            <br />
+            <br />
           </div>
-        }
-
-        <Paper>
-          <Table>
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={this.handleRequestSort}
-              columnData={columnData}
-            />
-            <TableBody>
-              {projects.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(project => (
-                <TableRow
-                  hover
-                  key={project.key}
-                  className={s.table__clickable}
-                  onClick={e => this.openProjectRecommender(e, project.key)}
-                >
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell>{project.description}</TableCell>
-                  <TableCell>{project.projectCategory}</TableCell>
-                  <TableCell numeric>
-                    <Tooltip
-                      title={this.displayIssuesTooltip(project.issuesCount)}
-                      placement={'bottom-end'}
-                      enterDelay={300}
-                    >
-                      <div className={s.issuesCount}>{this.issueCountCol(project.issuesCount)}</div>
-                    </Tooltip>
-                  </TableCell>
+        )}
+        {this.props.projects.length > 0 && (
+          <Paper>
+            <Table>
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={this.handleRequestSort}
+                columnData={columnData}
+              />
+              <TableBody>
+                {projects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(project => (
+                  <TableRow
+                    hover
+                    key={project.key}
+                    className={s.table__clickable}
+                    onClick={e => this.openProjectRecommender(e, project.key)}
+                  >
+                    <TableCell>{project.name}</TableCell>
+                    <TableCell>{project.description}</TableCell>
+                    <TableCell>{project.projectCategory}</TableCell>
+                    <TableCell numeric>
+                      <Tooltip
+                        title={this.displayIssuesTooltip(project.issuesCount)}
+                        placement={'bottom-end'}
+                        enterDelay={300}
+                      >
+                        <div className={s.issuesCount}>{this.issueCountCol(project.issuesCount)}</div>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    colSpan={6}
+                    count={projects.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    backIconButtonProps={{
+                      'aria-label': 'Previous Page'
+                    }}
+                    nextIconButtonProps={{
+                      'aria-label': 'Next Page'
+                    }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
                 </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={6}
-                  count={projects.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </Paper>
+              </TableFooter>
+            </Table>
+          </Paper>
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { projects } = state.screcs;
   return { projects };
 };
 
 Projects.propTypes = {
   projects: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps)(Projects);
