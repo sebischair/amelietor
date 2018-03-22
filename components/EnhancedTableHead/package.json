@@ -1,0 +1,6 @@
+{
+  "name": "EnhancedTableHead",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./EnhancedTableHead.js"
+}

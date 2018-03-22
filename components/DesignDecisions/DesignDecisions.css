@@ -1,4 +1,15 @@
-.customWidth {
-  width: 100%;
-  white-space: normal !important;
+.table__clickable {
+  cursor: pointer;
+}
+
+.searchField {
+  width: 350px;
+}
+
+.filters {
+  width: 350px;
+}
+
+.circularProgress {
+  text-align: center;
 }

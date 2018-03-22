@@ -10,6 +10,8 @@ export const RECEIVE_DESIGN_DECISIONS = 'RECEIVE_DESIGN_DECISIONS';
 export const REQUEST_DESIGN_DECISIONS = 'REQUEST_DESIGN_DECISIONS';
 export const RECEIVE_QA = 'RECEIVE_QA';
 export const REQUEST_QA = 'REQUEST_QA';
+export const REQUEST_ALL_QA = 'REQUEST_ALL_QA';
+export const RECEIVE_ALL_QA = 'RECEIVE_ALL_QA';
 export const RECEIVE_AE = 'RECEIVE_AE';
 export const REQUEST_AE = 'REQUEST_AE';
 export const RECEIVE_EM = 'RECEIVE_EM';
@@ -17,25 +19,21 @@ export const REQUEST_EM = 'REQUEST_EM';
 export const RECEIVE_ER = 'RECEIVE_ER';
 export const REQUEST_ER = 'REQUEST_ER';
 
-const AKRESERVER = config.spotlightHost;
-const API_ROOT = config.scHost;
-const WORKSPACEID = config.scWorkspaceId;
-const SCPROJECTID = config.scProjectId;
-const SCTASKSID = config.scTaskId;
-const ENTITIES = 'entities';
-const ENTITYTYPES = 'entityTypes';
-const WORKSPACES = 'workspaces';
-const MXLQUERY = 'mxlQuery';
+const AKRESERVER = config.akreServer;
+const PROJECT = 'project';
 
-const QADATA = 'getQAData?projectId=';
-const AEDATA = 'getAE?projectId=';
-const EMDATA = 'getAssignee?projectId=';
-const ERDATA = 'predictAssignee?projectId=';
+const QADATA = 'getDataForQAV?projectKey=';
+const ALLQA = 'getAllQAV';
+const AEDATA = 'getDataForAEV?projectKey=';
+const EMDATA = 'getAssignee?projectKey=';
+const ERDATA = 'predictAssignee?projectKey=';
+const DDDATA = 'getDataForDDV';
+const DESIGNDECISION = 'designDecision';
 
-export const fetchERData = (projectId) => {
+export const fetchERData = (projectKey) => {
   return dispatch => {
     dispatch(requestERData());
-    return getFrom(`${AKRESERVER}${ERDATA}${projectId}`).then(response => {
+    return getFrom(`${AKRESERVER}${ERDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveERData(data));
@@ -43,10 +41,10 @@ export const fetchERData = (projectId) => {
   }
 };
 
-export const fetchEMData = (projectId) => {
+export const fetchEMData = (projectKey) => {
   return dispatch => {
     dispatch(requestEMData());
-    return getFrom(`${AKRESERVER}${EMDATA}${projectId}`).then(response => {
+    return getFrom(`${AKRESERVER}${EMDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
       dispatch(receiveEMData(data));
@@ -54,38 +52,52 @@ export const fetchEMData = (projectId) => {
   }
 };
 
-export const fetchAEData = (projectId) => {
+export const fetchAEData = (projectKey) => {
   return dispatch => {
     dispatch(requestAEData());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "AEDDCountEvolution(\""+projectId+"\")"}).then(response => {
+    return getFrom(`${AKRESERVER}${AEDATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
-      dispatch(receiveAEData(data.value));
+      dispatch(receiveAEData(data));
     });
   }
 };
 
-export const fetchQAData = (projectId) => {
+export const fetchQAData = (projectKey) => {
   return dispatch => {
     dispatch(requestQAData());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "QADDCatCountEvolution(\""+projectId+"\")"}).then(response => {
+    return getFrom(`${AKRESERVER}${QADATA}${projectKey}`).then(response => {
       return response.json();
     }).then((data) => {
-      dispatch(receiveQAData(data.value));
+      dispatch(receiveQAData(data));
     });
   }
 };
 
-export const fetchDesignDecisions = (projectId, viz, attrName, segmentName) => {
+export const fetchAllQA = () => {
+  return dispatch => {
+    dispatch(requestAllQA());
+
+    return getFrom(`${AKRESERVER}${ALLQA}`).then(response => {
+      return response.json();
+    }).then((data) => {
+      data.sort((a, b) => (a < b ? -1 : 1));
+      dispatch(receiveAllQA(data));
+    });
+  }
+};
+
+export const fetchDesignDecisions = (projectKey, viz, attrName, segmentName) => {
   return dispatch => {
     dispatch(requestDesignDecisions());
 
-    return postTo(`${API_ROOT}${WORKSPACES}/${WORKSPACEID}/${MXLQUERY}`, {'expression': "getDesignDecisions(\""+projectId + "\", \""+ viz +"\", \""+attrName + "\", \""+ segmentName + "\")"}).then(response => {
+    return postTo(`${AKRESERVER}${DDDATA}`, {'projectKey': projectKey, 'viz': viz, 'attrName': attrName, 'segmentName': segmentName}).then(response => {
       return response.json();
     }).then((data) => {
-      dispatch(receiveDesignDecisions(data.value));
+      dispatch(receiveDesignDecisions(data));
+      return data;
     });
   }
 };
@@ -94,91 +106,39 @@ export const fetchProjects = () => {
   return dispatch => {
     dispatch(requestProjects());
 
-    return getFrom(`${API_ROOT}${ENTITYTYPES}/${SCPROJECTID}/${ENTITIES}`).then(response => {
+    return getFrom(`${AKRESERVER}${PROJECT}`).then(response => {
       return response.json();
     }).then((data) => {
-      let p = [];
-      let projects = [];
-      // let filteredData = data.filter(d => {
-      //   return (d.name === "Hadoop Common" || d.name === "Spark" || d.name === "Commons CSV")
-      // });
-      // filteredData = filteredData.concat(data.slice(0, 10));
-      data.map(e => {
-        p.push(getFrom(e.href).then(r => {
-          return r.json();
-        }).then((entity) => {
-          let p = getProjectDetails(entity);
-          if(isNotRetiredProject(p))
-            projects.push(p);
-        }));
+      const projects = data.sort(function (a, b) {
+        return b.issuesCount - a.issuesCount;
       });
-
-      Promise.all(p).then(() => {
-        projects.sort(function (a, b) {
-          return b.issuesCount - a.issuesCount;
-        });
-        dispatch(receiveProjects(projects));
-      });
+      dispatch(receiveProjects(projects));
+      return projects;
     });
   }
 };
 
-export const fetchSelctedProject = (projectId) => {
+export const fetchSelctedProject = (key) => {
   return dispatch => {
-    return getFrom(`${API_ROOT}${ENTITIES}/${projectId}`).then(response => {
+    return getFrom(`${AKRESERVER}${PROJECT}/${key}`).then(response => {
       return response.json();
     }).then((project) => {
-      dispatch(selectProject(getProjectDetails(project)));
+      dispatch(selectProject(project));
     });
   }
 };
 
-function isNotRetiredProject(entity) {
-  if(entity.projectCategory !== 'Retired')
-    return true;
-  else
-    return false;
-}
-
-function getProjectDetails(entity) {
-  let newEntity = {};
-  newEntity.projectId = entity.id;
-  newEntity.href = entity.href;
-  newEntity.name = entity.name;
-  newEntity.key = getAttribute(entity, 'key');
-  newEntity.description = getAttribute(entity, 'description');
-  newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
-  newEntity.projectCategory = (getAttribute(entity, 'projectCategory') !== "" ? getAttribute(entity, 'projectCategory').name : "");
-  if(entity.derivedAttributes.length > 0) {
-    newEntity.issuesCount = getDerivedAttribute(entity, 'issuesCount');
-    newEntity.designDecisionCount = getDerivedAttribute(entity, 'designDecisionCount');
+export const fetchSelctedDD = (ddKey) => {
+  return dispatch => {
+    return getFrom(`${AKRESERVER}${DESIGNDECISION}/${ddKey}`).then(response => {
+      return response.json();
+    }).then((dd) => {
+      dispatch(selectDD(dd));
+    });
   }
-  return newEntity;
-}
+};
 
-function getAttribute(project, attributeName) {
-  if(project && project.attributes) {
-    for (let i = 0; i < project.attributes.length; i++) {
-      if (project.attributes[i].name === attributeName && project.attributes[i].values.length > 0) {
-        return project.attributes[i].values[0];
-      }
-    }
-  }
-  return '';
-}
-
-function getDerivedAttribute(project, attributeName) {
-  if(project && project.derivedAttributes) {
-    for (let i = 0; i < project.derivedAttributes.length; i++) {
-      if (project.derivedAttributes[i].name === attributeName && project.derivedAttributes[i].values && project.derivedAttributes[i].values.length > 0) {
-        return project.derivedAttributes[i].values[0];
-      }
-    }
-  }
-  return '';
-}
-
-function getFrom(url) {
+export const getFrom = (url) => {
   return fetch(url, {
     method: 'GET',
     headers: {
@@ -186,18 +146,30 @@ function getFrom(url) {
       'Content-Type': 'application/json'
     }
   });
-}
+};
 
 export const postTo = (url, data) => {
   return fetch(url, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   });
 };
+
+/*export const putTo = (url, data) => {
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic '+ window.btoa(`${SCUSERNAME}:${SCPASSWORD}`)
+    },
+    body: JSON.stringify(data)
+  });
+};*/
 
 export const receiveProjects = (json) => {
   return {
@@ -244,6 +216,20 @@ export const receiveQAData = (json) => {
   return {
     type: RECEIVE_QA,
     qaData: json,
+    receivedAt: Date.now()
+  }
+};
+
+export const requestAllQA = () => {
+  return {
+    type: REQUEST_ALL_QA
+  };
+};
+
+export const receiveAllQA = (json) => {
+  return {
+    type: RECEIVE_ALL_QA,
+    allQA: json,
     receivedAt: Date.now()
   }
 };
@@ -297,40 +283,3 @@ export const selectDD = (dd) => {
   }
 };
 
-export const fetchSelctedDD = (ddId) => {
-  return dispatch => {
-    return getFrom(`${API_ROOT}${ENTITIES}/${ddId}`).then(response => {
-      return response.json();
-    }).then((dd) => {
-      dispatch(selectDD(getDDDetails(dd)));
-    });
-  }
-};
-
-function getDDDetails(entity) {
-  let newEntity = {};
-  newEntity.projectId = entity.id;
-  newEntity.href = entity.href;
-  newEntity.name = entity.name;
-  newEntity.summary = getAttribute(entity, 'Summary');
-  newEntity.description = getAttribute(entity, 'Description');
-  newEntity.shortDescription = HelperFunctions.truncate(newEntity.description);
-  newEntity.status = getAttribute(entity, 'status');
-  newEntity.concepts = getAttributes(entity, 'concepts');
-  newEntity.qualityAttributes = getAttributes(entity, 'qualityAttributes');
-  return newEntity;
-}
-
-function getAttributes(entity, attributeName) {
-  let values = [];
-  if(entity && entity.attributes) {
-    for (let i = 0; i < entity.attributes.length; i++) {
-      if (entity.attributes[i].name === attributeName && entity.attributes[i].values.length > 0) {
-        entity.attributes[i].forEach(a => {
-          values.add(a.values.name);
-        });
-      }
-    }
-  }
-  return values;
-}

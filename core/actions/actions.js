@@ -3,11 +3,13 @@ import { sessionService } from 'redux-react-session';
 import {decorationFailed, decorationSucceed} from "./amelietorActions";
 const config = require('../../tools/config');
 
+
 export const REQUEST_ANNOTATIONS = 'REQUEST_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS = 'RECEIVE_ANNOTATIONS';
 export const RECEIVE_ANNOTATIONS_FAILED = 'RECEIVE_ANNOTATIONS_FAILED';
-export const INVALIDATE_KEY = 'INVALIDATE_KEY';
+export const INVALIDATE_ANNOTATION = 'INVALIDATE_ANNOTATION';
 export const SELECT_REC = 'SELECT_REC';
+export const CLEAR_REC = 'CLEAR_REC';
 export const REMOVE_REC = 'REMOVE_REC';
 export const REQUEST_REC_META = 'REQUEST_REC_META';
 export const RECEIVE_REC_META = 'RECEIVE_REC_META';
@@ -42,6 +44,12 @@ export const selectRec = (tokenData) => {
   return {
     type: SELECT_REC,
     tokenData
+  }
+};
+
+export const clearRec = () => {
+  return {
+    type: CLEAR_REC
   }
 };
 
@@ -83,6 +91,7 @@ export const deleteSoftwareSolution = (href, token) =>{
 };
 
 export const fetchSession = () =>{
+  return dispatch => {
   return fetch(`${API_ROOT}${CREATE_SESSION}`, {
       method: 'post'
     }).then(response => {
@@ -98,6 +107,7 @@ export const fetchSession = () =>{
         });
       });
     })
+  };
 };
 
 export const addSoftware = (href, token) =>{
@@ -269,7 +279,7 @@ export const receiveFileContent = (fileName, fileContent, readOnly) => {
      },
     receivedAt: Date.now()
   }
-}
+};
 
 function receiveFileContentFailed(fileName, error) {
   return {
@@ -412,3 +422,11 @@ function receiveAnnotationsFailed(key, error) {
     receivedAt: Date.now()
   }
 }
+
+export const invalidateAnnotation = (key) => {
+  return {
+    type: INVALIDATE_ANNOTATION,
+    key,
+    receivedAt: Date.now()
+  }
+};

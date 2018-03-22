@@ -18,7 +18,6 @@ class StackedBarChart extends React.Component {
     this.applyTransition();
   }
 
-
   applyTransition = () => {
     let format = d3.format(",d");
     let div = d3.select("#barChart").append("div").attr("class", s.tooltip).style("opacity", 0);
@@ -52,19 +51,18 @@ class StackedBarChart extends React.Component {
 
   render() {
     const RD3Component = rd3.Component;
-    let year = this.state.year;
     return (
       <Grid>
         <Cell col={12}>
           <div className={`${s.barChart}`}>
             {this.state.d3 && <Slider min={2013} max={2017} defaultValue={2017} onChange={this.redraw} />}
-            {year}
+            {this.state.year}
           </div>
         </Cell>
         <Cell col={12}>
           <div className={`${s.barChart}`} id="barChart">
             <svg height="640" width="960"></svg>
-            {this.state.d3 && <RD3Component data={this.state.d3} ref="barSvg"/>}
+            {this.state.d3 && this.state.d3.length > 0 && <RD3Component data={this.state.d3} ref="barSvg"/>}
           </div>
         </Cell>
       </Grid>

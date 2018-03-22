@@ -5,8 +5,8 @@ function getNode(data) {
   let svg = d3.select("svg");
   svg.selectAll("*").remove();
 
-  let x_elements = d3.set(data.map(item => item.personName)).values();
-  let y_elements = d3.set(data.map(item => item.conceptName)).values();
+  let x_elements = d3.set(data.map(item => item.conceptName)).values();
+  let y_elements = d3.set(data.map(item => item.personName)).values();
 
   let itemSize = 22,
     cellSize = itemSize - 1,
@@ -53,10 +53,10 @@ function getNode(data) {
     .attr('width', cellSize)
     .attr('height', cellSize)
     .attr('y', function (d) {
-      return yScale(d.conceptName);
+      return yScale(d.personName);
     })
     .attr('x', function (d) {
-      return xScale(d.personName);
+      return xScale(d.conceptName);
     })
     .attr('fill', function (d) {
       return colorScale(d.value);
@@ -107,8 +107,8 @@ function doubleScroll(element) {
 }
 
 
-let d3BubbleChart = {
+let d3HeatMap = {
   getNode: getNode
 };
 
-export default d3BubbleChart;
+export default d3HeatMap;

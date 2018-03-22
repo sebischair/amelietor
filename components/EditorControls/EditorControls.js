@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import UploadZone from '../UploadZone';
 
 import { Button, Icon, ProgressBar} from 'react-mdl';
@@ -12,7 +12,7 @@ class EditorControls extends React.Component {
     super(props);
     const {dispatch} = this.props;
     this.annotate = () => {
-      dispatch(decorate());
+      this.props.dispatch(decorate());
     };
     this.state = {
       allFetched: true,

@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "global-require": "off",
+    "no-console": "off",
+    "max-len": ["error", { "code": 120 }],
+    "quotes": ["error", "single"]
+  },
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ]
+}

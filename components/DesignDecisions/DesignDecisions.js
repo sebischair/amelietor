@@ -1,116 +1,306 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import Typography from 'material-ui/Typography';
+import TextField from 'material-ui/TextField';
+import { CircularProgress } from 'material-ui/Progress';
+import Paper from 'material-ui/Paper';
+import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl } from 'material-ui/Form';
+import { ListItemText } from 'material-ui/List';
+import Select from 'material-ui/Select';
+import Checkbox from 'material-ui/Checkbox';
+
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
-import {Spinner, Table, TableHeader, Textfield, Grid, Cell, Chip, List, ListItem, ListItemContent, ListItemAction, Checkbox} from 'react-mdl';
-import {fetchSelctedProject, fetchDesignDecisions, selectDD} from '../../core/actions/scactions';
+import { fetchSelctedProject, fetchDesignDecisions, selectDD, fetchAllQA } from '../../core/actions/scactions';
+import EnhancedTableHead from '../EnhancedTableHead';
 import s from './DesignDecisions.css';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
 
 class DesignDecisions extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchDecisions: "", projectId: "", filterQA: false, filterAE: false, selectedAEs: [], selectedQAs: []};
-    this.state.projectId = this.props.projectId === undefined ? HelperFunctions.getParameterByName("id", history.location.search) : this.props.projectId;
-    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(this.state.projectId));
+    this.state = {
+      searchString: '',
+      projectKey: this.props.projectKey,
+      order: 'desc',
+      orderBy: '',
+      data: this.props.designDecisions,
+      page: 0,
+      rowsPerPage: 25,
+      qaFilters: [],
+      searchStringAE: ''
+    };
+
+    if (this.props.projectKey === undefined) {
+      this.setState({ projectKey: HelperFunctions.getParameterByName('projectKey', history.location.search) });
     }
-
-    this.props.dispatch(fetchDesignDecisions(this.state.projectId, this.props.viz, this.props.attrName, this.props.segmentName));
-  }
-
-  handleChange = (event) => {
-    this.setState({searchDecisions: event.target.value});
-  };
-
-  onRowSelection = (event) => {
-    if (event.length === 1) {
-      let dd = this.findSelectedDD(event[0]);
-      this.props.dispatch(selectDD(dd));
-      history.push({
-        pathname: '/designDecision',
-        search: '?projectId='+ this.state.projectId +'&id=' + dd.id
+    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
+      this.props.dispatch(fetchSelctedProject(this.state.projectKey));
+    }
+    if (this.props.designDecisions.length === 0) {
+      const decisionsPromise = this.props.dispatch(
+        fetchDesignDecisions(this.state.projectKey, this.props.viz, this.props.attrName, this.props.segmentName)
+      );
+      decisionsPromise.then(decisions => {
+        this.setState({ data: decisions });
       });
     }
+    if (this.props.allQA.length === 0) {
+      this.props.dispatch(fetchAllQA());
+    }
+  }
+
+  handleRequestSort = (event, property) => {
+    const orderBy = property;
+    let order = 'desc';
+
+    if (this.state.orderBy === property && this.state.order === 'desc') {
+      order = 'asc';
+    }
+    if (this.state.orderBy === property && this.state.order === order) {
+      return;
+    }
+    const data =
+      order === 'desc'
+        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+    this.setState({ data, order, orderBy });
   };
 
-  findSelectedDD(id) {
-    return this.props.designDecisions.find(dd => {
-      return dd.id === id;
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: event.target.value });
+  };
+
+  handleChangeSearch = event => {
+    this.setState({ searchString: event.target.value });
+  };
+
+  handleChangeSearchAE = event => {
+    this.setState({ searchStringAE: event.target.value });
+  };
+
+  openDecisionEditor = (event, name) => {
+    let dd = this.findSelectedDD(name);
+    this.props.dispatch(selectDD(dd));
+    history.push({
+      pathname: '/designDecision/' + dd.name + '/project/' + this.state.projectKey
     });
   };
 
-  filterQA = () => {
-    if(this.state.filterQA) {
-      this.setState({filterQA: false});
-    } else {
-      if(this.state.filterAE) this.setState({filterAE: false});
-      this.setState({filterQA: true});
-    }
+  findSelectedDD(name) {
+    return this.props.designDecisions.find(dd => {
+      return dd.name === name;
+    });
+  }
+
+  joinArray = data => {
+    return Array.isArray(data) ? data.join(', ') : data;
   };
 
-  filterAE = () => {
-    if(this.state.filterAE) {
-      this.setState({filterAE: false});
-    } else {
-      if(this.state.filterQA) this.setState({filterQA: false});
-      this.setState({filterAE: true});
-    }
+  handleQAChange = event => {
+    this.setState({ qaFilters: event.target.value });
+  };
+
+  handleClearFilters = () => {
+    this.setState({
+      searchString: '',
+      qaFilters: [],
+      searchStringAE: ''
+    });
+  };
+
+  hasFilter = () => {
+    return (
+      this.state.searchString.length > 0 || this.state.qaFilters.length > 0 || this.state.searchStringAE.length > 0
+    );
   };
 
   render() {
     let designDecisions = this.props.designDecisions;
-    let searchDecisions = this.state.searchDecisions.trim().toLowerCase();
-    if (searchDecisions.length > 0) {
+    let searchString = this.state.searchString.trim().toLowerCase();
+    let searchStringAE = this.state.searchStringAE.trim().toLowerCase();
+    const hasFilter = this.hasFilter();
+    const { order, orderBy, rowsPerPage, page } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, designDecisions.length - page * rowsPerPage);
+    const columnData = [
+      { id: 'summary', numeric: false, disablePadding: false, label: 'Design Decision' },
+      { id: 'shortDescription', numeric: false, disablePadding: false, label: 'Description' },
+      { id: 'qualityAttributes', numeric: false, disablePadding: false, label: 'Quality Attributes' },
+      { id: 'concepts', numeric: false, disablePadding: false, label: 'Architectural Elements' },
+      { id: 'decisionCategory', numeric: false, disablePadding: false, label: 'Decision Category' },
+      { id: 'status', numeric: false, disablePadding: false, label: 'Status' }
+    ];
+
+    if (searchString.length > 0) {
       designDecisions = designDecisions.filter(dd => {
-        return ((dd.summary !== null && dd.summary.toLowerCase().indexOf(searchDecisions) !== -1) ||
-        (dd.description !== null && dd.description.toLowerCase().indexOf(searchDecisions) !== -1));
+        return (
+          (dd.summary !== null && dd.summary.toLowerCase().indexOf(searchString) !== -1) ||
+          (dd.description !== null && dd.description.toLowerCase().indexOf(searchString) !== -1)
+        );
+      });
+    }
+    // Filter selected quality attributes
+    designDecisions = designDecisions.filter(dd => {
+      let result = true;
+      this.state.qaFilters.forEach(qaFilter => {
+        if (dd.qualityAttributes.indexOf(qaFilter) === -1) {
+          result = false;
+        }
+      });
+      return result;
+    });
+    // Search field for architectural elements
+    if (searchStringAE.length > 0) {
+      designDecisions = designDecisions.filter(dd => {
+        return (
+          dd.concepts &&
+          this.joinArray(dd.concepts)
+            .toLowerCase()
+            .indexOf(searchStringAE) > -1
+        );
       });
     }
 
     return (
       <div>
-
-        <Grid>
-          <Cell col={8}>
-            <Textfield id='searchDecisions' value={this.state.searchDecisions} onChange={this.handleChange} label="Search..."
-                       style={{width: '400px'}}/>
-          </Cell>
-          <Cell col={4} style={{textAlign: 'right'}}>
-            <Chip onClick={this.filterQA}>Filter quality attributes</Chip>
-            <Chip onClick={this.filterAE}>Filter architectural elements</Chip>
-          </Cell>
-          <Cell col={8}></Cell>
-          <Cell col={4} style={{textAlign: 'right'}}>
-
-          </Cell>
-        </Grid>
-
-        <div style={{'textAlign': 'center'}}> {this.props.designDecisions.length === 0 && <Spinner /> } </div>
-
-        <Table sortable selectable rowKeyColumn="id" shadow={0} rows={designDecisions} className={`${s.customWidth}`}
-               onSelectionChanged={this.onRowSelection}>
-          <TableHeader name="summary" tooltip="Design decision"
-                       sortFn={(a, b, isAsc) => (isAsc ? a : b).localeCompare((isAsc ? b : a))}>Design Decision</TableHeader>
-          <TableHeader name="description" tooltip="Description">Description</TableHeader>
-          <TableHeader name="qualityAttributes" tooltip="Quality Attributes"
-                       cellFormatter={(qualityAttribute) => `${qualityAttribute}\n`}>Quality Attributes</TableHeader>
-          <TableHeader name="concepts" tooltip="Architectural Elements"
-                       cellFormatter={(concept) => `${concept}\n`}>Architectural Elements</TableHeader>
-          <TableHeader name="decisionCategory" tooltip="Decision Category">Decision Category</TableHeader>
-          <TableHeader name="status" tooltip="Status">Status</TableHeader>
-        </Table>
+        <TextField
+          id="searchString"
+          value={this.state.searchString}
+          onChange={this.handleChangeSearch}
+          label="Search design decisions..."
+          className={s.searchField}
+        />
+        &nbsp; &nbsp;
+        <FormControl className={s.filters}>
+          <InputLabel htmlFor="select-multiple-checkbox">Select quality attributes</InputLabel>
+          <Select
+            multiple
+            value={this.state.qaFilters}
+            onChange={this.handleQAChange}
+            input={<Input id="select-multiple-checkbox" />}
+            renderValue={selected => selected.join(', ')}
+            MenuProps={MenuProps}
+          >
+            {this.props.allQA.map(qa => (
+              <MenuItem key={qa} value={qa}>
+                <Checkbox checked={this.state.qaFilters.indexOf(qa) > -1} />
+                <ListItemText primary={qa} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        &nbsp; &nbsp;
+        <TextField
+          id="searchStringAE"
+          value={this.state.searchStringAE}
+          onChange={this.handleChangeSearchAE}
+          label="Search architectural elements..."
+          className={s.searchField}
+        />
+        <br />
+        <br />
+        {hasFilter && (
+          <Typography gutterBottom>
+            Showing {designDecisions.length} matching results. &nbsp;
+            <a href="#" onClick={this.handleClearFilters}>
+              Click here to clear all filters.
+            </a>
+            <br />
+            <br />
+          </Typography>
+        )}
+        {this.props.designDecisions.length === 0 && (
+          <div className={s.circularProgress}>
+            <CircularProgress />
+            <br />
+            <br />
+          </div>
+        )}
+        <Paper>
+          <Table>
+            <EnhancedTableHead
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={this.handleRequestSort}
+              columnData={columnData}
+            />
+            <TableBody>
+              {designDecisions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((decision, index) => (
+                <TableRow
+                  hover
+                  key={index}
+                  className={s.table__clickable}
+                  onClick={e => this.openDecisionEditor(e, decision.name)}
+                >
+                  <TableCell>{decision.summary}</TableCell>
+                  <TableCell>{decision.shortDescription}</TableCell>
+                  <TableCell>{this.joinArray(decision.qualityAttributes)}</TableCell>
+                  <TableCell>{this.joinArray(decision.concepts)}</TableCell>
+                  <TableCell>{decision.decisionCategory}</TableCell>
+                  <TableCell>{decision.status}</TableCell>
+                </TableRow>
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 49 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  colSpan={6}
+                  count={designDecisions.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  backIconButtonProps={{
+                    'aria-label': 'Previous Page'
+                  }}
+                  nextIconButtonProps={{
+                    'aria-label': 'Next Page'
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </Paper>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  const {selectedProject, designDecisions} = state.screcs;
-  return {selectedProject, designDecisions};
+const mapStateToProps = state => {
+  const { selectedProject, designDecisions, allQA } = state.screcs;
+  return { selectedProject, designDecisions, allQA };
 };
 
 DesignDecisions.propTypes = {
   designDecisions: PropTypes.array.isRequired,
+  allQA: PropTypes.array.isRequired,
+  projectKey: PropTypes.string,
+  selectedProject: PropTypes.object,
+  viz: PropTypes.string,
+  attrName: PropTypes.string,
+  segmentName: PropTypes.string,
   dispatch: PropTypes.func.isRequired
 };
 

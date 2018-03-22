@@ -15,6 +15,16 @@
     "chunk": "main"
   },
   {
+    "path": "/recommender/:projectKey",
+    "page": "./recommender",
+    "chunk": "main"
+  },
+  {
+    "path": "/recommender/:projectKey/:tab",
+    "page": "./recommender",
+    "chunk": "main"
+  },
+  {
     "path": "/recommender",
     "page": "./recommender",
     "chunk": "main"
@@ -29,7 +39,7 @@
     "chunk": "main"
   },
   {
-    "path": "/designDecision",
+    "path": "/designDecision/:issueKey/project/:projectKey",
     "page": "./designDecision",
     "chunk": "main"
   }

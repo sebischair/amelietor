@@ -23,7 +23,7 @@ class DesignDecisionPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <DesignDecision />
+        <DesignDecision issueKey={this.props.route.params.issueKey} projectKey={this.props.route.params.projectKey} />
       </Layout>
     );
   }
