@@ -3,13 +3,7 @@ import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
-import Table, {
-  TableBody,
-  TableCell,
-  TableRow,
-  TablePagination,
-  TableFooter,
-} from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
 
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
@@ -26,11 +20,11 @@ class Projects extends React.Component {
       orderBy: 'issuesCount',
       data: this.props.projects,
       page: 0,
-      rowsPerPage: 25,
+      rowsPerPage: 25
     };
     if (this.props.projects.length === 0) {
       const projectsPromise = this.props.dispatch(fetchProjects());
-      projectsPromise.then((projects) => {
+      projectsPromise.then(projects => {
         this.setState({ data: projects });
       });
     }
@@ -57,11 +51,11 @@ class Projects extends React.Component {
     this.setState({ page });
   };
 
-  handleChangeRowsPerPage = (event) => {
+  handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  handleChangeSearch = (event) => {
+  handleChangeSearch = event => {
     this.setState({ searchString: event.target.value });
   };
 
@@ -69,7 +63,7 @@ class Projects extends React.Component {
     const sp = this.findSelectedProject(key);
     this.props.dispatch(selectProject(sp));
     history.push({
-      pathname: `/recommender/${sp.key}`,
+      pathname: `/recommender/${sp.key}`
     });
   };
 
@@ -77,28 +71,28 @@ class Projects extends React.Component {
     return this.props.projects.find(p => p.key === projectKey);
   }
 
-  issueCountCol = (count) => {
+  issueCountCol = count => {
     return count > 0 ? count : '—';
   };
 
-  displayIssuesTooltip = (count) => {
+  displayIssuesTooltip = count => {
     if (count > 0) {
       return '';
     } else {
-      return 'This project is not imported yet.'
+      return 'This project is not imported yet.';
     }
-  }
+  };
 
   render() {
     let projects = this.props.projects;
     const searchString = this.state.searchString.trim().toLowerCase();
     const { order, orderBy, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - (page * rowsPerPage));
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
     const columnData = [
       { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
       { id: 'description', numeric: false, disablePadding: false, label: 'Description' },
       { id: 'projectCategory', numeric: false, disablePadding: false, label: 'Category' },
-      { id: 'issuesCount', numeric: true, disablePadding: false, label: 'Issue Count' },
+      { id: 'issuesCount', numeric: true, disablePadding: false, label: 'Issue Count' }
     ];
 
     if (searchString.length > 0) {
@@ -106,7 +100,7 @@ class Projects extends React.Component {
         project =>
           project.name.toLowerCase().indexOf(searchString) !== -1 ||
           project.description.toLowerCase().indexOf(searchString) !== -1 ||
-          project.projectCategory.toLowerCase().indexOf(searchString) !== -1,
+          project.projectCategory.toLowerCase().indexOf(searchString) !== -1
       );
     }
 
