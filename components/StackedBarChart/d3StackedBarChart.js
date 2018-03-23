@@ -48,7 +48,8 @@ function getNode(data, defaultHeight, defaultWidth) {
       .attr('x', d => x(d.data.id))
       .attr('y', d => y(d[1]))
       .attr('height', d => y(d[0]) - y(d[1]))
-      .attr('width', x.bandwidth());
+      .attr('width', x.bandwidth())
+      .style('cursor', 'pointer');
 
     g
       .append('g')
