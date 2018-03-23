@@ -35,3 +35,7 @@
 {
   overflow: auto; overflow-y: hidden;
 }
+
+.searchField {
+  width: 400px;
+}

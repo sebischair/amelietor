@@ -1,23 +1,30 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { CircularProgress } from 'material-ui/Progress';
+
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
 import HeatMap from '../HeatMap/HeatMap';
-import {fetchSelctedProject, fetchEMData} from '../../core/actions/scactions';
-import {Spinner} from 'react-mdl';
+import { fetchSelctedProject, fetchEMData } from '../../core/actions/scactions';
+import s from './ExpertiseMatrix.css';
 
 class ExpertiseMatrix extends React.Component {
   constructor(props) {
     super(props);
-    let projectKey = this.props.projectKey === undefined ? HelperFunctions.getParameterByName("projectKey", history.location.search) : this.props.projectKey;
-    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(projectKey));
-    }
+    this.state = {
+      projectKey: this.props.projectKey,
+      searchString: ''
+    };
 
-    if (this.props.emData.length === 0) {
-      this.props.dispatch(fetchEMData(projectKey));
+    if (this.props.projectKey === undefined) {
+      this.setState({ projectKey: HelperFunctions.getParameterByName('projectKey', history.location.search) });
     }
-    this.state = {searchString: ""};
+    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
+      this.props.dispatch(fetchSelctedProject(this.state.projectKey));
+    }
+    if (this.props.emData.length === 0) {
+      this.props.dispatch(fetchEMData(this.state.projectKey));
+    }
   }
 
   render() {
@@ -26,21 +33,32 @@ class ExpertiseMatrix extends React.Component {
     //TODO: Unable to reload the component
     return (
       <div>
-        <div style={{'textAlign': 'center'}}>
-          {emData.length === 0 && <Spinner /> }
-        </div>
-        {emData.length > 0 && <div id='hmap'><HeatMap data={emData}/></div>}
+        {this.props.emData.length === 0 && (
+          <div className={s.circularProgress}>
+            <CircularProgress />
+            <br />
+            <br />
+          </div>
+        )}
+        {emData.length > 0 && (
+          <div id="hmap">
+            <HeatMap data={emData} />
+          </div>
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  const {selectedProject, emData} = state.screcs;
-  return {selectedProject, emData};
+const mapStateToProps = state => {
+  const { selectedProject, emData } = state.screcs;
+  return { selectedProject, emData };
 };
 
 ExpertiseMatrix.propTypes = {
+  projectKey: PropTypes.string,
+  selectedProject: PropTypes.object,
+  changeTabHandler: PropTypes.func,
   emData: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired
 };
