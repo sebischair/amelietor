@@ -75,7 +75,6 @@ class DesignDecision extends React.Component {
         </Grid>
         <Grid item xs={5} className={s.recommendations}>
           <TokenManager />
-          <br />
           <RecContainer />
           <SimilarDocuments similarDocuments={this.state.similarDocuments} />
         </Grid>

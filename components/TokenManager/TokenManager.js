@@ -1,48 +1,63 @@
-import React, { PropTypes, Component} from 'react'
-import { connect } from 'react-redux'
-import { Button, Icon } from 'react-mdl';
-import { removeRec } from '../../core/actions/actions';
-import {decorate} from "../../core/actions/amelietorActions";
+import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
 
+import { removeRec } from '../../core/actions/actions';
+import { decorate } from '../../core/actions/amelietorActions';
+
+const styles = {
+  title: {
+    margin: 0
+  }
+};
 
 class TokenManager extends Component {
   constructor(props) {
     super(props);
-    const {dispatch, blocks} = this.props;
-    this.deleteItem = (token) => {
-      dispatch(removeRec(token));
-      dispatch(decorate());
+    this.deleteItem = token => {
+      this.props.dispatch(removeRec(token));
+      this.props.dispatch(decorate());
       return true;
-    }
+    };
   }
 
   render() {
     if (!this.props.tokenData.token) {
-      return <div />
+      return <div />;
     }
     return (
       <div>
-        <h4 style={{marginTop: '0', color: '#000'}}>
+        <h4 className={this.props.classes.title}>
           {this.props.tokenData.token}
-          <Button accent onClick={e => { e.preventDefault(); this.deleteItem(this.props.tokenData.token) }}> <Icon name="delete" /></Button>
+          <IconButton
+            aria-label="Delete"
+            onClick={e => {
+              e.preventDefault();
+              this.deleteItem(this.props.tokenData.token);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
         </h4>
       </div>
-    )
+    );
   }
 }
 
+TokenManager.propTypes = {
+  tokenData: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => {
+  const { tokenData } = state.recs;
+  return { tokenData };
+};
 
 TokenManager.propTypes = {
-  tokenData: PropTypes.object.isRequired,
+  classes: PropTypes.object,
+  dispatch: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
-  const { tokenData
-  } = state.recs ;
-
-  return {
-    tokenData
-  }
-};
-
-export default connect(mapStateToProps)(TokenManager)
+export default connect(mapStateToProps)(withStyles(styles)(TokenManager));
