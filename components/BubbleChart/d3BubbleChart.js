@@ -46,19 +46,21 @@ function getNode(data, defaultHeight, defaultWidth) {
       .append('circle')
       .attr('id', d => d.id)
       .attr('r', d => d.r)
-      .style('fill', d => color(d.package));
+      .style('fill', d => color(d.package))
+      .style('cursor', 'pointer');
 
     node
       .append('text')
       .text(d => (d.data.id + ' (' + format(d.data.value) + ')').substring(0, d.r / 3))
       .attr('dy', '.3em')
       .style('text-anchor', 'middle')
+      .style('cursor', 'pointer')
       .style('font-size', function(d) {
         let len = d.id.substring(0, d.r / 3).length;
         let size = d.r / 4;
         size *= 10 / len;
         size += 1;
-        return Math.min(20, Math.round(size)) + 'px';
+        return Math.min(14, Math.round(size)) + 'px';
       });
   } else {
     svg
