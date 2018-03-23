@@ -9,7 +9,7 @@ import s from './BubbleChart.css';
 const minYear = 2013;
 const maxYear = 2017;
 const defaultYear = 2017;
-const defaultHeight = 640;
+const defaultHeight = 560;
 const defaultWidth = 960;
 
 class BubbleChart extends React.Component {
@@ -21,14 +21,17 @@ class BubbleChart extends React.Component {
   componentDidMount() {
     let changeTabHandler = this.props.changeTabHandler;
     let viz = this.props.viz;
-    this.setState({ d3: d3BubbleChart.getNode(this.props.data) });
+    this.setState({ d3: d3BubbleChart.getNode(this.props.data, defaultHeight, defaultWidth) });
     d3.selectAll('circle').on('click', d => {
       changeTabHandler(4, viz, d.id, 'default');
     });
   }
 
   redraw = event => {
-    this.setState({ d3: d3BubbleChart.redraw(this.props.data, event.target.value), year: event.target.value });
+    this.setState({
+      d3: d3BubbleChart.redraw(this.props.data, event.target.value, defaultHeight, defaultWidth),
+      year: event.target.value
+    });
   };
 
   render() {
