@@ -5,8 +5,10 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
+import Dialog from 'material-ui/Dialog';
 
 import { decorate } from '../../core/actions/amelietorActions';
+import UploadZone from '../UploadZone';
 import s from './EditorControls.css';
 
 const styles = theme => ({
@@ -32,9 +34,14 @@ class EditorControls extends React.Component {
     };
     this.state = {
       allFetched: true,
-      noErrors: true
+      noErrors: true,
+      dialogOpen: false
     };
   }
+
+  static defaultProps = {
+    hasUploadButton: false
+  };
 
   componentWillReceiveProps(nextProps) {
     let annotations_list = [];
@@ -51,6 +58,14 @@ class EditorControls extends React.Component {
       allFetched: annotations_list.every(checkAllFetched),
       noErrors: annotations_list.every(checkNoErrors)
     });
+  }
+
+  openUploadZone = () => {
+    this.setState({ dialogOpen: true });
+  };
+
+  handleDialogClose = () => {
+    this.setState({ dialogOpen: false });
   }
 
   render() {
@@ -73,6 +88,18 @@ class EditorControls extends React.Component {
             )}
           </Grid>
           <Grid item xs={5}>
+            {this.props.hasUploadButton && (
+              <Button
+              variant="raised"
+              className={this.props.classes.button}
+              onClick={e => {
+                e.preventDefault();
+                this.openUploadZone();
+              }}
+            >
+              Upload
+            </Button>
+            )}
             <Button
               variant="raised"
               color="primary"
@@ -86,14 +113,18 @@ class EditorControls extends React.Component {
             </Button>
           </Grid>
         </Grid>
+        <Dialog open={this.state.dialogOpen} onClose={this.handleDialogClose}>
+          <UploadZone />
+        </Dialog>
       </div>
     );
   }
 }
 
 EditorControls.propTypes = {
-  classes: PropTypes.object,
   annotations: PropTypes.object.isRequired,
+  hasUploadButton: PropTypes.bool,
+  classes: PropTypes.object,
   dispatch: PropTypes.func.isRequired
 };
 
