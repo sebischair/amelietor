@@ -1,10 +1,28 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography';
+import { LinearProgress } from 'material-ui/Progress';
 
-import { Button, Icon, ProgressBar } from 'react-mdl';
-
-import s from './EditorControls.css';
 import { decorate } from '../../core/actions/amelietorActions';
+import s from './EditorControls.css';
+
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+    float: 'right',
+    borderRadius: '4px'
+  },
+  progressBar: {
+    textAlign: 'center'
+  },
+  message: {
+    marginTop: '17px',
+    fontSize: '1rem'
+  }
+});
 
 class EditorControls extends React.Component {
   constructor(props) {
@@ -17,6 +35,7 @@ class EditorControls extends React.Component {
       noErrors: true
     };
   }
+
   componentWillReceiveProps(nextProps) {
     let annotations_list = [];
     Object.keys(nextProps.annotations).forEach(function(key) {
@@ -33,35 +52,47 @@ class EditorControls extends React.Component {
       noErrors: annotations_list.every(checkNoErrors)
     });
   }
+
   render() {
     const { allFetched, noErrors } = this.state;
     return (
       <div className={`${s.controls}`}>
-        {allFetched && (
-          <Button
-            ripple
-            onClick={e => {
-              e.preventDefault();
-              this.annotate();
-            }}
-          >
-            <Icon name="refresh" /> Annotate{' '}
-          </Button>
-        )}
-        {!allFetched && <ProgressBar indeterminate />}
-        {!allFetched && <i>Processing... </i>}
-        {!noErrors && (
-          <Button raised accent ripple>
-            {' '}
-            <Icon name="report" /> Errors occurred. Show logs
-          </Button>
-        )}
+        <Grid container>
+          {!allFetched && (
+            <Grid item xs={12} className={this.props.classes.progressBar}>
+              <LinearProgress />
+              <Typography>Annotating&hellip; </Typography>
+            </Grid>
+          )}
+          <Grid item xs={7}>
+            {!noErrors && (
+              <Typography className={this.props.classes.message}>
+                Errors occurred. &nbsp;
+                <a href="#">Show logs.</a>
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <Button
+              variant="raised"
+              color="primary"
+              className={this.props.classes.button}
+              onClick={e => {
+                e.preventDefault();
+                this.annotate();
+              }}
+            >
+              Annotate
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
 
 EditorControls.propTypes = {
+  classes: PropTypes.object,
   annotations: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired
 };
@@ -73,4 +104,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(EditorControls);
+export default connect(mapStateToProps)(withStyles(styles)(EditorControls));
