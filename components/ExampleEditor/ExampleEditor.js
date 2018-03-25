@@ -12,6 +12,10 @@ import s from './ExampleEditor.css';
 const styles = {
   gridContainer: {
     margin: 0
+  },
+  textField: {
+    width: '600px',
+    margin: '15px 0 30px 0'
   }
 };
 
@@ -49,7 +53,7 @@ class ExampleEditor extends React.Component {
     return (
       <Grid container className={this.props.classes.gridContainer}>
         <Grid item xs={7}>
-          <TextField className={s.textfield} onChange={() => {}} label="Document name" />
+          <TextField className={this.props.classes.textField} onChange={() => {}} label="Document name" />
           <Amelietor initialContent={rawContent} />
           <EditorControls hasUploadButton={true} />
         </Grid>
