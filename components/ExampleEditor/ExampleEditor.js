@@ -1,12 +1,19 @@
-import React from 'react';
-import { Textfield } from 'react-mdl';
+import React, { PropTypes } from 'react';
+import { withStyles } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
+import TextField from 'material-ui/TextField';
 
 import Amelietor from '../Amelietor';
 import TokenManager from '../TokenManager';
 import RecContainer from '../RecContainer';
 import EditorControls from '../EditorControls';
-import UploadZone from '../UploadZone';
 import s from './ExampleEditor.css';
+
+const styles = {
+  gridContainer: {
+    margin: 0
+  }
+};
 
 const rawContent = {
   blocks: [
@@ -40,21 +47,23 @@ class ExampleEditor extends React.Component {
 
   render() {
     return (
-      <div className="mdl-grid">
-        <div className="mdl-cell mdl-cell--8-col">
-          <Textfield className={`${s.textfield}`} onChange={() => {}} label="Document name" />
+      <Grid container className={this.props.classes.gridContainer}>
+        <Grid item xs={7}>
+          <TextField className={s.textfield} onChange={() => {}} label="Document name" />
           <Amelietor initialContent={rawContent} />
-        </div>
-        <EditorControls />
-        <UploadZone />
-        <div className={`mdl-cell mdl-cell--4-col ${s.recommendations}`}>
+          <EditorControls hasUploadButton={true} />
+        </Grid>
+        <Grid item xs={7} className={s.recommendations}>
           <TokenManager />
-          <br />
           <RecContainer />
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     );
   }
 }
 
-export default ExampleEditor;
+ExampleEditor.propTypes = {
+  classes: PropTypes.object
+};
+
+export default withStyles(styles)(ExampleEditor);
