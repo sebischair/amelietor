@@ -15,7 +15,7 @@ import s from './DesignDecision.css';
 
 const styles = {
   gridContainer: {
-    margin: 0
+    margin: '16px'
   }
 };
 

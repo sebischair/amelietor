@@ -11,7 +11,7 @@ import s from './ExampleEditor.css';
 
 const styles = {
   gridContainer: {
-    margin: 0
+    margin: '16px'
   },
   textField: {
     width: '600px',
