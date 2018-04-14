@@ -15,18 +15,10 @@ import s from './Projects.css';
 
 const tourSteps = [
   {
-    title: 'Search by keyword',
-    text: 'Get projects matching either name, description or category.',
-    selector: '.search-field',
-    position: 'bottom',
-    type: 'hover',
-    isFixed: true
-  },
-  {
-    title: 'Sort your projects',
-    text: 'Each column can be sorted in ascending or descending order.',
-    selector: '.table-head',
-    position: 'bottom',
+    title: 'Overview',
+    text: 'Here are the projects imported from your project management systems.',
+    selector: '.projects-table',
+    position: 'top',
     type: 'hover',
     isFixed: true
   },
@@ -34,7 +26,7 @@ const tourSteps = [
     title: 'Project details',
     text: 'Click to open the project page with detailed information.',
     selector: '.one-row:first-child',
-    position: 'top',
+    position: 'bottom',
     type: 'hover',
     isFixed: true
   },
@@ -191,7 +183,7 @@ class Projects extends React.Component {
           value={this.state.searchString}
           onChange={this.handleChangeSearch}
           label="Search projects..."
-          className={`${s.searchField} search-field`}
+          className={s.searchField}
         />
         <br />
         <br />
@@ -204,7 +196,7 @@ class Projects extends React.Component {
         )}
         {this.props.projects.length > 0 && (
           <Paper>
-            <Table>
+            <Table className={'projects-table'}>
               <EnhancedTableHead
                 order={order}
                 orderBy={orderBy}
