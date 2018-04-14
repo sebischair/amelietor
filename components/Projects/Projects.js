@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
 import Joyride from 'react-joyride';
+import disableScroll from 'disable-scroll';
 
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
 import history from '../../src/history';
@@ -133,6 +134,12 @@ class Projects extends React.Component {
     this.setState({
       selector: data.type === 'tooltip:before' ? data.step.selector : '',
     });
+
+    if (data.action === 'mouseenter') {
+      disableScroll.on();
+    } else if (data.action === 'close' || data.type ==='finished') {
+      disableScroll.off();
+    }
   }
 
   render() {
