@@ -13,3 +13,12 @@
 .issuesCount {
   padding: 8px 8px 8px 0;
 }
+
+.headline {
+  display: inline;
+}
+
+.helpSpan {
+  vertical-align: super;
+  cursor: pointer;
+}

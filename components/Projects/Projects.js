@@ -1,10 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
+import Help from 'material-ui-icons/Help';
 import Joyride from 'react-joyride';
 import disableScroll from 'disable-scroll';
 
@@ -31,6 +33,13 @@ const tourSteps = [
     isFixed: true
   },
 ];
+
+const styles = {
+  helpIcon: {
+    fontSize: '16px',
+    color: 'grey'
+  }
+};
 
 class Projects extends React.Component {
   constructor(props) {
@@ -129,10 +138,14 @@ class Projects extends React.Component {
     }
   };
 
-  callback(data) {
-    console.log('%cJoyride callback', 'color: #47AAAC; font-weight: bold; font-size: 13px;'); //eslint-disable-line no-console
-    console.log(data); //eslint-disable-line no-console
+  handleRestartTour = event => {
+    this.joyride.reset();
+    this.setState({
+      isRunning: true,
+    });
+  };
 
+  callback(data) {
     this.setState({
       selector: data.type === 'tooltip:before' ? data.step.selector : '',
     });
@@ -168,6 +181,7 @@ class Projects extends React.Component {
     return (
       <div style={{ margin: '20px' }}>
         <Joyride
+          ref={c => (this.joyride = c)}
           debug={false}
           callback={this.callback}
           locale={{
@@ -187,7 +201,19 @@ class Projects extends React.Component {
           type={joyrideType}
         />
         <div>
-          <h3>Projects</h3>
+          <h3 className={s.headline}>Projects</h3> &nbsp;
+          <span className={s.helpSpan}>
+            <Tooltip
+              title={'Show guides'}
+              placement={'right'}
+              enterDelay={300}
+            >
+              <Help
+                className={this.props.classes.helpIcon}
+                onClick={this.handleRestartTour}
+              />
+            </Tooltip>
+          </span>
         </div>
         <TextField
           id="searchProjects"
@@ -275,7 +301,8 @@ const mapStateToProps = state => {
 
 Projects.propTypes = {
   projects: PropTypes.array.isRequired,
+  classes: PropTypes.object,
   dispatch: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps)(Projects);
+export default connect(mapStateToProps)(withStyles(styles)(Projects));
