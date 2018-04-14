@@ -5,22 +5,57 @@ import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableRow, TablePagination, TableFooter } from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
+import Joyride from 'react-joyride';
 
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
 import history from '../../src/history';
 import EnhancedTableHead from '../EnhancedTableHead';
 import s from './Projects.css';
 
+const tourSteps = [
+  {
+    title: 'Search by keyword',
+    text: 'Get projects matching either name, description or category.',
+    selector: '.search-field',
+    position: 'bottom',
+    type: 'hover',
+    isFixed: true
+  },
+  {
+    title: 'Sort your projects',
+    text: 'Each column can be sorted in ascending or descending order.',
+    selector: '.table-head',
+    position: 'bottom',
+    type: 'hover',
+    isFixed: true
+  },
+  {
+    title: 'Project details',
+    text: 'Click to open the project page with detailed information.',
+    selector: '.one-row:first-child',
+    position: 'top',
+    type: 'hover',
+    isFixed: true
+  },
+];
+
 class Projects extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
     this.state = {
       searchString: '',
       order: 'desc',
       orderBy: 'issuesCount',
       data: this.props.projects,
       page: 0,
-      rowsPerPage: 25
+      rowsPerPage: 25,
+      joyrideOverlay: true,
+      joyrideType: 'continuous',
+      isRunning: false,
+      stepIndex: 0,
+      steps: tourSteps,
+      selector: ''
     };
     if (this.props.projects.length === 0) {
       const projectsPromise = this.props.dispatch(fetchProjects());
@@ -28,6 +63,14 @@ class Projects extends React.Component {
         this.setState({ data: projects });
       });
     }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        isRunning: true,
+      });
+    }, 2000);
   }
 
   handleRequestSort = (event, property) => {
@@ -83,10 +126,19 @@ class Projects extends React.Component {
     }
   };
 
+  callback(data) {
+    console.log('%cJoyride callback', 'color: #47AAAC; font-weight: bold; font-size: 13px;'); //eslint-disable-line no-console
+    console.log(data); //eslint-disable-line no-console
+
+    this.setState({
+      selector: data.type === 'tooltip:before' ? data.step.selector : '',
+    });
+  }
+
   render() {
     let projects = this.props.projects;
     const searchString = this.state.searchString.trim().toLowerCase();
-    const { order, orderBy, rowsPerPage, page } = this.state;
+    const { order, orderBy, rowsPerPage, page, isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
     const columnData = [
       { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -106,6 +158,24 @@ class Projects extends React.Component {
 
     return (
       <div style={{ margin: '20px' }}>
+        <Joyride
+          debug={false}
+          callback={this.callback}
+          locale={{
+            back: <span>Back</span>,
+            close: <span>Close</span>,
+            last: <span>Last</span>,
+            next: <span>Next</span>,
+            skip: <span>Skip</span>
+          }}
+          run={isRunning}
+          showOverlay={joyrideOverlay}
+          showSkipButton={true}
+          showStepsProgress={true}
+          stepIndex={stepIndex}
+          steps={steps}
+          type={joyrideType}
+        />
         <div>
           <h3>Projects</h3>
         </div>
@@ -114,7 +184,7 @@ class Projects extends React.Component {
           value={this.state.searchString}
           onChange={this.handleChangeSearch}
           label="Search projects..."
-          className={s.searchField}
+          className={`${s.searchField} search-field`}
         />
         <br />
         <br />
@@ -139,7 +209,7 @@ class Projects extends React.Component {
                   <TableRow
                     hover
                     key={project.key}
-                    className={s.table__clickable}
+                    className={`${s.table__clickable} one-row`}
                     onClick={e => this.openProjectRecommender(e, project.key)}
                   >
                     <TableCell>{project.name}</TableCell>

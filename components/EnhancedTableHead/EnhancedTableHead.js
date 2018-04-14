@@ -12,7 +12,7 @@ class EnhancedTableHead extends React.Component {
     const { order, orderBy } = this.props;
 
     return (
-      <TableHead>
+      <TableHead className='table-head'>
         <TableRow>
           {this.props.columnData.map(
             column => (
