@@ -31,7 +31,7 @@ const tourSteps = [
     position: 'bottom',
     type: 'hover',
     isFixed: true
-  },
+  }
 ];
 
 const styles = {
@@ -68,20 +68,20 @@ class Projects extends React.Component {
   }
 
   componentDidMount() {
-    const doneTour = localStorage.getItem('doneTour') === 'yes';
+    const doneProjectsTour = localStorage.getItem('doneProjectsTour') === 'yes';
 
-    if (doneTour) {
+    if (doneProjectsTour) {
       this.setState({
-        isRunning: false,
+        isRunning: false
       });
       return;
     } else {
       setTimeout(() => {
         this.setState({
-          isRunning: true,
+          isRunning: true
         });
       }, 1000);
-      localStorage.setItem('doneTour', 'yes');
+      localStorage.setItem('doneProjectsTour', 'yes');
     }
   }
 
@@ -141,18 +141,18 @@ class Projects extends React.Component {
   handleRestartTour = event => {
     this.joyride.reset();
     this.setState({
-      isRunning: true,
+      isRunning: true
     });
   };
 
   callback(data) {
     this.setState({
-      selector: data.type === 'tooltip:before' ? data.step.selector : '',
+      selector: data.type === 'tooltip:before' ? data.step.selector : ''
     });
 
     if (data.action === 'mouseenter') {
       disableScroll.on();
-    } else if (data.action === 'close' || data.type ==='finished') {
+    } else if (data.action === 'close' || data.type === 'finished') {
       disableScroll.off();
     }
   }
@@ -187,7 +187,7 @@ class Projects extends React.Component {
           locale={{
             back: <span>Back</span>,
             close: <span>Close</span>,
-            last: <span>Last</span>,
+            last: <span>Done</span>,
             next: <span>Next</span>,
             skip: <span>Skip</span>
           }}
@@ -203,15 +203,8 @@ class Projects extends React.Component {
         <div>
           <h3 className={s.headline}>Projects</h3> &nbsp;
           <span className={s.helpSpan}>
-            <Tooltip
-              title={'Show guides'}
-              placement={'right'}
-              enterDelay={300}
-            >
-              <Help
-                className={this.props.classes.helpIcon}
-                onClick={this.handleRestartTour}
-              />
+            <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+              <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
             </Tooltip>
           </span>
         </div>
