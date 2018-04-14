@@ -80,6 +80,9 @@ header video
   background: #fff;
 }
 
+.amelie-header.mdl-layout__header--waterfall {
+  z-index: 1;
+}
 .amelie-header .mdl-menu__container {
   z-index: 50;
   margin: 0 !important;
