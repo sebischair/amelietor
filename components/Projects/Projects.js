@@ -59,11 +59,21 @@ class Projects extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    const doneTour = localStorage.getItem('doneTour') === 'yes';
+
+    if (doneTour) {
       this.setState({
-        isRunning: true,
+        isRunning: false,
       });
-    }, 2000);
+      return;
+    } else {
+      setTimeout(() => {
+        this.setState({
+          isRunning: true,
+        });
+      }, 1000);
+      localStorage.setItem('doneTour', 'yes');
+    }
   }
 
   handleRequestSort = (event, property) => {
@@ -168,6 +178,7 @@ class Projects extends React.Component {
             skip: <span>Skip</span>
           }}
           run={isRunning}
+          autoStart
           showOverlay={joyrideOverlay}
           showSkipButton={true}
           showStepsProgress={true}
