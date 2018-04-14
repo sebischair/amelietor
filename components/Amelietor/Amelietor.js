@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-let jsSHA = require("jssha");
+let jsSHA = require('jssha');
 import {
   selectRec, clearRec, fetchAnnotationsPerBlock, selectKey, fetchSession,
   invalidateAnnotation
@@ -22,7 +22,7 @@ import {
   Modifier,
   ContentState
   } from 'draft-js';
-import {decorate, decorationFailed, decorationSucceed} from "../../core/actions/amelietorActions";
+import {decorate, decorationFailed, decorationSucceed} from '../../core/actions/amelietorActions';
 
 class Amelietor extends React.Component {
 
@@ -93,7 +93,7 @@ class Amelietor extends React.Component {
     };
 
     const editorState = this.props.initialContent? EditorState.createWithContent(convertFromRaw(this.props.initialContent), decorator): EditorState.createEmpty(decorator);
-    
+
     this.state = {
       triggerOnLoad: this.props.triggerOnLoad || false,
       editorState: editorState,
@@ -194,7 +194,7 @@ class Amelietor extends React.Component {
 
   render() {
     return (
-            <div className={`${s.editor}`} onClick={this.focus}>
+            <div className={`${s.editor} amelie-editor`} onClick={this.focus}>
               <Editor
                 editorState={this.state.editorState}
                 handleKeyCommand={this.handleKeyCommand}

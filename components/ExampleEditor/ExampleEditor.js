@@ -2,12 +2,28 @@ import React, { PropTypes } from 'react';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
+import Tooltip from 'material-ui/Tooltip';
+import Help from 'material-ui-icons/Help';
+import Joyride from 'react-joyride';
+import disableScroll from 'disable-scroll';
 
 import Amelietor from '../Amelietor';
 import TokenManager from '../TokenManager';
 import RecContainer from '../RecContainer';
 import EditorControls from '../EditorControls';
 import s from './ExampleEditor.css';
+
+const tourSteps = [
+  {
+    title: 'Design decision description',
+    text:
+      'Put your design decision here and annotate with architectural elements. Get recommendations for corresponding solutions.',
+    selector: '.amelie-editor',
+    position: 'right',
+    type: 'hover',
+    isFixed: true
+  }
+];
 
 const styles = {
   gridContainer: {
@@ -16,6 +32,10 @@ const styles = {
   textField: {
     width: '600px',
     margin: '15px 0 30px 0'
+  },
+  helpIcon: {
+    fontSize: '16px',
+    color: 'grey'
   }
 };
 
@@ -47,13 +67,87 @@ const rawContent = {
 class ExampleEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
+    this.state = {
+      joyrideOverlay: true,
+      joyrideType: 'continuous',
+      isRunning: false,
+      stepIndex: 0,
+      steps: tourSteps,
+      selector: ''
+    };
+  }
+
+  componentDidMount() {
+    const doneEditorTour = localStorage.getItem('doneEditorTour') === 'yes';
+
+    if (doneEditorTour) {
+      this.setState({
+        isRunning: false
+      });
+      return;
+    } else {
+      setTimeout(() => {
+        this.setState({
+          isRunning: true
+        });
+      }, 1000);
+      localStorage.setItem('doneEditorTour', 'yes');
+    }
+  }
+
+  handleRestartTour = event => {
+    this.joyride.reset();
+    this.setState({
+      isRunning: true
+    });
+  };
+
+  callback(data) {
+    this.setState({
+      selector: data.type === 'tooltip:before' ? data.step.selector : ''
+    });
+
+    if (data.action === 'mouseenter') {
+      disableScroll.on();
+    } else if (data.action === 'close' || data.type === 'finished') {
+      disableScroll.off();
+    }
   }
 
   render() {
+    const { isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
     return (
       <Grid container className={this.props.classes.gridContainer}>
+        <Joyride
+          ref={c => (this.joyride = c)}
+          debug={false}
+          callback={this.callback}
+          locale={{
+            back: <span>Back</span>,
+            close: <span>Close</span>,
+            last: <span>Last</span>,
+            next: <span>Next</span>,
+            skip: <span>Skip</span>
+          }}
+          run={isRunning}
+          autoStart
+          showOverlay={joyrideOverlay}
+          showSkipButton={true}
+          showStepsProgress={true}
+          stepIndex={stepIndex}
+          steps={steps}
+          type={joyrideType}
+        />
         <Grid item xs={7}>
-          <TextField className={this.props.classes.textField} onChange={() => {}} label="Document name" />
+          <div>
+            <TextField className={this.props.classes.textField} onChange={() => {}} label="Document name" />&nbsp;
+            <span className={s.helpSpan}>
+              <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+                <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
+              </Tooltip>
+            </span>
+          </div>
           <Amelietor initialContent={rawContent} />
           <EditorControls hasUploadButton={true} />
         </Grid>

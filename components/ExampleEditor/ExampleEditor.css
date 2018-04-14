@@ -3,3 +3,8 @@
   left: 63%;
   bottom: inherit;
 }
+
+.helpSpan {
+  vertical-align: super;
+  cursor: pointer;
+}
