@@ -126,7 +126,7 @@ class ExampleEditor extends React.Component {
           locale={{
             back: <span>Back</span>,
             close: <span>Close</span>,
-            last: <span>Last</span>,
+            last: <span>Done</span>,
             next: <span>Next</span>,
             skip: <span>Skip</span>
           }}
