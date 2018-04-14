@@ -35,6 +35,7 @@ const config = {
   entry: [
     /* Material Design Lite (https://getmdl.io) */
     '!!style-loader!css-loader!react-mdl/extra/material.min.css',
+    '!!style-loader!css-loader!react-joyride/lib/react-joyride-compiled.css',
     'react-mdl/extra/material.min.js',
     /* The main entry point of your JavaScript application */
     './main.js',

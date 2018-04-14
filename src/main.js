@@ -12,6 +12,7 @@ import 'babel-polyfill';
 import 'whatwg-fetch';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
+import 'react-joyride/lib/react-joyride-compiled.css'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
