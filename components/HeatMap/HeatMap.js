@@ -39,7 +39,7 @@ class HeatMap extends React.Component {
                 id="searchEMData"
                 value={this.state.searchString}
                 onChange={this.handleChange}
-                label="Search..."
+                label="Search for expert name or architectural element..."
                 className={s.searchField}
               />
               <br />
