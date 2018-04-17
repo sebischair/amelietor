@@ -25,6 +25,14 @@ const tourSteps = [
     isFixed: true
   },
   {
+    title: 'Count of issues',
+    text: 'For an imported project, this number indicates the total number of imported design decisions.',
+    selector: '.one-row-issues:first-child',
+    position: 'left',
+    type: 'hover',
+    isFixed: true
+  },
+  {
     title: 'Project details',
     text: 'Click to open the project page with detailed information.',
     selector: '.one-row:first-child',
@@ -250,7 +258,7 @@ class Projects extends React.Component {
                         placement={'bottom-end'}
                         enterDelay={300}
                       >
-                        <div className={s.issuesCount}>{this.issueCountCol(project.issuesCount)}</div>
+                        <div className={`${s.issuesCount} one-row-issues`}>{this.issueCountCol(project.issuesCount)}</div>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
