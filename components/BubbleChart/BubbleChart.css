@@ -30,3 +30,7 @@
   pointer-events: none;
 }
 
+.helpSpan {
+  vertical-align: super;
+  cursor: pointer;
+}
