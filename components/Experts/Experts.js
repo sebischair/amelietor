@@ -37,6 +37,7 @@ const styles = {
 class Experts extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
     this.state = {
       searchString: '',
       page: 0,

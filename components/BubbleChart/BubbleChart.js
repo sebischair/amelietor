@@ -38,6 +38,7 @@ const styles = {
 class BubbleChart extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
     this.state = {
       d3: '',
       year: defaultYear,
