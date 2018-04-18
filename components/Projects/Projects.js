@@ -27,7 +27,7 @@ const tourSteps = [
   {
     title: 'Count of issues',
     text: 'For an imported project, this number indicates the total number of imported design decisions.',
-    selector: '.one-row-issues:first-child',
+    selector: '.one-row-issues',
     position: 'left',
     type: 'hover',
     isFixed: true
