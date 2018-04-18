@@ -44,7 +44,7 @@ class BubbleChart extends React.Component {
           {this.state.year}
         </div>
         <div className={`${s.bubbleChart}`}>
-          <svg height={defaultHeight} width={defaultWidth} className="bubble" id="svg" />
+          <svg height={defaultHeight} width={defaultWidth} className="bubble" id="bubbleSvg" />
           {this.state.d3 && <RD3Component data={this.state.d3} />}
         </div>
       </div>
