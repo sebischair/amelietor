@@ -64,8 +64,7 @@ class Projects extends React.Component {
       joyrideType: 'continuous',
       isRunning: false,
       stepIndex: 0,
-      steps: tourSteps,
-      selector: ''
+      steps: tourSteps
     };
     if (this.props.projects.length === 0) {
       const projectsPromise = this.props.dispatch(fetchProjects());
@@ -154,10 +153,6 @@ class Projects extends React.Component {
   };
 
   callback(data) {
-    this.setState({
-      selector: data.type === 'tooltip:before' ? data.step.selector : ''
-    });
-
     if (data.action === 'mouseenter') {
       disableScroll.on();
     } else if (data.action === 'close' || data.type === 'finished') {

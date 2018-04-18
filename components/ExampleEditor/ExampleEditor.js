@@ -73,8 +73,7 @@ class ExampleEditor extends React.Component {
       joyrideType: 'continuous',
       isRunning: false,
       stepIndex: 0,
-      steps: tourSteps,
-      selector: ''
+      steps: tourSteps
     };
   }
 
@@ -104,10 +103,6 @@ class ExampleEditor extends React.Component {
   };
 
   callback(data) {
-    this.setState({
-      selector: data.type === 'tooltip:before' ? data.step.selector : ''
-    });
-
     if (data.action === 'mouseenter') {
       disableScroll.on();
     } else if (data.action === 'close' || data.type === 'finished') {
