@@ -2,6 +2,10 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
+import Tooltip from 'material-ui/Tooltip';
+import Help from 'material-ui-icons/Help';
+import Joyride from 'react-joyride';
+import disableScroll from 'disable-scroll';
 
 import history from '../../src/history';
 import Amelietor from '../Amelietor';
@@ -13,9 +17,24 @@ import { fetchSelctedProject, fetchSelctedDD } from '../../core/actions/scaction
 import { receiveFileContent } from '../../core/actions/actions';
 import s from './DesignDecision.css';
 
+const tourSteps = [
+  {
+    title: 'Similar decisions',
+    text: 'This tables shows similar design decisions made in the past.',
+    selector: '.similar-documents',
+    position: 'bottom',
+    type: 'hover',
+    isFixed: true
+  }
+];
+
 const styles = {
   gridContainer: {
     margin: '16px'
+  },
+  helpIcon: {
+    fontSize: '16px',
+    color: 'grey'
   }
 };
 
@@ -26,7 +45,12 @@ class DesignDecision extends React.Component {
       projectKey: this.props.projectKey,
       issueKey: this.props.issueKey,
       summary: this.props.selectedDD.summary,
-      similarDocuments: []
+      similarDocuments: [],
+      joyrideOverlay: true,
+      joyrideType: 'continuous',
+      isRunning: false,
+      stepIndex: 0,
+      steps: tourSteps
     };
     this.rawContent = {
       blocks: [
@@ -52,6 +76,24 @@ class DesignDecision extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const doneDecisionTour = localStorage.getItem('doneDecisionTour') === 'yes';
+
+    if (doneDecisionTour) {
+      this.setState({
+        isRunning: false
+      });
+      return;
+    } else {
+      setTimeout(() => {
+        this.setState({
+          isRunning: true
+        });
+      }, 1000);
+      localStorage.setItem('doneDecisionTour', 'yes');
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedDD.hasOwnProperty('description') && nextProps.selectedProject.hasOwnProperty('key')) {
       this.props.dispatch(receiveFileContent(null, [nextProps.selectedDD.description], true));
@@ -65,11 +107,55 @@ class DesignDecision extends React.Component {
     });
   };
 
+  handleRestartTour = event => {
+    this.joyride.reset();
+    this.setState({
+      isRunning: true
+    });
+  };
+
+  callback(data) {
+    if (data.action === 'mouseenter') {
+      disableScroll.on();
+    } else if (data.action === 'close' || data.type === 'finished') {
+      disableScroll.off();
+    }
+  }
+
   render() {
+    const { isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
+
     return (
       <Grid container className={this.props.classes.gridContainer}>
+        <Joyride
+          ref={c => (this.joyride = c)}
+          debug={false}
+          callback={this.callback}
+          locale={{
+            back: <span>Back</span>,
+            close: <span>Close</span>,
+            last: <span>Done</span>,
+            next: <span>Next</span>,
+            skip: <span>Skip</span>
+          }}
+          run={isRunning}
+          autoStart
+          showOverlay={joyrideOverlay}
+          showSkipButton={true}
+          showStepsProgress={true}
+          stepIndex={stepIndex}
+          steps={steps}
+          type={joyrideType}
+        />
         <Grid item xs={7}>
-          <h3>{this.state.summary}</h3>
+          <div>
+            <h3 className={s.headline}>{this.state.summary}</h3> &nbsp;
+            <span className={s.helpSpan}>
+              <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+                <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
+              </Tooltip>
+            </span>
+          </div>
           <Amelietor triggerOnLoad={true} initialContent={this.rawContent} readOnly={true} />
           <EditorControls />
         </Grid>

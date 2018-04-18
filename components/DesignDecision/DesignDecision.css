@@ -4,3 +4,11 @@
   bottom: inherit;
 }
 
+.headline {
+  display: inline;
+}
+
+.helpSpan {
+  vertical-align: super;
+  cursor: pointer;
+}
