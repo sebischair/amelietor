@@ -13,3 +13,8 @@
 .expertsColumn {
   width: 150px;
 }
+
+.helpSpan {
+  vertical-align: baseline;
+  cursor: pointer;
+}

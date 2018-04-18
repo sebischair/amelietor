@@ -1,10 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import { CircularProgress } from 'material-ui/Progress';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter, TablePagination } from 'material-ui/Table';
 import Tooltip from 'material-ui/Tooltip';
+import Help from 'material-ui-icons/Help';
+import Joyride from 'react-joyride';
+import disableScroll from 'disable-scroll';
 
 import HelperFunctions from '../HelperFunctions';
 import { fetchSelctedProject, fetchERData } from '../../core/actions/scactions';
@@ -12,13 +16,36 @@ import history from '../../src/history';
 import CollapseRow from './CollapseRow';
 import s from './Experts.css';
 
+const tourSteps = [
+  {
+    title: 'Expert scores',
+    text: 'A higher expertise score indicates that the person has more experience in resolving similar design decisions.',
+    selector: '.expert-scores',
+    position: 'left',
+    type: 'hover',
+    isFixed: true
+  }
+];
+
+const styles = {
+  helpIcon: {
+    fontSize: '14px',
+    color: 'grey'
+  }
+};
+
 class Experts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       searchString: '',
       page: 0,
-      rowsPerPage: 10
+      rowsPerPage: 10,
+      joyrideOverlay: true,
+      joyrideType: 'continuous',
+      isRunning: false,
+      stepIndex: 0,
+      steps: tourSteps
     };
     let projectKey =
       this.props.projectKey === undefined
@@ -30,6 +57,24 @@ class Experts extends React.Component {
 
     if (this.props.erData.length === 0) {
       this.props.dispatch(fetchERData(projectKey));
+    }
+  }
+
+  componentDidMount() {
+    const doneExpertsTour = localStorage.getItem('doneExpertsTour') === 'yes';
+
+    if (doneExpertsTour) {
+      this.setState({
+        isRunning: false
+      });
+      return;
+    } else {
+      setTimeout(() => {
+        this.setState({
+          isRunning: true
+        });
+      }, 3000);
+      localStorage.setItem('doneExpertsTour', 'yes');
     }
   }
 
@@ -45,13 +90,28 @@ class Experts extends React.Component {
     this.setState({ searchString: event.target.value });
   };
 
+  handleRestartTour = event => {
+    this.joyride.reset();
+    this.setState({
+      isRunning: true
+    });
+  };
+
+  callback(data) {
+    if (data.action === 'mouseenter') {
+      disableScroll.on();
+    } else if (data.action === 'close' || data.type === 'finished') {
+      disableScroll.off();
+    }
+  }
+
   render() {
     let issues = this.props.erData.filter(e => {
       if (e.predictions) return e.predictions.length > 0;
       else return false;
     });
     let searchString = this.state.searchString.trim().toLowerCase();
-    const { rowsPerPage, page } = this.state;
+    const { rowsPerPage, page, isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, issues.length - page * rowsPerPage);
     const numOfDisplayedExperts = 2;
 
@@ -63,6 +123,26 @@ class Experts extends React.Component {
 
     return (
       <div>
+        <Joyride
+          ref={c => (this.joyride = c)}
+          debug={false}
+          callback={this.callback}
+          locale={{
+            back: <span>Back</span>,
+            close: <span>Close</span>,
+            last: <span>Done</span>,
+            next: <span>Next</span>,
+            skip: <span>Skip</span>
+          }}
+          run={isRunning}
+          autoStart
+          showOverlay={joyrideOverlay}
+          showSkipButton={true}
+          showStepsProgress={true}
+          stepIndex={stepIndex}
+          steps={steps}
+          type={joyrideType}
+        />
         <TextField
           value={this.state.searchString}
           onChange={this.handleChangeSearch}
@@ -85,13 +165,12 @@ class Experts extends React.Component {
                 <TableRow>
                   <TableCell>Open Design Decisions</TableCell>
                   <TableCell className={s.expertsColumn}>
-                    <Tooltip
-                      title="The score indicates how experienced the expert is on this issue."
-                      placement={'bottom-start'}
-                      enterDelay={300}
-                    >
-                      <span>Experts Recommendation</span>
-                    </Tooltip>
+                    <span>Experts Recommendation &nbsp;</span>
+                    <span className={s.helpSpan}>
+                      <Tooltip title={'Show guides'} placement={'bottom'} enterDelay={300}>
+                        <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
+                      </Tooltip>
+                    </span>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -100,7 +179,7 @@ class Experts extends React.Component {
                   return (
                     <TableRow hover key={indexOfIssue}>
                       <TableCell>{issue.text}</TableCell>
-                      <TableCell>
+                      <TableCell className={'expert-scores'}>
                         <CollapseRow issue={issue} numOfDisplayedExperts={numOfDisplayedExperts} />
                       </TableCell>
                     </TableRow>
@@ -147,7 +226,8 @@ Experts.propTypes = {
   erData: PropTypes.array.isRequired,
   projectKey: PropTypes.string,
   selectedProject: PropTypes.object,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  classes: PropTypes.object
 };
 
-export default connect(mapStateToProps)(Experts);
+export default connect(mapStateToProps)(withStyles(styles)(Experts));
