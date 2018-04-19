@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 import * as d3 from 'd3';
 import rd3 from 'react-d3-library';
 import { Slider } from 'react-mdl';
+import { withStyles } from 'material-ui/styles';
+import Tooltip from 'material-ui/Tooltip';
+import Help from 'material-ui-icons/Help';
 
 import d3StackedBarChart from './d3StackedBarChart';
 import s from './StackedBarChart.css';
@@ -12,10 +15,20 @@ const defaultYear = 2017;
 const defaultHeight = 500;
 const defaultWidth = 960;
 
+const styles = {
+  helpIcon: {
+    fontSize: '16px',
+    color: 'grey'
+  }
+};
+
 class StackedBarChart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { d3: '', year: defaultYear };
+    this.state = {
+      d3: '',
+      year: defaultYear
+    };
   }
 
   componentDidMount() {
@@ -73,8 +86,16 @@ class StackedBarChart extends React.Component {
     return (
       <div>
         <div className={`${s.barChart}`}>
-          {this.state.d3 && <Slider min={minYear} max={maxYear} defaultValue={defaultYear} onChange={this.redraw} />}
-          {this.state.year}
+          <span className={`${s.sliderSpan} year-slider`}>
+            {this.state.d3 && <Slider min={minYear} max={maxYear} defaultValue={defaultYear} onChange={this.redraw} />}
+            {this.state.year}
+          </span>
+          &nbsp;&nbsp;
+          <span className={s.helpSpan}>
+            <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+              <Help className={this.props.classes.helpIcon} onClick={this.props.handleRestartTour} />
+            </Tooltip>
+          </span>
         </div>
         <div className={`${s.barChart}`} id="barChart">
           <svg id="barSvg" height={defaultHeight} width={defaultWidth} />
@@ -88,7 +109,9 @@ class StackedBarChart extends React.Component {
 StackedBarChart.propTypes = {
   changeTabHandler: PropTypes.func,
   data: PropTypes.array,
-  viz: PropTypes.string
+  viz: PropTypes.string,
+  classes: PropTypes.object,
+  handleRestartTour: PropTypes.func.isRequired
 };
 
-export default StackedBarChart;
+export default withStyles(styles)(StackedBarChart);

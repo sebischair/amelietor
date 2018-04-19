@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import { CircularProgress } from 'material-ui/Progress';
+import Joyride from 'react-joyride';
+import disableScroll from 'disable-scroll';
 
 import history from '../../src/history';
 import HelperFunctions from '../HelperFunctions';
@@ -9,11 +11,43 @@ import { fetchSelctedProject, fetchQAData } from '../../core/actions/scactions';
 import StackedBarChart from '../StackedBarChart/StackedBarChart';
 import s from './QualityAttributes.css';
 
+const tourSteps = [
+  {
+    title: 'Project evolution',
+    text: 'View design decisions in a chronological order.',
+    selector: '.year-slider',
+    position: 'bottom',
+    type: 'hover',
+    isFixed: true
+  },
+  {
+    text: 'These quality attributes are not addressed by any design decision. This indicates potential risks in the project.',
+    selector: '.missing-qa',
+    position: 'left',
+    type: 'hover',
+    isFixed: true
+  },
+  {
+    title: 'Categorized design decisions',
+    text: 'Click on a bar to see non-existence, behavioral or structural design decisions.',
+    selector: '.segment:first-child',
+    position: 'top',
+    type: 'hover',
+    isFixed: true
+  }
+];
+
 class QualityAttributes extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
     this.state = {
-      projectKey: this.props.projectKey
+      projectKey: this.props.projectKey,
+      joyrideOverlay: true,
+      joyrideType: 'continuous',
+      isRunning: false,
+      stepIndex: 0,
+      steps: tourSteps
     };
 
     if (this.props.projectKey === undefined) {
@@ -27,11 +61,45 @@ class QualityAttributes extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const doneAttributeTour = localStorage.getItem('doneAttributeTour') === 'yes';
+
+    if (doneAttributeTour) {
+      this.setState({
+        isRunning: false
+      });
+      return;
+    } else {
+      setTimeout(() => {
+        this.setState({
+          isRunning: true
+        });
+      }, 1000);
+      localStorage.setItem('doneAttributeTour', 'yes');
+    }
+  }
+
+  handleRestartTour = () => {
+    this.joyride.reset();
+    this.setState({
+      isRunning: true
+    });
+  };
+
+  callback(data) {
+    if (data.action === 'mouseenter' || data.action === 'start') {
+      disableScroll.on();
+    } else if (data.action === 'close' || data.type === 'finished') {
+      disableScroll.off();
+    }
+  }
+
   render() {
+    const { isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
     let emptyDDList = '';
     if (this.props.qaData.length > 0) {
       emptyDDList = (
-        <div className="mdl-card__supporting-text">
+        <div className="mdl-card__supporting-text missing-qa">
           <b>Missing Quality Attributes</b>
           <ul>
             {this.props.qaData.map(qa => {
@@ -46,6 +114,26 @@ class QualityAttributes extends React.Component {
 
     return (
       <div>
+        <Joyride
+          ref={c => (this.joyride = c)}
+          debug={false}
+          callback={this.callback}
+          locale={{
+            back: <span>Back</span>,
+            close: <span>Close</span>,
+            last: <span>Done</span>,
+            next: <span>Next</span>,
+            skip: <span>Skip</span>
+          }}
+          run={isRunning}
+          autoStart
+          showOverlay={joyrideOverlay}
+          showSkipButton={true}
+          showStepsProgress={true}
+          stepIndex={stepIndex}
+          steps={steps}
+          type={joyrideType}
+        />
         {this.props.qaData.length === 0 && (
           <div className={s.circularProgress}>
             <CircularProgress />
@@ -57,7 +145,12 @@ class QualityAttributes extends React.Component {
           <Grid item xs={10}>
             <div>
               {this.props.qaData.length > 0 && (
-                <StackedBarChart data={this.props.qaData} changeTabHandler={this.props.changeTabHandler} viz="qa" />
+                <StackedBarChart
+                  data={this.props.qaData}
+                  changeTabHandler={this.props.changeTabHandler}
+                  viz="qa"
+                  handleRestartTour={this.handleRestartTour}
+                />
               )}
             </div>
           </Grid>

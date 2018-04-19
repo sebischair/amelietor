@@ -34,3 +34,12 @@
   padding: 5px;
   text-align: center;
 }
+
+.helpSpan {
+  vertical-align: super;
+  cursor: pointer;
+}
+
+.sliderSpan {
+  display: inline-flex;
+}
