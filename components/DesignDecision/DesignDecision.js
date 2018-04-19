@@ -41,6 +41,7 @@ const styles = {
 class DesignDecision extends React.Component {
   constructor(props) {
     super(props);
+    this.callback = this.callback.bind(this);
     this.state = {
       projectKey: this.props.projectKey,
       issueKey: this.props.issueKey,
