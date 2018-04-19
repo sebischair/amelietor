@@ -99,7 +99,7 @@ class Experts extends React.Component {
   };
 
   callback(data) {
-    if (data.action === 'mouseenter') {
+    if (data.action === 'mouseenter' || data.action === 'start') {
       disableScroll.on();
     } else if (data.action === 'close' || data.type === 'finished') {
       disableScroll.off();
