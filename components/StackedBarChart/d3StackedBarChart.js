@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 function getNode(data, defaultHeight, defaultWidth) {
-  let svg = d3.select('svg');
+  let svg = d3.select('#barSvg');
   svg.selectAll('*').remove();
 
   let qaFilteredData = data.filter(d => d.value.find(v => v > 0) > 0);

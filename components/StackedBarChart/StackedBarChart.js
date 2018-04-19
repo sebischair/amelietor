@@ -77,7 +77,7 @@ class StackedBarChart extends React.Component {
           {this.state.year}
         </div>
         <div className={`${s.barChart}`} id="barChart">
-          <svg height={defaultHeight} width={defaultWidth} />
+          <svg id="barSvg" height={defaultHeight} width={defaultWidth} />
           {this.state.d3 && this.state.d3.length > 0 && <RD3Component data={this.state.d3} ref="barSvg" />}
         </div>
       </div>
