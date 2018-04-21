@@ -57,13 +57,21 @@ class Experts extends React.Component {
     }
 
     if (this.props.erData.length === 0) {
-      this.props.dispatch(fetchERData(projectKey));
+      const ERpromise = this.props.dispatch(fetchERData(projectKey));
+      ERpromise.then(() => {
+        this.checkDoneTour();
+      });
     }
   }
 
   componentDidMount() {
-    const doneExpertsTour = localStorage.getItem('doneExpertsTour') === 'yes';
+    if (this.props.erData.length > 0) {
+      this.checkDoneTour();
+    }
+  }
 
+  checkDoneTour = () => {
+    const doneExpertsTour = localStorage.getItem('doneExpertsTour') === 'yes';
     if (doneExpertsTour) {
       this.setState({
         isRunning: false
@@ -74,7 +82,7 @@ class Experts extends React.Component {
         this.setState({
           isRunning: true
         });
-      }, 3000);
+      }, 1000);
       localStorage.setItem('doneExpertsTour', 'yes');
     }
   }
@@ -91,8 +99,8 @@ class Experts extends React.Component {
     this.setState({ searchString: event.target.value });
   };
 
-  handleRestartTour = event => {
-    this.joyride.reset();
+  handleRestartTour = () => {
+    this.joyride.reset(true);
     this.setState({
       isRunning: true
     });

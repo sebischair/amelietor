@@ -108,8 +108,8 @@ class DesignDecision extends React.Component {
     });
   };
 
-  handleRestartTour = event => {
-    this.joyride.reset();
+  handleRestartTour = () => {
+    this.joyride.reset(true);
     this.setState({
       isRunning: true
     });

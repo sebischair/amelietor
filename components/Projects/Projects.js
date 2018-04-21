@@ -70,13 +70,19 @@ class Projects extends React.Component {
       const projectsPromise = this.props.dispatch(fetchProjects());
       projectsPromise.then(projects => {
         this.setState({ data: projects });
+        this.checkDoneTour();
       });
     }
   }
 
   componentDidMount() {
-    const doneProjectsTour = localStorage.getItem('doneProjectsTour') === 'yes';
+    if (this.props.projects.length > 0) {
+      this.checkDoneTour();
+    }
+  }
 
+  checkDoneTour = () => {
+    const doneProjectsTour = localStorage.getItem('doneProjectsTour') === 'yes';
     if (doneProjectsTour) {
       this.setState({
         isRunning: false
@@ -90,7 +96,7 @@ class Projects extends React.Component {
       }, 1000);
       localStorage.setItem('doneProjectsTour', 'yes');
     }
-  }
+  };
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -145,8 +151,8 @@ class Projects extends React.Component {
     }
   };
 
-  handleRestartTour = event => {
-    this.joyride.reset();
+  handleRestartTour = () => {
+    this.joyride.reset(true);
     this.setState({
       isRunning: true
     });
@@ -253,7 +259,9 @@ class Projects extends React.Component {
                         placement={'bottom-end'}
                         enterDelay={300}
                       >
-                        <div className={`${s.issuesCount} one-row-issues`}>{this.issueCountCol(project.issuesCount)}</div>
+                        <div className={`${s.issuesCount} one-row-issues`}>
+                          {this.issueCountCol(project.issuesCount)}
+                        </div>
                       </Tooltip>
                     </TableCell>
                   </TableRow>

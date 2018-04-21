@@ -21,7 +21,8 @@ const tourSteps = [
     isFixed: true
   },
   {
-    text: 'These quality attributes are not addressed by any design decision. This indicates potential risks in the project.',
+    text:
+      'These quality attributes are not addressed by any design decision. This indicates potential risks in the project.',
     selector: '.missing-qa',
     position: 'left',
     type: 'hover',
@@ -57,13 +58,21 @@ class QualityAttributes extends React.Component {
       this.props.dispatch(fetchSelctedProject(this.state.projectKey));
     }
     if (this.props.qaData.length === 0) {
-      this.props.dispatch(fetchQAData(this.state.projectKey));
+      const QApromise = this.props.dispatch(fetchQAData(this.state.projectKey));
+      QApromise.then(() => {
+        this.checkDoneTour();
+      });
     }
   }
 
   componentDidMount() {
-    const doneAttributeTour = localStorage.getItem('doneAttributeTour') === 'yes';
+    if (this.props.qaData.length > 0) {
+      this.checkDoneTour();
+    }
+  }
 
+  checkDoneTour = () => {
+    const doneAttributeTour = localStorage.getItem('doneAttributeTour') === 'yes';
     if (doneAttributeTour) {
       this.setState({
         isRunning: false
@@ -77,10 +86,10 @@ class QualityAttributes extends React.Component {
       }, 1000);
       localStorage.setItem('doneAttributeTour', 'yes');
     }
-  }
+  };
 
   handleRestartTour = () => {
-    this.joyride.reset();
+    this.joyride.reset(true);
     this.setState({
       isRunning: true
     });

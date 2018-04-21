@@ -51,15 +51,17 @@ class BubbleChart extends React.Component {
   }
 
   componentDidMount() {
-    const doneBubbleTour = localStorage.getItem('doneBubbleTour') === 'yes';
     let changeTabHandler = this.props.changeTabHandler;
     let viz = this.props.viz;
     this.setState({ d3: d3BubbleChart.getNode(this.props.data, defaultHeight, defaultWidth) });
     d3.selectAll('circle').on('click', d => {
       changeTabHandler(4, viz, d.id, 'default');
     });
+    this.checkDoneTour();
+  }
 
-    // Check whether the user has already saw the tour guide
+  checkDoneTour = () => {
+    const doneBubbleTour = localStorage.getItem('doneBubbleTour') === 'yes';
     if (doneBubbleTour) {
       this.setState({
         isRunning: false
@@ -75,8 +77,8 @@ class BubbleChart extends React.Component {
     }
   }
 
-  handleRestartTour = event => {
-    this.joyride.reset();
+  handleRestartTour = () => {
+    this.joyride.reset(true);
     this.setState({
       isRunning: true
     });
