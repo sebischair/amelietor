@@ -1,5 +1,5 @@
 .recommendations{
-  position: fixed;
+  position: absolute;
   left: 63%;
   bottom: inherit;
 }

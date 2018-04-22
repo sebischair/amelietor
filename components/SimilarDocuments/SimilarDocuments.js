@@ -14,7 +14,7 @@ class SimilarDocuments extends React.Component {
 
   render() {
     return (
-      <Table sortable rowKeyColumn="name" shadow={0} rows={this.props.similarDocuments} className={`${s.customWidth} similar-documents`}>
+      <Table sortable rowKeyColumn="name" shadow={0} rows={this.props.similarDocuments} className={`${s.similarityTable} similar-documents`}>
         <TableHeader name="name" tooltip="Design decision">Design Decision</TableHeader>
         <TableHeader name="summary" tooltip="Summary">Summary</TableHeader>
         <TableHeader name="cosinesimilarity" tooltip="Cosine Similarity"
