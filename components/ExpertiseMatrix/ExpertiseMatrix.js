@@ -41,7 +41,7 @@ class ExpertiseMatrix extends React.Component {
           </div>
         )}
         {emData.length > 0 && (
-          <div id="hmap">
+          <div>
             <HeatMap data={emData} />
           </div>
         )}

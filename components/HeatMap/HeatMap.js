@@ -45,7 +45,7 @@ class HeatMap extends React.Component {
               <br />
               <br />
             </div>
-            <div>
+            <div className={s.heatMapContainer}>
               <svg id="heatMap" />
               {this.state.d3 && <RD3Component data={this.state.d3} />}
             </div>
