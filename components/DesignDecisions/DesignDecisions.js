@@ -140,6 +140,7 @@ class DesignDecisions extends React.Component {
     const { order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, designDecisions.length - page * rowsPerPage);
     const columnData = [
+      { id: 'name', numeric: true, disablePadding: false, label: 'ID'},
       { id: 'summary', numeric: false, disablePadding: false, label: 'Design Decision' },
       { id: 'shortDescription', numeric: false, disablePadding: false, label: 'Description' },
       { id: 'qualityAttributes', numeric: false, disablePadding: false, label: 'Quality Attributes' },
@@ -250,6 +251,7 @@ class DesignDecisions extends React.Component {
                     className={s.table__clickable}
                     onClick={e => this.openDecisionEditor(e, decision.name)}
                   >
+                    <TableCell>{decision.name.split('-')[1]}</TableCell>
                     <TableCell>{decision.summary}</TableCell>
                     <TableCell>{decision.shortDescription}</TableCell>
                     <TableCell>{this.joinArray(decision.qualityAttributes)}</TableCell>
