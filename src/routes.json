@@ -10,11 +10,6 @@
     "chunk": "main"
   },
   {
-    "path": "/editor",
-    "page": "./editor",
-    "chunk": "main"
-  },
-  {
     "path": "/recommender/:projectKey",
     "page": "./recommender",
     "chunk": "main"

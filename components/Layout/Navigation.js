@@ -7,7 +7,6 @@ class Navigation extends React.Component {
       <div className="amelie-navigation-container">
         <nav className="amelie-navigation mdl-navigation" ref={node => (this.root = node)}>
           <Link className="mdl-navigation__link" to="/projects">Projects</Link>
-          <Link className="mdl-navigation__link" to="/editor">Editor</Link>
         </nav>
       </div>
     );
