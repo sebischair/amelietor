@@ -131,7 +131,7 @@ class Projects extends React.Component {
     const sp = this.findSelectedProject(key);
     this.props.dispatch(selectProject(sp));
     history.push({
-      pathname: `/recommender/${sp.key}`
+      pathname: `/recommender/${sp.key}/qa`
     });
   };
 
