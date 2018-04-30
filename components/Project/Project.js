@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell, Spinner, Icon } from 'react-mdl';
+import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Spinner, Icon } from 'react-mdl';
+import { withStyles } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
+import Collapse from 'material-ui/transitions/Collapse';
 
 import { fetchSelctedProject, postTo, getFrom } from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
@@ -12,6 +15,15 @@ import Breadcrumb from '../Breadcrumb';
 import s from './Project.css';
 
 const config = require('../../tools/config');
+
+const styles = {
+  infoButton: {
+    fontSize: '0.875rem'
+  },
+  gridContainer: {
+    margin: '0 16px 16px 16px'
+  },
+};
 
 class Project extends React.Component {
   constructor(props) {
@@ -48,7 +60,8 @@ class Project extends React.Component {
       pipelineStatus: '',
       pipelineExeId: '',
       wait: false,
-      isExtractionComplete: false
+      isExtractionComplete: false,
+      open: false
     };
   }
 
@@ -141,6 +154,10 @@ class Project extends React.Component {
               });
           });
       });
+  };
+
+  toggleInfo = () => {
+    this.setState({ open: !this.state.open });
   };
 
   render() {
@@ -268,17 +285,24 @@ class Project extends React.Component {
       <div>
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <Card shadow={0} style={{ width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto' }}>
-          <CardTitle expand>{this.props.selectedProject.name}</CardTitle>
+          <CardTitle expand>
+            {this.props.selectedProject.name} &nbsp;
+            <a href="#" onClick={this.toggleInfo} className={this.props.classes.infoButton}>
+              {this.state.open ? 'Show less' : 'Show more'}
+            </a>
+          </CardTitle>
           <CardText className={`${s.customCardText}`}>
-            <Grid>
-              <Cell col={10}>{this.props.selectedProject.description}</Cell>
-              <Cell col={2}>
-                <div>
-                  Issues: <b>{this.props.selectedProject.issuesCount}</b> <br />
-                  Design Decisions: <b>{this.props.selectedProject.decisionCount}</b>
-                </div>
-              </Cell>
-            </Grid>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <Grid container className={this.props.classes.gridContainer}>
+                <Grid item xs={10}>{this.props.selectedProject.description}</Grid>
+                <Grid item xs={2}>
+                  <div>
+                    Issues: <b>{this.props.selectedProject.issuesCount}</b> <br />
+                    Design Decisions: <b>{this.props.selectedProject.decisionCount}</b>
+                  </div>
+                </Grid>
+              </Grid>
+            </Collapse>
           </CardText>
           <div style={{ textAlign: 'center' }}>{this.state.wait && <Spinner />}</div>
           {actionsView}
@@ -297,7 +321,8 @@ Project.propTypes = {
   projectKey: PropTypes.string,
   selectedProject: PropTypes.object,
   tab: PropTypes.string,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  classes: PropTypes.object
 };
 
-export default connect(mapStateToProps)(Project);
+export default connect(mapStateToProps)(withStyles(styles)(Project));
