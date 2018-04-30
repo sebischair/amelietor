@@ -1,0 +1,26 @@
+ul.breadcrumb {
+  padding: 10px 16px;
+  margin: 0;
+  list-style: none;
+  background-color: #3f51b5;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+  display: inline;
+  font-size: 1rem;
+  color: #fff;
+}
+
+/* Add a greater-than symbol before/behind each list item */
+ul.breadcrumb li+li:before {
+  padding: 8px;
+  color: #fff;
+  content: ">";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+  color: #fff;
+  text-decoration: none;
+}
