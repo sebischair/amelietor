@@ -23,7 +23,6 @@ class ProjectsPage extends React.Component {
   render() {
     return (
       <Layout className={s.content}>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
         <Projects />
       </Layout>
     );

@@ -13,6 +13,7 @@ import disableScroll from 'disable-scroll';
 import { fetchProjects, selectProject } from '../../core/actions/scactions';
 import history from '../../src/history';
 import EnhancedTableHead from '../EnhancedTableHead';
+import Breadcrumb from '../Breadcrumb';
 import s from './Projects.css';
 
 const tourSteps = [
@@ -46,6 +47,9 @@ const styles = {
   helpIcon: {
     fontSize: '16px',
     color: 'grey'
+  },
+  container: {
+    padding: '8px'
   }
 };
 
@@ -187,8 +191,11 @@ class Projects extends React.Component {
       );
     }
 
+    //  Breadcrumb navigation
+    const breadcrumbs = [{ url: '/', label: 'Home' }, { label: 'Projects' }];
+
     return (
-      <div style={{ margin: '20px' }}>
+      <div>
         <Joyride
           ref={c => (this.joyride = c)}
           debug={false}
@@ -209,90 +216,93 @@ class Projects extends React.Component {
           steps={steps}
           type={joyrideType}
         />
-        <div>
-          <h3 className={s.headline}>Projects</h3> &nbsp;
-          <span className={s.helpSpan}>
-            <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
-              <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
-            </Tooltip>
-          </span>
-        </div>
-        <TextField
-          id="searchProjects"
-          value={this.state.searchString}
-          onChange={this.handleChangeSearch}
-          label="Search projects..."
-          className={s.searchField}
-        />
-        <br />
-        <br />
-        {this.props.projects.length === 0 && (
-          <div className={s.circularProgress}>
-            <CircularProgress />
-            <br />
-            <br />
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <div className={this.props.classes.container}>
+          <div>
+            <h4 className={s.headline}>Projects</h4> &nbsp;
+            <span className={s.helpSpan}>
+              <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+                <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
+              </Tooltip>
+            </span>
           </div>
-        )}
-        {this.props.projects.length > 0 && (
-          <Paper>
-            <Table className={'projects-table'}>
-              <EnhancedTableHead
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={this.handleRequestSort}
-                columnData={columnData}
-              />
-              <TableBody>
-                {projects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(project => (
-                  <TableRow
-                    hover
-                    key={project.key}
-                    className={`${s.table__clickable} one-row`}
-                    onClick={e => this.openProjectRecommender(e, project.key)}
-                  >
-                    <TableCell>{project.name}</TableCell>
-                    <TableCell>{project.description}</TableCell>
-                    <TableCell>{project.projectCategory}</TableCell>
-                    <TableCell numeric>
-                      <Tooltip
-                        title={this.displayIssuesTooltip(project.issuesCount)}
-                        placement={'bottom-end'}
-                        enterDelay={300}
-                      >
-                        <div className={`${s.issuesCount} one-row-issues`}>
-                          {this.issueCountCol(project.issuesCount)}
-                        </div>
-                      </Tooltip>
-                    </TableCell>
+          <TextField
+            id="searchProjects"
+            value={this.state.searchString}
+            onChange={this.handleChangeSearch}
+            label="Search projects..."
+            className={s.searchField}
+          />
+          <br />
+          <br />
+          {this.props.projects.length === 0 && (
+            <div className={s.circularProgress}>
+              <CircularProgress />
+              <br />
+              <br />
+            </div>
+          )}
+          {this.props.projects.length > 0 && (
+            <Paper>
+              <Table className={'projects-table'}>
+                <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={this.handleRequestSort}
+                  columnData={columnData}
+                />
+                <TableBody>
+                  {projects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(project => (
+                    <TableRow
+                      hover
+                      key={project.key}
+                      className={`${s.table__clickable} one-row`}
+                      onClick={e => this.openProjectRecommender(e, project.key)}
+                    >
+                      <TableCell>{project.name}</TableCell>
+                      <TableCell>{project.description}</TableCell>
+                      <TableCell>{project.projectCategory}</TableCell>
+                      <TableCell numeric>
+                        <Tooltip
+                          title={this.displayIssuesTooltip(project.issuesCount)}
+                          placement={'bottom-end'}
+                          enterDelay={300}
+                        >
+                          <div className={`${s.issuesCount} one-row-issues`}>
+                            {this.issueCountCol(project.issuesCount)}
+                          </div>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 49 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      colSpan={6}
+                      count={projects.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      backIconButtonProps={{
+                        'aria-label': 'Previous Page'
+                      }}
+                      nextIconButtonProps={{
+                        'aria-label': 'Next Page'
+                      }}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                   </TableRow>
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    colSpan={6}
-                    count={projects.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                      'aria-label': 'Previous Page'
-                    }}
-                    nextIconButtonProps={{
-                      'aria-label': 'Next Page'
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </Paper>
-        )}
+                </TableFooter>
+              </Table>
+            </Paper>
+          )}
+        </div>
       </div>
     );
   }
