@@ -15,6 +15,7 @@ import EditorControls from '../EditorControls';
 import SimilarDocuments from '../SimilarDocuments';
 import { fetchSelctedProject, fetchSelctedDD } from '../../core/actions/scactions';
 import { receiveFileContent } from '../../core/actions/actions';
+import Breadcrumb from '../Breadcrumb';
 import s from './DesignDecision.css';
 
 const tourSteps = [
@@ -125,47 +126,57 @@ class DesignDecision extends React.Component {
 
   render() {
     const { isRunning, joyrideOverlay, joyrideType, stepIndex, steps } = this.state;
+    //  Breadcrumb navigation
+    const breadcrumbs = [
+      { url: '/', label: 'Home' },
+      { url: '/projects', label: 'Projects' },
+      { url: '/recommender/'.concat(this.props.projectKey).concat('/dd'), label: this.props.projectKey },
+      { label: this.props.issueKey }
+    ];
 
     return (
-      <Grid container className={this.props.classes.gridContainer}>
-        <Joyride
-          ref={c => (this.joyride = c)}
-          debug={false}
-          callback={this.callback}
-          locale={{
-            back: <span>Back</span>,
-            close: <span>Close</span>,
-            last: <span>Done</span>,
-            next: <span>Next</span>,
-            skip: <span>Skip</span>
-          }}
-          run={isRunning}
-          autoStart
-          showOverlay={joyrideOverlay}
-          showSkipButton={true}
-          showStepsProgress={true}
-          stepIndex={stepIndex}
-          steps={steps}
-          type={joyrideType}
-        />
-        <Grid item xs={7}>
-          <div>
-            <h3 className={s.headline}>{this.state.summary}</h3> &nbsp;
-            <span className={s.helpSpan}>
-              <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
-                <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
-              </Tooltip>
-            </span>
-          </div>
-          <Amelietor triggerOnLoad={true} initialContent={this.rawContent} readOnly={true} />
-          <EditorControls />
+      <div>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <Grid container className={this.props.classes.gridContainer}>
+          <Joyride
+            ref={c => (this.joyride = c)}
+            debug={false}
+            callback={this.callback}
+            locale={{
+              back: <span>Back</span>,
+              close: <span>Close</span>,
+              last: <span>Done</span>,
+              next: <span>Next</span>,
+              skip: <span>Skip</span>
+            }}
+            run={isRunning}
+            autoStart
+            showOverlay={joyrideOverlay}
+            showSkipButton={true}
+            showStepsProgress={true}
+            stepIndex={stepIndex}
+            steps={steps}
+            type={joyrideType}
+          />
+          <Grid item xs={7}>
+            <div>
+              <h3 className={s.headline}>{this.state.summary}</h3> &nbsp;
+              <span className={s.helpSpan}>
+                <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
+                  <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />
+                </Tooltip>
+              </span>
+            </div>
+            <Amelietor triggerOnLoad={true} initialContent={this.rawContent} readOnly={true} />
+            <EditorControls />
+          </Grid>
+          <Grid item xs={5} className={s.recommendations}>
+            <TokenManager />
+            <RecContainer />
+            <SimilarDocuments similarDocuments={this.state.similarDocuments} />
+          </Grid>
         </Grid>
-        <Grid item xs={5} className={s.recommendations}>
-          <TokenManager />
-          <RecContainer />
-          <SimilarDocuments similarDocuments={this.state.similarDocuments} />
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }

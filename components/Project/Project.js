@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Grid, Cell, Spinner, Icon } from 'react-mdl';
+
 import { fetchSelctedProject, postTo, getFrom } from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
 import ArchitecturalElements from '../ArchitecturalElements';
 import ExpertiseMatrix from '../ExpertiseMatrix';
 import Experts from '../Experts';
 import DesignDecisions from '../DesignDecisions';
+import Breadcrumb from '../Breadcrumb';
 import s from './Project.css';
 
 const config = require('../../tools/config');
@@ -255,8 +257,16 @@ class Project extends React.Component {
       );
     }
 
+    //  Breadcrumb navigation
+    const breadcrumbs = [
+      { url: '/', label: 'Home' },
+      { url: '/projects', label: 'Projects' },
+      { label: this.props.projectKey }
+    ];
+
     return (
       <div>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
         <Card shadow={0} style={{ width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto' }}>
           <CardTitle expand>{this.props.selectedProject.name}</CardTitle>
           <CardText className={`${s.customCardText}`}>
