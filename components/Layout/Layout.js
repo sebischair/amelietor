@@ -10,13 +10,11 @@
 
 import React, { PropTypes } from 'react';
 import cx from 'classnames';
-import Header from './Header';
-import Footer from '../Footer';
+// import Footer from '../Footer';
 
 class Layout extends React.Component {
-
   static propTypes = {
-    className: PropTypes.string,
+    className: PropTypes.string
   };
 
   componentDidMount() {
@@ -31,12 +29,9 @@ class Layout extends React.Component {
     return (
       <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header" ref={node => (this.root = node)}>
         <div className="mdl-layout__inner-container">
-          {/* TODO: display header only on homepage */}
-          {/* <Header /> */}
           <main className="amelie-content mdl-layout__content">
             <div {...this.props} className={cx(this.props.className)} />
           </main>
-
         </div>
       </div>
     );
