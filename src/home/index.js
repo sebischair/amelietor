@@ -12,14 +12,20 @@ import React, { PropTypes } from 'react';
 import { Grid, Cell } from 'react-mdl';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 
 import Header from '../../components/Header';
+import history from '../../src/history';
 import { title } from './home.md';
 
 const styles = {
   description: {
     fontSize: '1.5rem',
     color: 'rgba(0, 0, 0, 0.54)'
+  },
+  buttonContainer: {
+    textAlign: 'center',
+    paddingTop: '20px'
   }
 };
 
@@ -36,17 +42,23 @@ class HomePage extends React.Component {
     window.addEventListener('scroll', this.handleScroll, true);
   }
 
-  handleScroll = (event) => {
+  handleScroll = event => {
     let scrollTop = event.srcElement.scrollTop;
     const displayNavigation = scrollTop > 150 ? true : false;
     this.setState({ displayNavigation: displayNavigation });
+  };
+
+  redirectToProjects = () => {
+    history.push({
+      pathname: '/projects'
+    });
   };
 
   render() {
     return (
       <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header" ref={node => (this.root = node)}>
         <div className="mdl-layout__inner-container">
-          <Header displayNavigation={this.state.displayNavigation}/>
+          <Header displayNavigation={this.state.displayNavigation} />
           <main className="amelie-content mdl-layout__content">
             <div>
               <header>
@@ -63,6 +75,11 @@ class HomePage extends React.Component {
                   See what's going on in your project. Improve the overall quality of your project. Learn from past
                   experiences...
                 </Typography>
+                <div className={this.props.classes.buttonContainer}>
+                  <Button variant="raised" color="primary" onClick={this.redirectToProjects}>
+                    Get Started
+                  </Button>
+                </div>
               </header>
 
               <div className="shadow_box" />
