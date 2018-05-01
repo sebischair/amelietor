@@ -1,17 +1,15 @@
-html
-{
+html {
   height: 100%;
 }
 
-body
-{
+body {
   height: 100%;
   background: #fff;
-  font-family: 'Brandon Light';
+  font-family: "Brandon Light";
 }
 
 /* Disable ugly boxes around images in IE10 */
-a img{
+a img {
   border: 0px;
 }
 
@@ -25,8 +23,7 @@ a img{
   color: #fff;
 }
 
-header
-{
+header {
   width: 100%;
   height: auto;
   min-height: 20vh;
@@ -36,36 +33,44 @@ header
   margin-bottom: 50px;
 }
 
-.shadow_box
-{
+.shadow_box {
   left: 0;
   top: 100%;
   width: 100%;
   height: 100px;
   background: red;
   position: relative;
-  background: -moz-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 70%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 70%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 70%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -moz-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0) 70%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0) 70%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0) 70%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
 }
 
-header .head_top
-{
+header .head_top {
   z-index: 9;
   text-align: left;
   position: relative;
 }
 
-header .overlay
-{
-  width:100%;
+header .overlay {
+  width: 100%;
   height: auto;
   padding-top: 5%;
 }
 
-header .video-wrap
-{
+header .video-wrap {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -75,14 +80,33 @@ header .video-wrap
   left: 0;
 }
 
-header video
-{
+header video {
   background: #fff;
 }
 
-.amelie-header.mdl-layout__header--waterfall {
-  z-index: 1;
+@keyframes header-fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
+
+.amelie-header.mdl-layout__header--waterfall {
+  z-index: 3;
+  position: fixed;
+  opacity: 0;
+}
+.amelie-header.mdl-layout__header--waterfall.show {
+  animation: header-fadeIn 1.2s;
+  opacity: 1;
+}
+.amelie-header.mdl-layout__header--waterfall.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
 .amelie-header .mdl-menu__container {
   z-index: 50;
   margin: 0 !important;
@@ -118,7 +142,7 @@ header video
   order: 1;
   width: 500px;
   transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-  width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .amelie-navigation {
@@ -143,13 +167,13 @@ header video
 .amelie-slogan {
   font-size: 60px;
   padding-top: 10px;
-  opacity: .64;
+  opacity: 0.64;
 }
 
 .amelie-sub-slogan {
   font-size: 21px;
   padding-top: 24px;
-  opacity: .54;
+  opacity: 0.54;
 }
 
 .amelie-section {
@@ -187,7 +211,7 @@ header video
 }
 
 .amelie-pm .amelie-import-pm-image {
-  width:50%;
+  width: 50%;
   z-index: 1;
 }
 
@@ -197,7 +221,7 @@ header video
 }
 
 .amelie-pm .amelie-import-ol-image {
-  width:50%;
+  width: 50%;
   z-index: 1;
 }
 
