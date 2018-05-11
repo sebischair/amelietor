@@ -13,6 +13,7 @@
     "d3": "^4.9.1",
     "d3-measure-text": "0.0.2",
     "disable-scroll": "^0.4.0",
+    "dotenv": "^5.0.1",
     "draft-js": "^0.10.1",
     "fastclick": "^1.0.6",
     "history": "^4.6.1",

@@ -13,6 +13,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
+const Dotenv = require('dotenv').config();
 const pkg = require('../package.json');
 
 const isDebug = global.DEBUG === false ? false : !process.argv.includes('--release');

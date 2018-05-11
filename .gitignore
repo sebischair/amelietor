@@ -17,3 +17,5 @@ npm-debug.log
 firebase-debug.log
 
 yarn.lock
+.env
+package-lock.json
