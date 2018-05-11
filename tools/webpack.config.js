@@ -13,8 +13,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
-const Dotenv = require('dotenv').config();
 const pkg = require('../package.json');
+const Dotenv = require('dotenv-webpack');
 
 const isDebug = global.DEBUG === false ? false : !process.argv.includes('--release');
 const isVerbose = process.argv.includes('--verbose') || process.argv.includes('-v');
@@ -70,6 +70,10 @@ const config = {
 
   // The list of plugins for Webpack compiler
   plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, '../.env'),
+      systemvars: true
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': isDebug ? '"development"' : '"production"',
       __DEV__: isDebug,

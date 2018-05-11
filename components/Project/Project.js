@@ -15,6 +15,8 @@ import Breadcrumb from '../Breadcrumb';
 import s from './Project.css';
 
 const config = require('../../tools/config');
+const syncPipesClient = process.env.SYNCPIPESCLIENT;
+const AKRESERVER = process.env.AKRESERVER || 'http://localhost:9000/';
 
 const styles = {
   infoButton: {
@@ -92,32 +94,34 @@ class Project extends React.Component {
 
   importProject = () => {
     this.setState({ wait: true });
+    let syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
     let syncPipesConfig = {
       config: {
-        url: config.jiraHost,
+        url: process.env.JIRAHOST || "issues.apache.org/jira",
         project: this.props.selectedProject.key,
-        username: config.jiraUserName,
-        password: config.jiraPassword
+        username: process.env.JIRAUSERNAME,
+        password: process.env.JIRAPASSWORD
       },
       name: 'Extract issues from jira - ' + this.props.selectedProject.name
     };
 
     let syncPipesPipeline = {
       name: 'Issues into to SC - ' + this.props.selectedProject.name,
-      loaderConfig: config.syncPipesIssueLoaderConfig,
-      extractorConfig: config.syncPipesIssueExtractorConfig,
-      mapping: config.syncPipesIssueMapping
+      loaderConfig: process.env.SYNCPIPESISSUELOADERCONFIG || '5a16d383d64ce21f30047c19',
+      extractorConfig: process.env.SYNCPIPESISSUEEXTRACTORCONFIG || '5968d6e444fb3c1fa464b76a',
+      mapping: process.env.SYNCPIPESISSUEMAPPING || '5a214e6903c07826f09d1025'
     };
 
-    postTo(config.syncPipesServer + config.syncPipesJiraIssueImporterConfig, syncPipesConfig)
+    let syncPipesJiraIssueImporterConfig = process.env.SYNCPIPESJIRAISSUEIMPORTERCONFIG || 'services/jiraIssueExtractor/configs';
+    postTo(syncPipesServer + syncPipesJiraIssueImporterConfig, syncPipesConfig)
       .then(response => response.json())
       .then(configData => {
         syncPipesPipeline.extractorConfig = configData._id;
-        postTo(config.syncPipesServer + 'pipelines', syncPipesPipeline)
+        postTo(syncPipesServer + 'pipelines', syncPipesPipeline)
           .then(response => response.json())
           .then(pipelineData => {
             this.state.pipelineId = pipelineData._id;
-            postTo(config.syncPipesServer + 'pipelines/' + pipelineData._id + '/actions/execute', {})
+            postTo(syncPipesServer + 'pipelines/' + pipelineData._id + '/actions/execute', {})
               .then(response => response.json())
               .then(statusData => {
                 this.setState({ pipelineStatus: statusData.status, pipelineExeId: statusData._id, wait: false });
@@ -127,7 +131,7 @@ class Project extends React.Component {
   };
 
   updateProjectIssueCount = () => {
-    getFrom(config.akreServer + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
+    getFrom(AKRESERVER + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(status => {
         this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
@@ -137,16 +141,16 @@ class Project extends React.Component {
 
   extractMetaInformation = () => {
     this.setState({ wait: true });
-    getFrom(config.akreServer + 'labelDesignDecisions?projectKey=' + this.props.selectedProject.key)
+    getFrom(AKRESERVER + 'labelDesignDecisions?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(labelStatus => {
-        getFrom(config.akreServer + 'updateTaskWithQA?projectKey=' + this.props.selectedProject.key)
+        getFrom(AKRESERVER + 'updateTaskWithQA?projectKey=' + this.props.selectedProject.key)
           .then(response => response.json())
           .then(qaStatus => {
-            getFrom(config.akreServer + 'updateTaskWithAE?projectKey=' + this.props.selectedProject.key)
+            getFrom(AKRESERVER + 'updateTaskWithAE?projectKey=' + this.props.selectedProject.key)
               .then(response => response.json())
               .then(aeStatus => {
-                getFrom(config.akreServer + 'updateProjectProcessState?projectKey=' + this.props.selectedProject.key)
+                getFrom(AKRESERVER + 'updateProjectProcessState?projectKey=' + this.props.selectedProject.key)
                   .then(response => response.json())
                   .then(finalStatus => {
                     this.setState({ wait: false, isExtractionComplete: true });
@@ -226,7 +230,7 @@ class Project extends React.Component {
                     <b>Step 1.1.</b> View import status{' '}
                     <a
                       target="_blank"
-                      href={config.syncPipesClient + 'pipeline-executions/' + this.state.pipelineExeId}
+                      href={syncPipesClient + 'pipeline-executions/' + this.state.pipelineExeId}
                     >
                       here
                     </a>{' '}

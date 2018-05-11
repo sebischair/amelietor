@@ -13,15 +13,4 @@ module.exports = {
   url: 'https://amelietor.com',          // Your website URL
   project: 'amelietor-9f8c3',      // Firebase project. See README.md -> How to Deploy
   trackingID: 'UA-52068106-3', // Google Analytics Site's ID
-  spotlightHost: 'https://spotlight.in.tum.de/',
-  jiraHost: 'issues.apache.org/jira',
-  jiraUserName: 'manoj5864@gmail.com',
-  jiraPassword: '@Jira5864',
-  syncPipesServer: 'http://localhost:3010/api/v1/',
-  syncPipesClient: 'http://localhost:3000/#/',
-  akreServer: 'http://127.0.0.1:9000/',
-  syncPipesJiraIssueImporterConfig: 'services/jiraIssueExtractor/configs',
-  syncPipesIssueLoaderConfig: '5a16d383d64ce21f30047c19',
-  syncPipesIssueExtractorConfig: '5968d6e444fb3c1fa464b76a',
-  syncPipesIssueMapping: '5a214e6903c07826f09d1025'
 };

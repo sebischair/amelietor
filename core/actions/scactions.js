@@ -1,6 +1,4 @@
 import fetch from 'isomorphic-fetch';
-import HelperFunctions from '../../components/HelperFunctions';
-const config = require('../../tools/config');
 
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
@@ -19,7 +17,8 @@ export const REQUEST_EM = 'REQUEST_EM';
 export const RECEIVE_ER = 'RECEIVE_ER';
 export const REQUEST_ER = 'REQUEST_ER';
 
-const AKRESERVER = config.akreServer;
+const AKRESERVER = process.env.AKRESERVER || "http://localhost:9000/";
+
 const PROJECT = 'project';
 
 const QADATA = 'getDataForQAV?projectKey=';
@@ -105,7 +104,6 @@ export const fetchDesignDecisions = (projectKey, viz, attrName, segmentName) => 
 export const fetchProjects = () => {
   return dispatch => {
     dispatch(requestProjects());
-
     return getFrom(`${AKRESERVER}${PROJECT}`).then(response => {
       return response.json();
     }).then((data) => {

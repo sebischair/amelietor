@@ -23,7 +23,7 @@ export const REQUEST_FILE_CONTENT = 'REQUEST_FILE_CONTENT';
 export const RECEIVE_FILE_CONTENT = "RECEIVE_FILE_CONTENT";
 export const RECEIVE_FILE_CONTENT_FAILED = "RECEIVE_FILE_CONTENT_FAILED";
 
-const API_ROOT = config.spotlightHost;
+const API_ROOT = process.env.AKRESERVER || "http://localhost:9000/";
 
 const GET_CONTENT_EXTRACTION = "getFileContent";
 const PROCESS_DOCUMENT = "annotate";
