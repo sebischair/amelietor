@@ -16,7 +16,6 @@ import Button from 'material-ui/Button';
 
 import Header from '../../components/Header';
 import history from '../../src/history';
-import { title } from './home.md';
 
 const styles = {
   description: {
@@ -38,7 +37,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    document.title = title;
+    document.title = "AMELIE Home";
     window.addEventListener('scroll', this.handleScroll, true);
   }
 

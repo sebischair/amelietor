@@ -11,13 +11,12 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
-import { title, html } from './index.md';
 import Projects from '../../components/Projects';
 
 class ProjectsPage extends React.Component {
 
   componentDidMount() {
-    document.title = title;
+    document.title = "AMELIE Projects";
   }
 
   render() {
@@ -27,7 +26,6 @@ class ProjectsPage extends React.Component {
       </Layout>
     );
   }
-
 }
 
 export default ProjectsPage;
