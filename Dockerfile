@@ -7,5 +7,5 @@ RUN yarn
 RUN yarn build
 RUN yarn cache clean
 CMD [ "yarn", "start" ]
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 3001
+EXPOSE 3002
