@@ -37,5 +37,10 @@
     "path": "/designDecision/:issueKey/project/:projectKey",
     "page": "./designDecision",
     "chunk": "main"
+  },
+  {
+    "path": "/editor",
+    "page": "./editor",
+    "chunk": "main"
   }
 ]

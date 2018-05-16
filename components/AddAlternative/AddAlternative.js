@@ -9,7 +9,7 @@ class AddAlternative extends Component {
   constructor(props) {
     super(props);
 
-    this.submitAlternative = (href, type, input) => {
+    this.submitAlternative = (href, type) => {
       const {dispatch} = this.props;
       if (!this.refs.textfield.refs.input.value.trim()) {
         return

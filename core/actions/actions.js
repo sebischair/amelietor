@@ -36,7 +36,8 @@ const DELETE_ALTERNATIVE = "removeAlternative";
 const GET_SOFTWARE = "getSoftwareSolutions";
 const DELETE_SOFTWARE_SOLUTION = "removeSoftware";
 const ADD_SOFTWARE = "addSoftware";
-const REMOVE_TOKEN = "removeToken?token=";
+const REMOVE_TOKEN = "removeArchitecturalElement?architecturalElement=";
+const ADD_TOKEN = "addArchitecturalElement?architecturalElement=";
 
 const CREATE_SESSION = "createSession";
 
@@ -68,6 +69,22 @@ export const removeRec = (token) => {
       .then(json => {
         dispatch(selectRec("{}"));
       })
+  }
+};
+
+export const addRec = (token) => {
+  return dispatch => {
+    return fetch(`${API_ROOT}${ADD_TOKEN}${token}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then(response => {
+        return response.json();
+    }).then(json => {
+        dispatch(selectRec(token));
+    });
   }
 };
 
@@ -187,7 +204,10 @@ export const fetchRecSoftware = (href) => {
         return response.json();
       })
       .then(json => {
-        dispatch(receiveRecSoftware(href, json));
+        if(json.status != 400)
+          dispatch(receiveRecSoftware(href, json));
+        else
+          dispatch({type: RECEIVE_SOFTWARE});
       })
   }
 };
@@ -224,7 +244,10 @@ export const fetchRecAlternatives = (href) => {
         return response.json();
       })
       .then(json => {
-        dispatch(receiveRecAlternatives(href, json));
+        if(json.status != 400)
+          dispatch(receiveRecAlternatives(href, json));
+        else
+          dispatch({type: RECEIVE_ALTERNATIVES});
       })
   }
 };
@@ -324,7 +347,10 @@ export const fetchRecMeta = (href) => {
         return response.json();
       })
       .then(json => {
-        dispatch(receiveRecMeta(href, json));
+        if(json.status != 400)
+          dispatch(receiveRecMeta(href, json));
+        else
+          dispatch({type: RECEIVE_REC_META});
       })
   }
 };

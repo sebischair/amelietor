@@ -3,7 +3,6 @@ import { Icon, List, ListItemAction, ListItem, ListItemContent  } from 'react-md
 import { connect } from 'react-redux'
 import {deleteSoftwareSolution, deleteAlternative} from '../../core/actions/actions';
 import AddAlternative from '../AddAlternative'
-import s from './Alternatives.css';
 
 class Alternatives extends Component {
 
@@ -25,7 +24,6 @@ class Alternatives extends Component {
 
   render(){
     const {alternatives, type, href} = this.props;
-    const inputLabel = "New "+type;
     return (
         <section>
           <div className={`content`}>
