@@ -50,12 +50,12 @@ class DesignDecisions extends React.Component {
     if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
       this.props.dispatch(fetchSelctedProject(this.state.projectKey));
     }
-    if (this.props.designDecisions.length === 0) {
+    if(this.props.designDecisions.length === 0 || this.state.segmentName !== this.props.segmentName) {
       const decisionsPromise = this.props.dispatch(
         fetchDesignDecisions(this.state.projectKey, this.props.viz, this.props.attrName, this.props.segmentName)
       );
       decisionsPromise.then(decisions => {
-        this.setState({ data: decisions });
+        this.setState({ data: decisions, segmentName: this.props.segmentName});
       });
     }
     if (this.props.allQA.length === 0) {
