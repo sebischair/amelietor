@@ -3,6 +3,7 @@ ul.breadcrumb {
   margin: 0;
   list-style: none;
   background-color: #3f51b5;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 /* Display list items side by side */

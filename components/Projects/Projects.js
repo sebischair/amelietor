@@ -217,9 +217,9 @@ class Projects extends React.Component {
           type={joyrideType}
         />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <div className={this.props.classes.container}>
+        <div className={s.projects}>
           <div>
-            <h4 className={s.headline}>Projects</h4> &nbsp;
+            <div className={s.headline}>Projects</div> &nbsp;
             <span className={s.helpSpan}>
               <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
                 <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />

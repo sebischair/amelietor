@@ -6,9 +6,15 @@
 
 .headline {
   display: inline;
+  font-size: 20px;
+  font-weight: 800;
 }
 
 .helpSpan {
   vertical-align: super;
   cursor: pointer;
+}
+
+.designDecision {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }

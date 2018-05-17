@@ -5,3 +5,14 @@
   padding: 0;
   width: 100%;
 }
+
+.project {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.customCard {
+  width: auto;
+  height: auto;
+  margin: auto;
+  overflow: auto;
+}

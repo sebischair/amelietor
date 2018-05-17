@@ -128,7 +128,7 @@ export const fetchSelctedProject = (key) => {
 
 export const fetchSelctedDD = (ddKey) => {
   return dispatch => {
-    return getFrom(`${AKRESERVER}${DESIGNDECISION}/${ddKey}`).then(response => {
+    return getFrom(`${AKRESERVER}${DESIGNDECISION}?issueKey=${ddKey}`).then(response => {
       return response.json();
     }).then((dd) => {
       dispatch(selectDD(dd));

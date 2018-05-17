@@ -135,7 +135,7 @@ class DesignDecision extends React.Component {
     ];
 
     return (
-      <div>
+      <div className={s.designDecision}>
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <Grid container className={this.props.classes.gridContainer}>
           <Joyride
@@ -160,7 +160,7 @@ class DesignDecision extends React.Component {
           />
           <Grid item xs={7}>
             <div>
-              <h3 className={s.headline}>{this.state.summary}</h3> &nbsp;
+              <div className={s.headline}>{this.state.summary}</div> &nbsp;
               <span className={s.helpSpan}>
                 <Tooltip title={'Show guides'} placement={'right'} enterDelay={300}>
                   <Help className={this.props.classes.helpIcon} onClick={this.handleRestartTour} />

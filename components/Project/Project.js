@@ -282,20 +282,20 @@ class Project extends React.Component {
     const breadcrumbs = [
       { url: '/', label: 'Home' },
       { url: '/projects', label: 'Projects' },
-      { label: this.props.projectKey }
+      { label: this.props.selectedProject.name }
     ];
 
     return (
-      <div>
+      <div className={s.project}>
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <Card shadow={0} style={{ width: 'auto', height: 'auto', margin: 'auto', overflow: 'auto' }}>
+        <Card shadow={0} className={s.customCard}>
           <CardTitle expand>
             {this.props.selectedProject.name} &nbsp;
             <a href="#" onClick={this.toggleInfo} className={this.props.classes.infoButton}>
               {this.state.open ? 'Show less' : 'Show more'}
             </a>
           </CardTitle>
-          <CardText className={`${s.customCardText}`}>
+          <CardText className={s.customCardText}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <Grid container className={this.props.classes.gridContainer}>
                 <Grid item xs={10}>{this.props.selectedProject.description}</Grid>

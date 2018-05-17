@@ -366,13 +366,10 @@ function receiveRecMeta(href, json) {
   return {
     type: RECEIVE_REC_META,
     href,
-    info: json['http://dbpedia.org/ontology/abstract']
-      .map(child => {return child['lang'] === "en"?child['value']:null})
-      .filter(child => child != null)[0],
+    info: json.info,
     receivedAt: Date.now()
   }
 }
-
 
 export const fetchAnnotationsPerBlock = (block) => {
   return dispatch => {
