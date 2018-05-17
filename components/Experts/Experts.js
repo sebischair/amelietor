@@ -167,7 +167,7 @@ class Experts extends React.Component {
             <br />
           </div>
         )}
-        {this.props.erData.length > 0 && (
+        {this.props.erData.length > 1 && (
           <Paper>
             <Table>
               <TableHead>
@@ -221,6 +221,9 @@ class Experts extends React.Component {
             </Table>
           </Paper>
         )}
+        {this.props.erData.length === 1 && Object.keys(this.props.erData[0]).length === 0 &&
+          <div className={s.noData}> This project does not have sufficient data. Please select different project. </div>
+        }
       </div>
     );
   }

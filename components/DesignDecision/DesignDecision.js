@@ -130,7 +130,7 @@ class DesignDecision extends React.Component {
     const breadcrumbs = [
       { url: '/', label: 'Home' },
       { url: '/projects', label: 'Projects' },
-      { url: '/recommender/'.concat(this.props.projectKey).concat('/dd'), label: this.props.projectKey },
+      { url: '/recommender/'.concat(this.props.projectKey).concat('/dd'), label: this.props.selectedProject.name },
       { label: this.props.issueKey }
     ];
 

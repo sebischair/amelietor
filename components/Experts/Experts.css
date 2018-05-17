@@ -18,3 +18,9 @@
   vertical-align: baseline;
   cursor: pointer;
 }
+
+.noData {
+  text-align: center;
+  height: 400px;
+  padding-top: 200px;
+}

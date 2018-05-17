@@ -234,7 +234,7 @@ class DesignDecisions extends React.Component {
             <br />
           </div>
         )}
-        {this.props.designDecisions.length > 0 && (
+        {this.props.designDecisions.length > 1 && (
           <Paper>
             <Table>
               <EnhancedTableHead
@@ -287,6 +287,9 @@ class DesignDecisions extends React.Component {
             </Table>
           </Paper>
         )}
+        {this.props.designDecisions.length === 1 && Object.keys(this.props.designDecisions[0]).length === 0 &&
+          <div className={s.noData}> This project does not have sufficient data. Please select different project. </div>
+        }
       </div>
     );
   }
