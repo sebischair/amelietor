@@ -93,11 +93,13 @@ class Project extends React.Component {
   };
 
   importProject = () => {
+    console.log('Start importing the project...');
+
     this.setState({ wait: true });
     let syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
     let syncPipesConfig = {
       config: {
-        url: process.env.JIRAHOST || "issues.apache.org/jira",
+        url: process.env.JIRAHOST || 'issues.apache.org/jira',
         project: this.props.selectedProject.key,
         username: process.env.JIRAUSERNAME,
         password: process.env.JIRAPASSWORD
@@ -165,12 +167,15 @@ class Project extends React.Component {
   };
 
   render() {
+    const { selectedProject } = this.props;
+    const { activeTab, viz, attrName, segmentName, pipelineStatus, pipelineExeId, isExtractionComplete } = this.state;
     let actionsView = null;
-    if (this.props.selectedProject.issuesCount > 0 && this.props.selectedProject.decisionCount > 0) {
+
+    if (selectedProject.issuesCount > 0 && selectedProject.decisionCount > 0) {
       actionsView = (
         <CardActions border>
           <Tabs
-            activeTab={this.state.activeTab}
+            activeTab={activeTab}
             onChange={tabId => this.changeTabHandler(tabId, 'default', 'default', 'default')}
             ripple
           >
@@ -183,26 +188,26 @@ class Project extends React.Component {
           <section>
             <br />
             <div className="content">
-              {this.state.activeTab === 0 && (
+              {activeTab === 0 && (
                 <QualityAttributes
-                  projectKey={this.props.selectedProject.key}
+                  projectKey={selectedProject.key}
                   changeTabHandler={this.changeTabHandler}
                 />
               )}
-              {this.state.activeTab === 1 && (
+              {activeTab === 1 && (
                 <ArchitecturalElements
-                  projectKey={this.props.selectedProject.key}
+                  projectKey={selectedProject.key}
                   changeTabHandler={this.changeTabHandler}
                 />
               )}
-              {this.state.activeTab === 2 && <ExpertiseMatrix projectKey={this.props.selectedProject.key} />}
-              {this.state.activeTab === 3 && <Experts projectKey={this.props.selectedProject.key} />}
-              {this.state.activeTab === 4 && (
+              {activeTab === 2 && <ExpertiseMatrix projectKey={selectedProject.key} />}
+              {activeTab === 3 && <Experts projectKey={selectedProject.key} />}
+              {activeTab === 4 && (
                 <DesignDecisions
-                  projectKey={this.props.selectedProject.key}
-                  viz={this.state.viz}
-                  attrName={this.state.attrName}
-                  segmentName={this.state.segmentName}
+                  projectKey={selectedProject.key}
+                  viz={viz}
+                  attrName={attrName}
+                  segmentName={segmentName}
                 />
               )}
             </div>
@@ -215,59 +220,58 @@ class Project extends React.Component {
           <section>
             <br />
             <div className="content">
-              {this.props.selectedProject.issuesCount === 0 && (
+              {selectedProject.issuesCount === 0 && (
                 <div>
-                  <b>Step 1.</b> Import this project using{' '}
+                  <b>Step 1.</b> Import this project using
                   <Button raised accent ripple onClick={this.importProject}>
-                    {' '}
-                    SyncPipes{' '}
+                    SyncPipes
                   </Button>
                 </div>
               )}
-              {this.props.selectedProject.issuesCount === 0 &&
-                this.state.pipelineStatus === 'Queued' && (
+              {selectedProject.issuesCount === 0 &&
+                pipelineStatus === 'Queued' && (
                   <div>
-                    <b>Step 1.1.</b> View import status{' '}
+                    <b>Step 1.1.</b> View import status
                     <a
                       target="_blank"
-                      href={syncPipesClient + 'pipeline-executions/' + this.state.pipelineExeId}
+                      href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}
                     >
                       here
-                    </a>{' '}
-                    async &&{' '}
+                    </a>
+                    async &&
                     <Button raised accent ripple onClick={this.updateProjectIssueCount}>
                       Update issues count in project
-                    </Button>{' '}
+                    </Button>
                   </div>
                 )}
-              {this.props.selectedProject.issuesCount > 0 &&
-                this.props.selectedProject.decisionCount == 0 &&
-                !this.props.selectedProject.preProcessed && (
+              {selectedProject.issuesCount > 0 &&
+                selectedProject.decisionCount == 0 &&
+                !selectedProject.preProcessed && (
                   <div>
                     <div>
                       <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
                     </div>
                     <div>
-                      {!this.state.isExtractionComplete && (
+                      {!isExtractionComplete && (
                         <div>
-                          <b>Step 2.</b> Prepare data for analysis{' '}
+                          <b>Step 2.</b> Prepare data for analysis
                           <Button raised accent ripple onClick={this.extractMetaInformation}>
                             Extract meta-information
                           </Button>
                         </div>
                       )}
-                      {this.state.isExtractionComplete && (
+                      {isExtractionComplete && (
                         <div>
-                          <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />{' '}
+                          <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
                           <b>Please reload the page!</b>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
-              {this.props.selectedProject.issuesCount > 0 &&
-                this.props.selectedProject.decisionCount == 0 &&
-                this.props.selectedProject.preProcessed && (
+              {selectedProject.issuesCount > 0 &&
+                selectedProject.decisionCount == 0 &&
+                selectedProject.preProcessed && (
                   <div>
                     <h3>This project does not contain any design decisions! </h3>
                   </div>
@@ -282,7 +286,7 @@ class Project extends React.Component {
     const breadcrumbs = [
       { url: '/', label: 'Home' },
       { url: '/projects', label: 'Projects' },
-      { label: this.props.selectedProject.name }
+      { label: selectedProject.name }
     ];
 
     return (
@@ -290,7 +294,7 @@ class Project extends React.Component {
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <Card shadow={0} className={s.customCard}>
           <CardTitle expand>
-            {this.props.selectedProject.name} &nbsp;
+            {selectedProject.name} &nbsp;
             <a href="#" onClick={this.toggleInfo} className={this.props.classes.infoButton}>
               {this.state.open ? 'Show less' : 'Show more'}
             </a>
@@ -298,11 +302,11 @@ class Project extends React.Component {
           <CardText className={s.customCardText}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <Grid container className={this.props.classes.gridContainer}>
-                <Grid item xs={10}>{this.props.selectedProject.description}</Grid>
+                <Grid item xs={10}>{selectedProject.description}</Grid>
                 <Grid item xs={2}>
                   <div>
-                    Issues: <b>{this.props.selectedProject.issuesCount}</b> <br />
-                    Design Decisions: <b>{this.props.selectedProject.decisionCount}</b>
+                    Issues: <b>{selectedProject.issuesCount}</b> <br />
+                    Design Decisions: <b>{selectedProject.decisionCount}</b>
                   </div>
                 </Grid>
               </Grid>
