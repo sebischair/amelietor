@@ -1,9 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Button, Spinner, Icon } from 'react-mdl';
+import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Icon } from 'react-mdl';
 import { withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import Collapse from 'material-ui/transitions/Collapse';
+import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper';
+import Button from 'material-ui/Button';
+import { CircularProgress } from 'material-ui/Progress';
+import Paper from 'material-ui/Paper';
 
 import { fetchSelctedProject, postTo, getFrom } from '../../core/actions/scactions';
 import QualityAttributes from '../QualityAttributes';
@@ -18,14 +23,49 @@ const config = require('../../tools/config');
 const syncPipesClient = process.env.SYNCPIPESCLIENT;
 const AKRESERVER = process.env.AKRESERVER || 'http://localhost:9000/';
 
-const styles = {
+const styles = theme => ({
   infoButton: {
     fontSize: '0.875rem'
   },
   gridContainer: {
     margin: '0 16px 16px 16px'
   },
-};
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+    width: 'fit-content'
+  },
+  button: {
+    marginTop: theme.spacing.unit,
+    marginRight: theme.spacing.unit
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -6,
+    marginLeft: -16
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing.unit * 2
+  },
+  finishContainer: {
+    padding: theme.spacing.unit * 3
+  }
+});
+
+const steps = ['Import project', 'Process data for analysis'];
+
+function getStepContent(step) {
+  switch (step) {
+    case 0:
+      return 'Use SyncPipes to import this project.';
+    case 1:
+      return 'Extract meta-information about the project as well as issues.';
+    default:
+      return 'Unknown step';
+  }
+}
 
 class Project extends React.Component {
   constructor(props) {
@@ -61,9 +101,10 @@ class Project extends React.Component {
       segmentName: 'default',
       pipelineStatus: '',
       pipelineExeId: '',
-      wait: false,
+      loading: false,
       isExtractionComplete: false,
-      open: false
+      open: false,
+      activeStep: 0
     };
   }
 
@@ -94,8 +135,7 @@ class Project extends React.Component {
 
   importProject = () => {
     console.log('Start importing the project...');
-
-    this.setState({ wait: true });
+    this.setState({ loading: true });
     let syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
     let syncPipesConfig = {
       config: {
@@ -114,7 +154,8 @@ class Project extends React.Component {
       mapping: process.env.SYNCPIPESISSUEMAPPING || '5a214e6903c07826f09d1025'
     };
 
-    let syncPipesJiraIssueImporterConfig = process.env.SYNCPIPESJIRAISSUEIMPORTERCONFIG || 'services/jiraIssueExtractor/configs';
+    let syncPipesJiraIssueImporterConfig =
+      process.env.SYNCPIPESJIRAISSUEIMPORTERCONFIG || 'services/jiraIssueExtractor/configs';
     postTo(syncPipesServer + syncPipesJiraIssueImporterConfig, syncPipesConfig)
       .then(response => response.json())
       .then(configData => {
@@ -126,7 +167,12 @@ class Project extends React.Component {
             postTo(syncPipesServer + 'pipelines/' + pipelineData._id + '/actions/execute', {})
               .then(response => response.json())
               .then(statusData => {
-                this.setState({ pipelineStatus: statusData.status, pipelineExeId: statusData._id, wait: false });
+                this.setState({
+                  pipelineStatus: statusData.status,
+                  pipelineExeId: statusData._id,
+                  loading: false,
+                  activeStep: this.state.activeStep + 1
+                });
               });
           });
       });
@@ -137,12 +183,13 @@ class Project extends React.Component {
       .then(response => response.json())
       .then(status => {
         this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
-        this.setState({ wait: false });
+        this.setState({ loading: false });
       });
   };
 
   extractMetaInformation = () => {
-    this.setState({ wait: true });
+    console.log('Start extracting meta-information...');
+    this.setState({ loading: true });
     getFrom(AKRESERVER + 'labelDesignDecisions?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(labelStatus => {
@@ -155,7 +202,11 @@ class Project extends React.Component {
                 getFrom(AKRESERVER + 'updateProjectProcessState?projectKey=' + this.props.selectedProject.key)
                   .then(response => response.json())
                   .then(finalStatus => {
-                    this.setState({ wait: false, isExtractionComplete: true });
+                    this.setState({
+                      loading: false,
+                      isExtractionComplete: true,
+                      activeStep: this.state.activeStep + 1
+                    });
                   });
               });
           });
@@ -166,10 +217,31 @@ class Project extends React.Component {
     this.setState({ open: !this.state.open });
   };
 
+  // TODO: remove mock
+  mockImport = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({
+        loading: false,
+        activeStep: this.state.activeStep + 1
+      });
+    }, 2000);
+  };
+
   render() {
-    const { selectedProject } = this.props;
-    const { activeTab, viz, attrName, segmentName, pipelineStatus, pipelineExeId, isExtractionComplete } = this.state;
     let actionsView = null;
+    const { selectedProject, classes } = this.props;
+    const {
+      activeTab,
+      viz,
+      attrName,
+      segmentName,
+      pipelineStatus,
+      pipelineExeId,
+      isExtractionComplete,
+      activeStep,
+      loading
+    } = this.state;
 
     if (selectedProject.issuesCount > 0 && selectedProject.decisionCount > 0) {
       actionsView = (
@@ -189,16 +261,10 @@ class Project extends React.Component {
             <br />
             <div className="content">
               {activeTab === 0 && (
-                <QualityAttributes
-                  projectKey={selectedProject.key}
-                  changeTabHandler={this.changeTabHandler}
-                />
+                <QualityAttributes projectKey={selectedProject.key} changeTabHandler={this.changeTabHandler} />
               )}
               {activeTab === 1 && (
-                <ArchitecturalElements
-                  projectKey={selectedProject.key}
-                  changeTabHandler={this.changeTabHandler}
-                />
+                <ArchitecturalElements projectKey={selectedProject.key} changeTabHandler={this.changeTabHandler} />
               )}
               {activeTab === 2 && <ExpertiseMatrix projectKey={selectedProject.key} />}
               {activeTab === 3 && <Experts projectKey={selectedProject.key} />}
@@ -216,69 +282,122 @@ class Project extends React.Component {
       );
     } else {
       actionsView = (
-        <CardActions border>
-          <section>
-            <br />
-            <div className="content">
-              {selectedProject.issuesCount === 0 && (
-                <div>
-                  <b>Step 1.</b> Import this project using
-                  <Button raised accent ripple onClick={this.importProject}>
-                    SyncPipes
-                  </Button>
-                </div>
-              )}
-              {selectedProject.issuesCount === 0 &&
-                pipelineStatus === 'Queued' && (
-                  <div>
-                    <b>Step 1.1.</b> View import status
-                    <a
-                      target="_blank"
-                      href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}
+        <div>
+          <Stepper activeStep={activeStep} orientation="vertical">
+            <Step>
+              <StepLabel>{steps[0]}</StepLabel>
+              <StepContent>
+                <Typography>{getStepContent(0)}</Typography>
+                <div className={classes.actionsContainer}>
+                  <div className={classes.wrapper}>
+                    <Button
+                      className={classes.button}
+                      variant="raised"
+                      color="primary"
+                      // TODO: remove mock
+                      onClick={this.importProject}
+                      // onClick={this.mockImport}
+                      disabled={loading}
                     >
-                      here
-                    </a>
-                    async &&
-                    <Button raised accent ripple onClick={this.updateProjectIssueCount}>
-                      Update issues count in project
+                      Import
                     </Button>
+                    {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                   </div>
-                )}
-              {selectedProject.issuesCount > 0 &&
-                selectedProject.decisionCount == 0 &&
-                !selectedProject.preProcessed && (
-                  <div>
-                    <div>
-                      <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
-                    </div>
-                    <div>
-                      {!isExtractionComplete && (
-                        <div>
-                          <b>Step 2.</b> Prepare data for analysis
-                          <Button raised accent ripple onClick={this.extractMetaInformation}>
-                            Extract meta-information
-                          </Button>
-                        </div>
-                      )}
-                      {isExtractionComplete && (
-                        <div>
-                          <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
-                          <b>Please reload the page!</b>
-                        </div>
-                      )}
-                    </div>
+                </div>
+              </StepContent>
+            </Step>
+            <Step>
+              <StepLabel>{steps[1]}</StepLabel>
+              <StepContent>
+                <Typography>{getStepContent(1)}</Typography>
+                <div className={classes.actionsContainer}>
+                  <div className={classes.wrapper}>
+                    <Button
+                      className={classes.button}
+                      variant="raised"
+                      color="primary"
+                      // TODO: remove mock
+                      onClick={this.extractMetaInformation}
+                      // onClick={this.mockImport}
+                      disabled={loading}
+                    >
+                      Process
+                    </Button>
+                    {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                   </div>
-                )}
-              {selectedProject.issuesCount > 0 &&
-                selectedProject.decisionCount == 0 &&
-                selectedProject.preProcessed && (
-                  <div>
-                    <h3>This project does not contain any design decisions! </h3>
-                  </div>
-                )}
-            </div>
-          </section>
-        </CardActions>
+                </div>
+              </StepContent>
+            </Step>
+          </Stepper>
+          {activeStep === steps.length && (
+            <Paper square elevation={0} className={classes.finishContainer}>
+              <Typography>
+                Project is successfully imported. &nbsp;
+                <a href="javascript:window.location.reload(true)">View your project.</a>
+              </Typography>
+            </Paper>
+          )}
+        </div>
+        // <CardActions border>
+        //   <section>
+        //     <br />
+        //     <div className="content">
+        //       {selectedProject.issuesCount === 0 && (
+        //         <div>
+        //           <b>Step 1.</b> Import this project using
+        //           <Button raised accent ripple onClick={this.importProject}>
+        //             SyncPipes
+        //           </Button>
+        //         </div>
+        //       )}
+        //       {selectedProject.issuesCount === 0 &&
+        //         pipelineStatus === 'Queued' && (
+        //           <div>
+        //             <b>Step 1.1.</b> View import status
+        //             <a target="_blank" href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}>
+        //               here
+        //             </a>
+        //             async &&
+        //             <Button raised accent ripple onClick={this.updateProjectIssueCount}>
+        //               Update issues count in project
+        //             </Button>
+        //           </div>
+        //         )}
+        //       {selectedProject.issuesCount > 0 &&
+        //         selectedProject.decisionCount == 0 &&
+        //         !selectedProject.preProcessed && (
+        //           <div>
+        //             <div>
+        //               <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
+        //             </div>
+        //             <div>
+        //               {!isExtractionComplete && (
+        //                 <div>
+        //                   <b>Step 2.</b> Prepare data for analysis
+        //                   <Button raised accent ripple onClick={this.extractMetaInformation}>
+        //                     Extract meta-information
+        //                   </Button>
+        //                 </div>
+        //               )}
+        //               {isExtractionComplete && (
+        //                 <div>
+        //                   <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
+        //                   <b>Please reload the page!</b>
+        //                 </div>
+        //               )}
+        //             </div>
+        //           </div>
+        //         )}
+        //       {selectedProject.issuesCount > 0 &&
+        //         selectedProject.decisionCount == 0 &&
+        //         selectedProject.preProcessed && (
+        //           <div>
+        //             <h3>This project does not contain any design decisions! </h3>
+        //           </div>
+        //         )}
+        //     </div>
+        //   </section>
+        // </CardActions>
       );
     }
 
@@ -302,7 +421,9 @@ class Project extends React.Component {
           <CardText className={s.customCardText}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <Grid container className={this.props.classes.gridContainer}>
-                <Grid item xs={10}>{selectedProject.description}</Grid>
+                <Grid item xs={10}>
+                  {selectedProject.description}
+                </Grid>
                 <Grid item xs={2}>
                   <div>
                     Issues: <b>{selectedProject.issuesCount}</b> <br />
@@ -312,7 +433,6 @@ class Project extends React.Component {
               </Grid>
             </Collapse>
           </CardText>
-          <div style={{ textAlign: 'center' }}>{this.state.wait && <Spinner />}</div>
           {actionsView}
         </Card>
       </div>
