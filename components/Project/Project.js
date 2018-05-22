@@ -90,10 +90,6 @@ class Project extends React.Component {
       default:
         tabNum = 0;
     }
-    let projectKey = this.props.projectKey;
-    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
-      this.props.dispatch(fetchSelctedProject(projectKey));
-    }
     this.state = {
       activeTab: tabNum,
       viz: 'default',
@@ -106,7 +102,31 @@ class Project extends React.Component {
       open: false,
       activeStep: 0
     };
+
+    let projectKey = this.props.projectKey;
+    if (Object.keys(this.props.selectedProject).length === 0 && this.props.selectedProject.constructor === Object) {
+      const projectPromise = this.props.dispatch(fetchSelctedProject(projectKey));
+      projectPromise.then(project => {
+        this.setActiveStep(project);
+      });
+    }
   }
+
+  componentDidMount() {
+    if (Object.keys(this.props.selectedProject).length >0 ) {
+      this.setActiveStep(this.props.selectedProject);
+    }
+  }
+
+  setActiveStep = project => {
+    if (project.preProcessed) {
+      this.setState({ activeStep: 2 });
+    } else {
+      if (project.issuesCount > 0) {
+        this.setState({ activeStep: 1 });
+      }
+    }
+  };
 
   changeTabHandler = (tabNo, viz, d, segName) => {
     const newState = { activeTab: tabNo, viz: viz, attrName: d, segmentName: segName };
@@ -244,6 +264,7 @@ class Project extends React.Component {
     } = this.state;
 
     if (selectedProject.issuesCount > 0 && selectedProject.decisionCount > 0) {
+      // Project is imported and has design decisions
       actionsView = (
         <CardActions border>
           <Tabs
@@ -281,124 +302,134 @@ class Project extends React.Component {
         </CardActions>
       );
     } else {
-      actionsView = (
-        <div>
-          <Stepper activeStep={activeStep} orientation="vertical">
-            <Step>
-              <StepLabel>{steps[0]}</StepLabel>
-              <StepContent>
-                <Typography>{getStepContent(0)}</Typography>
-                <div className={classes.actionsContainer}>
-                  <div className={classes.wrapper}>
-                    <Button
-                      className={classes.button}
-                      variant="raised"
-                      color="primary"
-                      // TODO: remove mock
-                      onClick={this.importProject}
-                      // onClick={this.mockImport}
-                      disabled={loading}
-                    >
-                      Import
-                    </Button>
-                    {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      if (selectedProject.decisionCount == 0) {
+        actionsView = (
+          // If project is not imported, start from step 1;
+          // if project is imported but not processed, jump to step 2.
+          <div>
+            <Stepper activeStep={activeStep} orientation="vertical">
+              <Step>
+                <StepLabel>{steps[0]}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(0)}</Typography>
+                  <div className={classes.actionsContainer}>
+                    <div className={classes.wrapper}>
+                      <Button
+                        className={classes.button}
+                        variant="raised"
+                        color="primary"
+                        // TODO: remove mock
+                        onClick={this.importProject}
+                        // onClick={this.mockImport}
+                        disabled={loading}
+                      >
+                        Import
+                      </Button>
+                      {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
                   </div>
-                </div>
-              </StepContent>
-            </Step>
-            <Step>
-              <StepLabel>{steps[1]}</StepLabel>
-              <StepContent>
-                <Typography>{getStepContent(1)}</Typography>
-                <div className={classes.actionsContainer}>
-                  <div className={classes.wrapper}>
-                    <Button
-                      className={classes.button}
-                      variant="raised"
-                      color="primary"
-                      // TODO: remove mock
-                      onClick={this.extractMetaInformation}
-                      // onClick={this.mockImport}
-                      disabled={loading}
-                    >
-                      Process
-                    </Button>
-                    {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </StepContent>
+              </Step>
+              <Step>
+                <StepLabel>{steps[1]}</StepLabel>
+                <StepContent>
+                  <Typography>{getStepContent(1)}</Typography>
+                  <div className={classes.actionsContainer}>
+                    <div className={classes.wrapper}>
+                      <Button
+                        className={classes.button}
+                        variant="raised"
+                        color="primary"
+                        // TODO: remove mock
+                        onClick={this.extractMetaInformation}
+                        // onClick={this.mockImport}
+                        disabled={loading}
+                      >
+                        Process
+                      </Button>
+                      {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
                   </div>
-                </div>
-              </StepContent>
-            </Step>
-          </Stepper>
-          {activeStep === steps.length && (
-            <Paper square elevation={0} className={classes.finishContainer}>
-              <Typography>
-                Project is successfully imported. &nbsp;
-                <a href="javascript:window.location.reload(true)">View your project.</a>
-              </Typography>
-            </Paper>
-          )}
-        </div>
-        // <CardActions border>
-        //   <section>
-        //     <br />
-        //     <div className="content">
-        //       {selectedProject.issuesCount === 0 && (
-        //         <div>
-        //           <b>Step 1.</b> Import this project using
-        //           <Button raised accent ripple onClick={this.importProject}>
-        //             SyncPipes
-        //           </Button>
-        //         </div>
-        //       )}
-        //       {selectedProject.issuesCount === 0 &&
-        //         pipelineStatus === 'Queued' && (
-        //           <div>
-        //             <b>Step 1.1.</b> View import status
-        //             <a target="_blank" href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}>
-        //               here
-        //             </a>
-        //             async &&
-        //             <Button raised accent ripple onClick={this.updateProjectIssueCount}>
-        //               Update issues count in project
-        //             </Button>
-        //           </div>
-        //         )}
-        //       {selectedProject.issuesCount > 0 &&
-        //         selectedProject.decisionCount == 0 &&
-        //         !selectedProject.preProcessed && (
-        //           <div>
-        //             <div>
-        //               <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
-        //             </div>
-        //             <div>
-        //               {!isExtractionComplete && (
-        //                 <div>
-        //                   <b>Step 2.</b> Prepare data for analysis
-        //                   <Button raised accent ripple onClick={this.extractMetaInformation}>
-        //                     Extract meta-information
-        //                   </Button>
-        //                 </div>
-        //               )}
-        //               {isExtractionComplete && (
-        //                 <div>
-        //                   <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
-        //                   <b>Please reload the page!</b>
-        //                 </div>
-        //               )}
-        //             </div>
-        //           </div>
-        //         )}
-        //       {selectedProject.issuesCount > 0 &&
-        //         selectedProject.decisionCount == 0 &&
-        //         selectedProject.preProcessed && (
-        //           <div>
-        //             <h3>This project does not contain any design decisions! </h3>
-        //           </div>
-        //         )}
-        //     </div>
-        //   </section>
-        // </CardActions>
-      );
+                </StepContent>
+              </Step>
+            </Stepper>
+            {activeStep === steps.length && (
+              <Paper square elevation={0} className={classes.finishContainer}>
+                {selectedProject.decisionCount > 0 && (
+                  <Typography>
+                    Project is successfully imported. &nbsp;
+                    <a href="javascript:window.location.reload(true)">View your project.</a>
+                  </Typography>
+                )}
+                {selectedProject.decisionCount == 0 && (
+                  // Project is imported but has no design decisions
+                  <Typography>This project does not contain any design decisions.</Typography>
+                )}
+              </Paper>
+            )}
+          </div>
+          // <CardActions border>
+          //   <section>
+          //     <br />
+          //     <div className="content">
+          //       {selectedProject.issuesCount === 0 && (
+          //         <div>
+          //           <b>Step 1.</b> Import this project using
+          //           <Button raised accent ripple onClick={this.importProject}>
+          //             SyncPipes
+          //           </Button>
+          //         </div>
+          //       )}
+          //       {selectedProject.issuesCount === 0 &&
+          //         pipelineStatus === 'Queued' && (
+          //           <div>
+          //             <b>Step 1.1.</b> View import status
+          //             <a target="_blank" href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}>
+          //               here
+          //             </a>
+          //             async &&
+          //             <Button raised accent ripple onClick={this.updateProjectIssueCount}>
+          //               Update issues count in project
+          //             </Button>
+          //           </div>
+          //         )}
+          //       {selectedProject.issuesCount > 0 &&
+          //         selectedProject.decisionCount == 0 &&
+          //         !selectedProject.preProcessed && (
+          //           <div>
+          //             <div>
+          //               <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
+          //             </div>
+          //             <div>
+          //               {!isExtractionComplete && (
+          //                 <div>
+          //                   <b>Step 2.</b> Prepare data for analysis
+          //                   <Button raised accent ripple onClick={this.extractMetaInformation}>
+          //                     Extract meta-information
+          //                   </Button>
+          //                 </div>
+          //               )}
+          //               {isExtractionComplete && (
+          //                 <div>
+          //                   <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
+          //                   <b>Please reload the page!</b>
+          //                 </div>
+          //               )}
+          //             </div>
+          //           </div>
+          //         )}
+          //       {selectedProject.issuesCount > 0 &&
+          //         selectedProject.decisionCount == 0 &&
+          //         selectedProject.preProcessed && (
+          //           <div>
+          //             <h3>This project does not contain any design decisions! </h3>
+          //           </div>
+          //         )}
+          //     </div>
+          //   </section>
+          // </CardActions>
+        );
+      }
     }
 
     //  Breadcrumb navigation

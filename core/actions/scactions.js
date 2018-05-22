@@ -122,6 +122,7 @@ export const fetchSelctedProject = (key) => {
       return response.json();
     }).then((project) => {
       dispatch(selectProject(project));
+      return project;
     });
   }
 };
