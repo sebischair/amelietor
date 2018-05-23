@@ -380,66 +380,6 @@ class Project extends React.Component {
               </Paper>
             )}
           </div>
-          // <CardActions border>
-          //   <section>
-          //     <br />
-          //     <div className="content">
-          //       {selectedProject.issuesCount === 0 && (
-          //         <div>
-          //           <b>Step 1.</b> Import this project using
-          //           <Button raised accent ripple onClick={this.importProject}>
-          //             SyncPipes
-          //           </Button>
-          //         </div>
-          //       )}
-          //       {selectedProject.issuesCount === 0 &&
-          //         pipelineStatus === 'Queued' && (
-          //           <div>
-          //             <b>Step 1.1.</b> View import status
-          //             <a target="_blank" href={syncPipesClient + 'pipeline-executions/' + pipelineExeId}>
-          //               here
-          //             </a>
-          //             async &&
-          //             <Button raised accent ripple onClick={this.updateProjectIssueCount}>
-          //               Update issues count in project
-          //             </Button>
-          //           </div>
-          //         )}
-          //       {selectedProject.issuesCount > 0 &&
-          //         selectedProject.decisionCount == 0 &&
-          //         !selectedProject.preProcessed && (
-          //           <div>
-          //             <div>
-          //               <b>Step 1.</b> Import this project using SyncPipes <Icon name="check" />
-          //             </div>
-          //             <div>
-          //               {!isExtractionComplete && (
-          //                 <div>
-          //                   <b>Step 2.</b> Prepare data for analysis
-          //                   <Button raised accent ripple onClick={this.extractMetaInformation}>
-          //                     Extract meta-information
-          //                   </Button>
-          //                 </div>
-          //               )}
-          //               {isExtractionComplete && (
-          //                 <div>
-          //                   <b>Step 2.</b> Prepare data for analysis <Icon name="check" /> <br />
-          //                   <b>Please reload the page!</b>
-          //                 </div>
-          //               )}
-          //             </div>
-          //           </div>
-          //         )}
-          //       {selectedProject.issuesCount > 0 &&
-          //         selectedProject.decisionCount == 0 &&
-          //         selectedProject.preProcessed && (
-          //           <div>
-          //             <h3>This project does not contain any design decisions! </h3>
-          //           </div>
-          //         )}
-          //     </div>
-          //   </section>
-          // </CardActions>
         );
       }
     }
