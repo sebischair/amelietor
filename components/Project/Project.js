@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardTitle, CardText, CardActions, Tabs, Tab, Icon } from 'react-mdl';
+import { Card, CardTitle, CardText, CardActions, Tabs, Tab } from 'react-mdl';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -20,7 +20,6 @@ import Breadcrumb from '../Breadcrumb';
 import s from './Project.css';
 
 const config = require('../../tools/config');
-const syncPipesClient = process.env.SYNCPIPESCLIENT;
 const syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
 const AKRESERVER = process.env.AKRESERVER || 'http://localhost:9000/';
 
@@ -98,7 +97,6 @@ class Project extends React.Component {
       pipelineStatus: '',
       pipelineExeId: '',
       loading: false,
-      isExtractionComplete: false,
       open: false,
       activeStep: 0
     };
@@ -182,7 +180,7 @@ class Project extends React.Component {
         postTo(syncPipesServer + 'pipelines', syncPipesPipeline)
           .then(response => response.json())
           .then(pipelineData => {
-            this.state.pipelineId = pipelineData._id;
+            this.setState({ pipelineId: pipelineData._id });
             postTo(syncPipesServer + 'pipelines/' + pipelineData._id + '/actions/execute', {})
               .then(response => response.json())
               .then(statusData => {
@@ -235,7 +233,6 @@ class Project extends React.Component {
                   .then(finalStatus => {
                     this.setState({
                       loading: false,
-                      isExtractionComplete: true,
                       activeStep: this.state.activeStep + 1
                     });
                   });
@@ -248,31 +245,10 @@ class Project extends React.Component {
     this.setState({ open: !this.state.open });
   };
 
-  // TODO: remove mock
-  mockImport = () => {
-    this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        activeStep: this.state.activeStep + 1
-      });
-    }, 2000);
-  };
-
   render() {
     let actionsView = null;
     const { selectedProject, classes } = this.props;
-    const {
-      activeTab,
-      viz,
-      attrName,
-      segmentName,
-      pipelineStatus,
-      pipelineExeId,
-      isExtractionComplete,
-      activeStep,
-      loading
-    } = this.state;
+    const { activeTab, viz, attrName, segmentName, pipelineStatus, activeStep, loading } = this.state;
 
     if (selectedProject.issuesCount > 0 && selectedProject.decisionCount > 0) {
       // Project is imported and has design decisions
@@ -329,9 +305,7 @@ class Project extends React.Component {
                         className={classes.button}
                         variant="raised"
                         color="primary"
-                        // TODO: remove mock
                         onClick={this.importProject}
-                        // onClick={this.mockImport}
                         disabled={loading}
                       >
                         Import
@@ -352,9 +326,7 @@ class Project extends React.Component {
                         className={classes.button}
                         variant="raised"
                         color="primary"
-                        // TODO: remove mock
                         onClick={this.extractMetaInformation}
-                        // onClick={this.mockImport}
                         disabled={loading}
                       >
                         Process
