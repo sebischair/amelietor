@@ -21,6 +21,7 @@ import s from './Project.css';
 
 const config = require('../../tools/config');
 const syncPipesClient = process.env.SYNCPIPESCLIENT;
+const syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
 const AKRESERVER = process.env.AKRESERVER || 'http://localhost:9000/';
 
 const styles = theme => ({
@@ -36,15 +37,14 @@ const styles = theme => ({
     width: 'fit-content'
   },
   button: {
-    marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    margin: theme.spacing.unit
   },
   buttonProgress: {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginTop: -6,
-    marginLeft: -16
+    marginTop: -1.5 * theme.spacing.unit,
+    marginLeft: -1.5 * theme.spacing.unit
   },
   actionsContainer: {
     marginBottom: theme.spacing.unit * 2
@@ -113,7 +113,7 @@ class Project extends React.Component {
   }
 
   componentDidMount() {
-    if (Object.keys(this.props.selectedProject).length >0 ) {
+    if (Object.keys(this.props.selectedProject).length > 0) {
       this.setActiveStep(this.props.selectedProject);
     }
   }
@@ -156,7 +156,6 @@ class Project extends React.Component {
   importProject = () => {
     console.log('Start importing the project...');
     this.setState({ loading: true });
-    let syncPipesServer = process.env.syncPipesServer || 'http://localhost:3010/api/v1/';
     let syncPipesConfig = {
       config: {
         url: process.env.JIRAHOST || 'issues.apache.org/jira',
@@ -189,13 +188,25 @@ class Project extends React.Component {
               .then(statusData => {
                 this.setState({
                   pipelineStatus: statusData.status,
-                  pipelineExeId: statusData._id,
-                  loading: false,
-                  activeStep: this.state.activeStep + 1
+                  pipelineExeId: statusData._id
                 });
+                this.checkPipelineStatus();
               });
           });
       });
+  };
+
+  checkPipelineStatus = () => {
+    let pipelineExecution;
+    while (this.state.pipelineStatus != 'Finished') {
+      // Check once per minute whether the pipeline execution is finished
+      setTimeout(() => {
+        pipelineExecution = getFrom(syncPipesServer + 'pipeline-executions/' + this.state.pipelineExeId);
+        this.setState({ pipelineStatus: pipelineExecution.status });
+      }, 60000);
+    }
+    // Pipeline is finished, can now update issue count
+    this.updateProjectIssueCount();
   };
 
   updateProjectIssueCount = () => {
@@ -203,7 +214,7 @@ class Project extends React.Component {
       .then(response => response.json())
       .then(status => {
         this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
-        this.setState({ loading: false });
+        this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
       });
   };
 
@@ -327,6 +338,7 @@ class Project extends React.Component {
                       </Button>
                       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                     </div>
+                    {pipelineStatus == 'Queued' && <Typography>This might take a couple of minutes.</Typography>}
                   </div>
                 </StepContent>
               </Step>
