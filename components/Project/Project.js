@@ -153,6 +153,7 @@ class Project extends React.Component {
 
   importProject = () => {
     console.log('Start importing the project...');
+    const limit = 60;
     this.setState({ loading: true });
     let syncPipesConfig = {
       config: {
@@ -188,29 +189,42 @@ class Project extends React.Component {
                   pipelineStatus: statusData.status,
                   pipelineExeId: statusData._id
                 });
-                this.checkPipelineStatus();
+                this.checkPipelineStatus(limit, 0);
               });
           });
       });
   };
 
-  checkPipelineStatus = () => {
-    let pipelineExecution;
-    while (this.state.pipelineStatus != 'Finished') {
-      // Check once per minute whether the pipeline execution is finished
+  checkPipelineStatus = (limit, count) => {
+    if (this.state.pipelineStatus == 'Finished') {
+      // Pipeline is finished, can now update issue count
+      this.updateProjectIssueCount();
+    } else {
+      getFrom(syncPipesServer + 'pipeline-executions/' + this.state.pipelineExeId)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({ pipelineStatus: data.status });
+          console.log('Current pipeline execution status: ' + this.state.pipelineStatus);
+        });
+      count++;
+      if (count >= limit) {
+        throw 'Importing exceeded time limit.';
+      }
+      if (this.state.pipelineStatus == 'Failed') {
+        throw 'Importing failed.';
+      }
+      // Check every 30 seconds whether the pipeline execution is finished
       setTimeout(() => {
-        pipelineExecution = getFrom(syncPipesServer + 'pipeline-executions/' + this.state.pipelineExeId);
-        this.setState({ pipelineStatus: pipelineExecution.status });
-      }, 60000);
+        this.checkPipelineStatus(limit, count);
+      }, 30000);
     }
-    // Pipeline is finished, can now update issue count
-    this.updateProjectIssueCount();
   };
 
   updateProjectIssueCount = () => {
     getFrom(AKRESERVER + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(status => {
+        console.log('Updating issue count...');
         this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
         this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
       });
@@ -249,6 +263,11 @@ class Project extends React.Component {
     let actionsView = null;
     const { selectedProject, classes } = this.props;
     const { activeTab, viz, attrName, segmentName, pipelineStatus, activeStep, loading } = this.state;
+    let showTips = false;
+
+    if (pipelineStatus == 'Running' || pipelineStatus == 'Queued') {
+      showTips = true;
+    }
 
     if (selectedProject.issuesCount > 0 && selectedProject.decisionCount > 0) {
       // Project is imported and has design decisions
@@ -312,7 +331,7 @@ class Project extends React.Component {
                       </Button>
                       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
                     </div>
-                    {pipelineStatus == 'Queued' && <Typography>This might take a couple of minutes.</Typography>}
+                    {showTips && <Typography>This might take a couple of minutes.</Typography>}
                   </div>
                 </StepContent>
               </Step>
