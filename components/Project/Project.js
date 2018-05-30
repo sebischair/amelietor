@@ -196,35 +196,33 @@ class Project extends React.Component {
   };
 
   checkPipelineStatus = (limit, count) => {
-    if (this.state.pipelineStatus == 'Finished') {
-      // Pipeline is finished, can now update issue count
-      this.updateProjectIssueCount();
-    } else {
-      getFrom(syncPipesServer + 'pipeline-executions/' + this.state.pipelineExeId)
-        .then(response => response.json())
-        .then(data => {
-          this.setState({ pipelineStatus: data.status });
-          console.log('Current pipeline execution status: ' + this.state.pipelineStatus);
-        });
-      count++;
-      if (count >= limit) {
-        throw 'Importing exceeded time limit.';
-      }
-      if (this.state.pipelineStatus == 'Failed') {
-        throw 'Importing failed.';
-      }
-      // Check every 30 seconds whether the pipeline execution is finished
-      setTimeout(() => {
-        this.checkPipelineStatus(limit, count);
-      }, 30000);
-    }
+    getFrom(syncPipesServer + 'pipeline-executions/' + this.state.pipelineExeId)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ pipelineStatus: data.status });
+        console.log('Current pipeline execution status: ' + this.state.pipelineStatus);
+        count++;
+        if (count >= limit) {
+          throw 'Importing exceeded time limit.';
+        } else if (this.state.pipelineStatus == 'Failed') {
+          throw 'Importing failed.';
+        } else if (this.state.pipelineStatus == 'Finished') {
+          // Pipeline is finished, can now update issue count
+          this.updateProjectIssueCount();
+        } else {
+          // Check every 30 seconds whether the pipeline execution is finished
+          setTimeout(() => {
+            this.checkPipelineStatus(limit, count);
+          }, 30000);
+        }
+      });
   };
 
   updateProjectIssueCount = () => {
     getFrom(AKRESERVER + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(status => {
-        console.log('Updating issue count...');
+        console.log('Issue count updated.');
         this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
         this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
       });
@@ -245,6 +243,8 @@ class Project extends React.Component {
                 getFrom(AKRESERVER + 'updateProjectProcessState?projectKey=' + this.props.selectedProject.key)
                   .then(response => response.json())
                   .then(finalStatus => {
+                    console.log('Extraction finished. Final status: ');
+                    console.log(finalStatus);
                     this.setState({
                       loading: false,
                       activeStep: this.state.activeStep + 1
