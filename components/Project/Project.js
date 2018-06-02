@@ -231,27 +231,15 @@ class Project extends React.Component {
   extractMetaInformation = () => {
     console.log('Start extracting meta-information...');
     this.setState({ loading: true });
-    getFrom(AKRESERVER + 'labelDesignDecisions?projectKey=' + this.props.selectedProject.key)
+    getFrom(`${AKRESERVER}preProcess?projectKey=${this.props.selectedProject.key}`)
       .then(response => response.json())
-      .then(labelStatus => {
-        getFrom(AKRESERVER + 'updateTaskWithQA?projectKey=' + this.props.selectedProject.key)
-          .then(response => response.json())
-          .then(qaStatus => {
-            getFrom(AKRESERVER + 'updateTaskWithAE?projectKey=' + this.props.selectedProject.key)
-              .then(response => response.json())
-              .then(aeStatus => {
-                getFrom(AKRESERVER + 'updateProjectProcessState?projectKey=' + this.props.selectedProject.key)
-                  .then(response => response.json())
-                  .then(finalStatus => {
-                    console.log('Extraction finished. Final status: ');
-                    console.log(finalStatus);
-                    this.setState({
-                      loading: false,
-                      activeStep: this.state.activeStep + 1
-                    });
-                  });
-              });
-          });
+      .then(finalStatus => {
+        console.log('Extraction finished. Final status: ');
+        console.log(finalStatus);
+        this.setState({
+          loading: false,
+          activeStep: this.state.activeStep + 1
+        });
       });
   };
 
