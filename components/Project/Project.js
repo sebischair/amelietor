@@ -166,7 +166,7 @@ class Project extends React.Component {
     };
 
     let syncPipesPipeline = {
-      name: 'Issues into to SC - ' + this.props.selectedProject.name,
+      name: 'Import issues into to Mongo for - ' + this.props.selectedProject.name,
       loaderConfig: process.env.SYNCPIPESISSUELOADERCONFIG || '5a16d383d64ce21f30047c19',
       extractorConfig: process.env.SYNCPIPESISSUEEXTRACTORCONFIG || '5968d6e444fb3c1fa464b76a',
       mapping: process.env.SYNCPIPESISSUEMAPPING || '5a214e6903c07826f09d1025'
