@@ -17,6 +17,9 @@ export const REQUEST_EM = 'REQUEST_EM';
 export const RECEIVE_ER = 'RECEIVE_ER';
 export const REQUEST_ER = 'REQUEST_ER';
 
+export const REQUEST_SIMILAR_DDS = 'REQUEST_SIMILAR_DDS';
+export const RECEIVE_SIMILAR_DDS = 'RECEIVE_SIMILAR_DDS';
+
 const AKRESERVER = process.env.AKRESERVER || "http://localhost:9000/";
 
 const PROJECT = 'project';
@@ -28,6 +31,7 @@ const EMDATA = 'getAssignee?projectKey=';
 const ERDATA = 'predictAssignee?projectKey=';
 const DDDATA = 'getDataForDDV';
 const DESIGNDECISION = 'designDecision';
+const SIMILARDECISIONS = 'similarDecisions';
 
 export const fetchERData = (projectKey) => {
   return dispatch => {
@@ -137,6 +141,18 @@ export const fetchSelctedDD = (ddKey) => {
   }
 };
 
+export const fetchSimilarDDs = (ddKey) => {
+  return dispatch => {
+    dispatch(requestSimilarDDs());
+    return getFrom(`${AKRESERVER}${SIMILARDECISIONS}?issueKey=${ddKey}`).then(response => {
+      return response.json();
+    }).then((dds) => {
+      dispatch(receiveSimilarDDs(dds));
+      return dds;
+    });
+  }
+};
+
 export const getFrom = (url) => {
   return fetch(url, {
     method: 'GET',
@@ -188,6 +204,20 @@ export const selectProject = (project) => {
   return {
     type: SELECTED_PROJECT,
     selectedProject: project
+  }
+};
+
+export const requestSimilarDDs = () => {
+  return {
+    type: REQUEST_SIMILAR_DDS
+  };
+};
+
+export const receiveSimilarDDs = (json) => {
+  return {
+    type: RECEIVE_SIMILAR_DDS,
+    similarDDs: json.similarDDs,
+    receivedAt: Date.now()
   }
 };
 

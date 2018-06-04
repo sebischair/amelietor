@@ -47,7 +47,6 @@ class DesignDecision extends React.Component {
       projectKey: this.props.projectKey,
       issueKey: this.props.issueKey,
       summary: this.props.selectedDD.summary,
-      similarDocuments: [],
       joyrideOverlay: true,
       joyrideType: 'continuous',
       isRunning: false,
@@ -72,9 +71,6 @@ class DesignDecision extends React.Component {
     }
     if (this.props.selectedDD.hasOwnProperty('description') && this.props.selectedProject.hasOwnProperty('key')) {
       this.props.dispatch(receiveFileContent(null, [this.props.selectedDD.description], true));
-    }
-    if (this.props.selectedDD.similarDocuments !== undefined && this.props.selectedDD.similarDocuments !== null) {
-      this.state.similarDocuments = this.props.selectedDD.similarDocuments;
     }
   }
 
@@ -173,7 +169,7 @@ class DesignDecision extends React.Component {
           <Grid item xs={5} className={s.recommendations}>
             <TokenManager />
             <RecContainer />
-            <SimilarDocuments similarDocuments={this.state.similarDocuments} />
+            <SimilarDocuments issueKey={this.props.issueKey} />
           </Grid>
         </Grid>
       </div>

@@ -1,4 +1,4 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT, SELECTED_DD, REQUEST_DESIGN_DECISIONS, RECEIVE_DESIGN_DECISIONS, REQUEST_QA, RECEIVE_QA, REQUEST_ALL_QA, RECEIVE_ALL_QA, REQUEST_AE, RECEIVE_AE, REQUEST_EM, RECEIVE_EM, REQUEST_ER, RECEIVE_ER} from '../actions/scactions';
+import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECTED_PROJECT, SELECTED_DD, REQUEST_SIMILAR_DDS, RECEIVE_SIMILAR_DDS, REQUEST_DESIGN_DECISIONS, RECEIVE_DESIGN_DECISIONS, REQUEST_QA, RECEIVE_QA, REQUEST_ALL_QA, RECEIVE_ALL_QA, REQUEST_AE, RECEIVE_AE, REQUEST_EM, RECEIVE_EM, REQUEST_ER, RECEIVE_ER} from '../actions/scactions';
 const screcs = (state = {
   projects: [],
   selectedProject: {},
@@ -40,6 +40,16 @@ const screcs = (state = {
       return Object.assign({}, state, {
         isFetching: false,
         designDecisions: action.designDecisions
+      });
+    case REQUEST_SIMILAR_DDS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        similarDDs: []
+      });
+    case RECEIVE_SIMILAR_DDS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        similarDDs: action.similarDDs
       });
     case REQUEST_QA:
       return Object.assign({}, state, {
