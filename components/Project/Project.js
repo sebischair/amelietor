@@ -222,9 +222,11 @@ class Project extends React.Component {
     getFrom(AKRESERVER + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(status => {
-        console.log('Issue count updated.');
-        this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key));
-        this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
+        this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key))
+        .then(() => {
+          console.log('Issue count updated.');
+          this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
+        });
       });
   };
 
