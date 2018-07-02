@@ -222,8 +222,8 @@ class Project extends React.Component {
     getFrom(AKRESERVER + 'updateProjectIssueCount?projectKey=' + this.props.selectedProject.key)
       .then(response => response.json())
       .then(status => {
-        this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key))
-        .then(() => {
+        // Fetch project again to update issue count
+        this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key)).then(() => {
           console.log('Issue count updated.');
           this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
         });
@@ -236,11 +236,11 @@ class Project extends React.Component {
     getFrom(`${AKRESERVER}preProcess?projectKey=${this.props.selectedProject.key}`)
       .then(response => response.json())
       .then(finalStatus => {
-        console.log('Extraction finished. Final status: ');
-        console.log(finalStatus);
-        this.setState({
-          loading: false,
-          activeStep: this.state.activeStep + 1
+        // Fetch project again to update design decision count
+        this.props.dispatch(fetchSelctedProject(this.props.selectedProject.key)).then(() => {
+          console.log('Extraction finished. Final status: ');
+          console.log(finalStatus);
+          this.setState({ loading: false, activeStep: this.state.activeStep + 1 });
         });
       });
   };
