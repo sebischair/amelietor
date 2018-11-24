@@ -154,6 +154,7 @@ export const fetchSimilarDDs = (ddKey) => {
 };
 
 export const getFrom = (url) => {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   return fetch(url, {
     method: 'GET',
     headers: {
@@ -164,6 +165,7 @@ export const getFrom = (url) => {
 };
 
 export const postTo = (url, data) => {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   return fetch(url, {
     method: 'POST',
     headers: {
